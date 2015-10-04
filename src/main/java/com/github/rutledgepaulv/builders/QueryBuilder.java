@@ -1,0 +1,308 @@
+package com.github.rutledgepaulv.builders;
+
+import com.github.rutledgepaulv.conditions.CompleteCondition;
+import com.github.rutledgepaulv.conditions.PartialCondition;
+import com.github.rutledgepaulv.nodes.AbstractNode;
+import com.github.rutledgepaulv.nodes.AndNode;
+import com.github.rutledgepaulv.nodes.ComparisonNode;
+import com.github.rutledgepaulv.nodes.OrNode;
+import com.github.rutledgepaulv.operators.ComparisonOperator;
+import com.github.rutledgepaulv.properties.concrete.*;
+import com.github.rutledgepaulv.properties.virtual.*;
+import com.github.rutledgepaulv.utilities.VarArgUtils;
+import com.github.rutledgepaulv.visitors.NodeVisitor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@SuppressWarnings("unchecked")
+public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T> {
+
+    protected AbstractNode root;
+    protected AbstractNode current;
+
+    public QueryBuilder() {
+        root = new OrNode(null, new ArrayList<>());
+        current = root;
+    }
+
+    public BooleanProperty<T> booleanField(String field) {
+        return new BooleanPropertyDelegate(field, self());
+    }
+
+    public StringProperty<T> stringField(String field) {
+        return new StringPropertyDelegate(field, self());
+    }
+
+    public ShortProperty<T> shortField(String field) {
+        return new ShortPropertyDelegate(field, self());
+    }
+
+    public IntegerProperty<T> integerField(String field) {
+        return new IntegerPropertyDelegate(field, self());
+    }
+
+    public LongProperty<T> longField(String field) {
+        return new LongPropertyDelegate(field, self());
+    }
+
+    public FloatProperty<T> floatField(String field) {
+        return new FloatPropertyDelegate(field, self());
+    }
+
+    public DoubleProperty<T> doubleField(String field) {
+        return new DoublePropertyDelegate(field, self());
+    }
+
+    public CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+        return and(VarArgUtils.combine(c1, c2, cn));
+    }
+
+    public CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+        return or(VarArgUtils.combine(c1, c2, cn));
+    }
+
+    public CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
+
+        List<AbstractNode> children = completeConditions.stream()
+                .map(condition -> ((QueryBuilder<T>) condition).current).collect(Collectors.toList());
+
+        self().current.getChildren().add(new AndNode(current, children));
+
+        return new CompleteConditionDelegate(self());
+    }
+
+    public CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
+
+        List<AbstractNode> children = completeConditions.stream()
+                .map(condition -> ((QueryBuilder<T>) condition).current).collect(Collectors.toList());
+
+        self().current.getChildren().add(new OrNode(current, children));
+
+        return new CompleteConditionDelegate(self());
+    }
+
+    protected CompleteCondition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
+        self().current.getChildren().add(new ComparisonNode(current, field, operator, values));
+        return new CompleteConditionDelegate(self());
+    }
+
+    protected T self() {
+        return (T) this;
+    }
+
+    private abstract class Delegate extends QueryBuilder<T> {
+        private T canonical;
+
+        public Delegate(T canonical) {
+            this.canonical = canonical;
+        }
+
+        @Override
+        protected T self() {
+            return canonical;
+        }
+    }
+
+    private class CompleteConditionDelegate extends Delegate implements CompleteCondition<T> {
+
+        public CompleteConditionDelegate(T canonical) {
+            super(canonical);
+        }
+
+        public T and() {
+            List<AbstractNode> children = new ArrayList<>();
+            children.add(self().current);
+            AndNode node = new AndNode(self().current.getParent(), children);
+            self().current.setParent(node);
+            self().current = node;
+            return self();
+        }
+
+        public T or() {
+            List<AbstractNode> children = new ArrayList<>();
+            children.add(self().current);
+            OrNode node = new OrNode(self().current.getParent(), children);
+            self().current.setParent(node);
+            self().current = node;
+            return self();
+        }
+
+        public <Q> Q query(NodeVisitor<Q> visitor) {
+            return self().root.visit(visitor);
+        }
+
+    }
+
+    private abstract class PropertyDelegate extends Delegate implements Property<T> {
+
+        private String field;
+
+        public PropertyDelegate(String field, T canonical) {
+            super(canonical);
+            this.field = field;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+    }
+
+    private abstract class ExistentialPropertyDelegate extends PropertyDelegate implements ExistentialProperty<T> {
+
+        public ExistentialPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> exists() {
+            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(Boolean.toString(true)));
+        }
+
+        public CompleteCondition<T> doesNotExist() {
+            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(Boolean.toString(false)));
+        }
+
+    }
+
+    private abstract class EquitablePropertyDelegate<S> extends ExistentialPropertyDelegate implements EquitableProperty<T,S> {
+
+        public EquitablePropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> eq(S value) {
+            return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(value));
+        }
+
+        public CompleteCondition<T> ne(S value) {
+            return condition(getField(), ComparisonOperator.NE, Collections.singletonList(value));
+        }
+    }
+
+    private abstract class ListablePropertyDelegate<S> extends EquitablePropertyDelegate<S> implements ListableProperty<T, S> {
+
+        public ListablePropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> in(S... values) {
+            return condition(getField(), ComparisonOperator.IN, VarArgUtils.list(values));
+        }
+
+        public CompleteCondition<T> in(Collection<S> values) {
+            return condition(getField(), ComparisonOperator.IN, values);
+        }
+
+        public CompleteCondition<T> nin(S... values) {
+            return condition(getField(), ComparisonOperator.NIN, VarArgUtils.list(values));
+        }
+
+        public CompleteCondition<T> nin(Collection<S> values) {
+            return condition(getField(), ComparisonOperator.NIN, values);
+        }
+    }
+
+    private class NumberPropertyDelegate<S extends Number> extends ListablePropertyDelegate<S> implements NumberProperty<T, S> {
+
+        public NumberPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> gt(S number) {
+            return condition(getField(), ComparisonOperator.GT, Collections.singletonList(number));
+        }
+
+        public CompleteCondition<T> lt(S number) {
+            return condition(getField(), ComparisonOperator.LT, Collections.singletonList(number));
+        }
+
+        public CompleteCondition<T> gte(S number) {
+            return condition(getField(), ComparisonOperator.GTE, Collections.singletonList(number));
+        }
+
+        public CompleteCondition<T> lte(S number) {
+            return condition(getField(), ComparisonOperator.LTE, Collections.singletonList(number));
+        }
+
+    }
+
+    private class BooleanPropertyDelegate extends ExistentialPropertyDelegate implements BooleanProperty<T> {
+
+        public BooleanPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> isTrue() {
+            return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(true));
+        }
+
+        public CompleteCondition<T> isFalse() {
+            return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(false));
+        }
+
+    }
+
+    private class ShortPropertyDelegate extends NumberPropertyDelegate<Short> implements ShortProperty<T> {
+
+        public ShortPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+    }
+
+    private class IntegerPropertyDelegate extends NumberPropertyDelegate<Integer> implements IntegerProperty<T> {
+
+        public IntegerPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+    }
+
+    private class LongPropertyDelegate extends NumberPropertyDelegate<Long> implements LongProperty<T> {
+
+        public LongPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+    }
+
+    private class FloatPropertyDelegate extends NumberPropertyDelegate<Float> implements FloatProperty<T> {
+
+        public FloatPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+    }
+
+    private class DoublePropertyDelegate extends NumberPropertyDelegate<Double> implements DoubleProperty<T> {
+
+        public DoublePropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+    }
+
+    private class StringPropertyDelegate extends EquitablePropertyDelegate<String> implements StringProperty<T> {
+
+        public StringPropertyDelegate(String field, T canonical) {
+            super(field, canonical);
+        }
+
+        public CompleteCondition<T> lexicallyAfter(String value) {
+            return condition(getField(), ComparisonOperator.GT, Collections.singletonList(value));
+        }
+
+        public CompleteCondition<T> lexicallyBefore(String value) {
+            return condition(getField(), ComparisonOperator.LT, Collections.singletonList(value));
+        }
+
+    }
+
+}
