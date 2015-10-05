@@ -139,3 +139,8 @@ Installation (coming soon to a maven repository near you):
 
 </dependencies>
 ```
+
+
+### License
+
+This project is licensed under [MIT license](http://opensource.org/licenses/MIT).
