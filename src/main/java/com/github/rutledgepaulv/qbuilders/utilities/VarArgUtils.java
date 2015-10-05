@@ -8,14 +8,7 @@ public final class VarArgUtils {
     private VarArgUtils(){
     }
 
-
-    public static <S> List<S> combine(S v1, S... vn) {
-        List<S> all = new ArrayList<>();
-        all.add(v1);
-        all.addAll(Arrays.asList(vn));
-        return all;
-    }
-
+    @SafeVarargs
     public static <S> List<S> combine(S v1, S v2, S... vn){
         List<S> all = new ArrayList<>();
         all.add(v1);
@@ -24,7 +17,7 @@ public final class VarArgUtils {
         return all;
     }
 
-
+    @SafeVarargs
     public static <S> List<S> list(S... vn) {
         return Arrays.asList(vn);
     }

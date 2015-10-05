@@ -113,8 +113,9 @@ String rsql = firstName().lexicallyAfter("Pam").or()
 ```
 
 ### Supported Target Types:
-- RSQL
+- [RSQL - (a text query syntax)](https://github.com/jirutka/rsql-parser)
 - Spring Data's MongoDB Criteria
+- Elasticsearch's FilterBuilder
 
 _submit a PR to add more!_
 
@@ -131,12 +132,20 @@ _submit a PR to add more!_
         <version>1.0</version>
     </dependency>
     
-    <!-- only necessary if you're using the spring data mongodb target type -->
+    <!-- only necessary if you're using the spring data mongodb criteria target type -->
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-mongodb</artifactId>
         <version>1.8.0.RELEASE</version>
     </dependency>
+    
+    <!-- only necessary if you're using the elasticsearch filter builder target type -->
+    <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>1.7.2</version>
+    </dependency>
+
 
 </dependencies>
 ```
