@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/RutledgePaulV/q-builders.svg)](https://travis-ci.org/RutledgePaulV/q-builders)
 
-## Overview
-
+### Overview
 A generic abstraction for building queries for arbitrary domain models that minimizes
 magic strings, provides type safety, produces queries that read like a sentence,
 and provides an extensible way to define new target query formats. All of that together means that 
@@ -14,14 +13,7 @@ that you use in both your SDK and API, and target different formats. Like RSQL f
 and straight mongo queries on the API side.
 
 
-## Supported Target Types (OOB):
-- RSQL
-- Spring Data's MongoDB Criteria
-
-_submit a PR to add more!_
-
-
-## Why does this exist?
+### Why does this exist?
 A lot of existing query builders are bad. It's *hard* to write a query builder that always restricts you to the
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
 call methods that you shouldn't be able to call at that time. Additionally, sometimes it's not clear when
@@ -119,8 +111,16 @@ String rsql = firstName().lexicallyAfter("Pam").or()
 // firstName=gt=Pam,(age=gt=20;age=lt=25)
 ```
 
+### Supported Target Types:
+- RSQL
+- Spring Data's MongoDB Criteria
 
-Installation (coming soon to a maven repository near you):
+_submit a PR to add more!_
+
+
+### Installation 
+(coming soon to a maven repository near you)
+
 ```xml
 <dependencies>
 
