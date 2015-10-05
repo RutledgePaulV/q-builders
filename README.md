@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/RutledgePaulV/q-builders.svg)](https://travis-ci.org/RutledgePaulV/q-builders)
+[![Coverage Status](https://coveralls.io/repos/RutledgePaulV/q-builders/badge.svg?branch=master&service=github)](https://coveralls.io/github/RutledgePaulV/q-builders?branch=master)
 
 ### Overview
 A generic abstraction for building queries for arbitrary domain models that minimizes
