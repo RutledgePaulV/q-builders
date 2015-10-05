@@ -1,27 +1,25 @@
 package com.github.rutledgepaulv.visitors;
 
-import com.github.rutledgepaulv.nodes.AndNode;
-import com.github.rutledgepaulv.nodes.ComparisonNode;
-import com.github.rutledgepaulv.nodes.OrNode;
+import com.github.rutledgepaulv.nodes.*;
 
 import java.util.stream.Collectors;
 
-public class RSQLVisitor implements NodeVisitor<String> {
+public class RSQLVisitor extends NodeVisitor<String> {
 
     @Override
-    public final String visit(AndNode node) {
-        return node.getChildren().stream().map(this::visit)
-                .collect(Collectors.joining(";"));
+    protected final String visit(AndNode node) {
+        String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(";"));
+        return nodeHasMultipleChildrenAndParent(node) ? "(" + body + ")" : body;
     }
 
     @Override
-    public final String visit(OrNode node) {
-        return node.getChildren().stream().map(this::visit)
-                .collect(Collectors.joining(","));
+    protected final String visit(OrNode node) {
+        String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(","));
+        return nodeHasMultipleChildrenAndParent(node) ? "(" + body + ")" : body;
     }
 
     @Override
-    public final String visit(ComparisonNode node) {
+    protected final String visit(ComparisonNode node) {
         switch (node.getOperator()) {
             case EQ:
                 return single(node, "==");
@@ -42,7 +40,12 @@ public class RSQLVisitor implements NodeVisitor<String> {
             case NIN:
                 return list(node, "=nin=");
         }
-        return null;
+
+        throw new UnsupportedOperationException("Unsupported operator.");
+    }
+
+    private boolean nodeHasMultipleChildrenAndParent(AbstractNode node) {
+        return node.getChildren().size() > 1 && node.getParent() != null;
     }
 
     private String single(ComparisonNode node, String op) {
@@ -53,7 +56,6 @@ public class RSQLVisitor implements NodeVisitor<String> {
         return node.getField() + op + node.getValues().stream()
                 .map(this::serialize).collect(Collectors.joining(",", "(", ")"));
     }
-
 
     protected String serialize(Object value) {
         return value.toString();

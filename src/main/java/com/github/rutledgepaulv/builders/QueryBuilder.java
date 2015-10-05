@@ -2,10 +2,7 @@ package com.github.rutledgepaulv.builders;
 
 import com.github.rutledgepaulv.conditions.CompleteCondition;
 import com.github.rutledgepaulv.conditions.PartialCondition;
-import com.github.rutledgepaulv.nodes.AbstractNode;
-import com.github.rutledgepaulv.nodes.AndNode;
-import com.github.rutledgepaulv.nodes.ComparisonNode;
-import com.github.rutledgepaulv.nodes.OrNode;
+import com.github.rutledgepaulv.nodes.*;
 import com.github.rutledgepaulv.operators.ComparisonOperator;
 import com.github.rutledgepaulv.properties.concrete.*;
 import com.github.rutledgepaulv.properties.virtual.*;
@@ -21,8 +18,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T> {
 
-    protected AbstractNode root;
-    protected AbstractNode current;
+    protected LogicalNode root;
+    protected LogicalNode current;
 
     public QueryBuilder() {
         root = new OrNode(null, new ArrayList<>());
@@ -57,36 +54,42 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
         return new DoublePropertyDelegate(field, self());
     }
 
-    public CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+    @SafeVarargs
+    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
         return and(VarArgUtils.combine(c1, c2, cn));
     }
 
-    public CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+    @SafeVarargs
+    public final CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
         return or(VarArgUtils.combine(c1, c2, cn));
     }
 
-    public CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
+    public final CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
 
         List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QueryBuilder<T>) condition).current).collect(Collectors.toList());
+                .map(condition -> ((QueryBuilder<T>) condition).self().current)
+                .collect(Collectors.toList());
 
-        self().current.getChildren().add(new AndNode(current, children));
+        AndNode node = new AndNode(self().current, children);
+        self().current.getChildren().add(node);
 
         return new CompleteConditionDelegate(self());
     }
 
-    public CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
+    public final CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
 
         List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QueryBuilder<T>) condition).current).collect(Collectors.toList());
+                .map(condition -> ((QueryBuilder<T>) condition).self().current)
+                .collect(Collectors.toList());
 
-        self().current.getChildren().add(new OrNode(current, children));
+        OrNode node = new OrNode(self().current, children);
+        self().current.getChildren().add(node);
 
         return new CompleteConditionDelegate(self());
     }
 
     protected CompleteCondition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
-        self().current.getChildren().add(new ComparisonNode(current, field, operator, values));
+        self().current.getChildren().add(new ComparisonNode(self().current, field, operator, values));
         return new CompleteConditionDelegate(self());
     }
 
@@ -114,19 +117,25 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
         }
 
         public T and() {
+            LogicalNode current = self().current;
             List<AbstractNode> children = new ArrayList<>();
-            children.add(self().current);
-            AndNode node = new AndNode(self().current.getParent(), children);
-            self().current.setParent(node);
+            children.add(current);
+            AndNode node = new AndNode(current.getParent(), children);
+            if(current == self().root) {
+                self().root = node;
+            }
             self().current = node;
             return self();
         }
 
         public T or() {
+            LogicalNode current = self().current;
             List<AbstractNode> children = new ArrayList<>();
-            children.add(self().current);
-            OrNode node = new OrNode(self().current.getParent(), children);
-            self().current.setParent(node);
+            children.add(current);
+            OrNode node = new OrNode(current.getParent(), children);
+            if(current == self().root) {
+                self().root = node;
+            }
             self().current = node;
             return self();
         }

@@ -6,24 +6,15 @@ import java.util.Collection;
 
 public class ComparisonNode extends AbstractNode {
 
-    private AbstractNode parent;
     private String field;
     private ComparisonOperator operator;
     private Collection<?> values;
 
     public ComparisonNode(AbstractNode parent, String field, ComparisonOperator operator, Collection<?> values) {
+        super(parent);
         this.operator = operator;
         this.field = field;
-        this.parent = parent;
         this.values = values;
-    }
-
-    public AbstractNode getParent() {
-        return parent;
-    }
-
-    public void setParent(AbstractNode parent) {
-        this.parent = parent;
     }
 
     public String getField() {

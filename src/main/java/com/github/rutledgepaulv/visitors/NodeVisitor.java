@@ -1,20 +1,23 @@
 package com.github.rutledgepaulv.visitors;
 
 
-import com.github.rutledgepaulv.nodes.AbstractNode;
-import com.github.rutledgepaulv.nodes.AndNode;
-import com.github.rutledgepaulv.nodes.ComparisonNode;
-import com.github.rutledgepaulv.nodes.OrNode;
+import com.github.rutledgepaulv.nodes.*;
 
-public interface NodeVisitor<T> {
+public abstract class NodeVisitor<T> {
 
-    T visit(AndNode node);
+    protected abstract T visit(AndNode node);
 
-    T visit(OrNode node);
+    protected abstract T visit(OrNode node);
 
-    T visit(ComparisonNode node);
+    protected abstract T visit(ComparisonNode node);
 
-    default T visit(AbstractNode node) {
+    public final T visit(AbstractNode node) {
+
+        // skip straight to the children if it's a logical node with one member
+        if(node instanceof LogicalNode && node.getChildren().size() == 1) {
+            return visit(node.getChildren().get(0));
+        }
+
         if(node instanceof AndNode){
             return visit((AndNode)node);
         } else if (node instanceof OrNode){
@@ -22,6 +25,8 @@ public interface NodeVisitor<T> {
         } else if (node instanceof ComparisonNode) {
             return visit((ComparisonNode)node);
         }
+
         return null;
     }
+
 }
