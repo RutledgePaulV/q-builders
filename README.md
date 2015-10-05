@@ -118,3 +118,24 @@ String rsql = firstName().lexicallyAfter("Pam").or()
               
 // firstName=gt=Pam,(age=gt=20;age=lt=25)
 ```
+
+
+Installation (coming soon to a maven repository near you):
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>com.github.rutledgepaulv</groupId>
+        <artifactId>q-builders</artifactId>
+        <version>1.0</version>
+    </dependency>
+    
+    <!-- only necessary if you're using the spring data mongodb target type -->
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-mongodb</artifactId>
+        <version>1.8.0.RELEASE</version>
+    </dependency>
+
+</dependencies>
+```
