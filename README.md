@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RutledgePaulV/q-builders.svg)](https://travis-ci.org/RutledgePaulV/q-builders)
+
 ## Overview
 
 A generic abstraction for building queries for arbitrary domain models that minimizes
@@ -24,14 +26,15 @@ A lot of existing query builders are bad. It's *hard* to write a query builder t
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
 call methods that you shouldn't be able to call at that time. Additionally, sometimes it's not clear when
 you've got the final result versus when you can continue to build on it. What happens if you grab the final
-result and then make more changes to the builder? Some examples:
+result and then make more changes to the builder? Some examples of poor query builders:
 
 
-_spring data mongodb_:
+*spring data mongodb*:
 
 ```java
-// notice that there's no type restrictions on the values, and you can pass multiple lists of integers to a string field
-// you'll get an exception at runtime but everything will compile just fine.
+// notice that there's no type restrictions on the values, and you can pass 
+// multiple lists of integers to a string field you'll get an exception at 
+// runtime but everything will compile just fine.
 Criteria crit = Criteria.where("myStringField")
                 .in(Collections.singletonList(1), Collections.singletonList(2));
 
@@ -42,9 +45,9 @@ crit = new Critera().is("cats");
 ```
 
 
-_apache cxf_:
+*apache cxf*:
 ```java
-
+// I think this one speaks for itself
 FiqlSearchConditionBuilder builder = new FiqlSearchConditionBuilder();
 builder.is("cats").notAfter(new Date()).or().is("cats").equalTo(3, 3, 3, 3, 4).query();
 builder.and(new ArrayList<>()).wrap().wrap().wrap().and().is("cats");
@@ -53,16 +56,15 @@ String finalQuery = builder.query();
 ```
 
 
-# q-builders
+# Meet q-builders
 
-
-## Enough of that. Breathe easy, friend
 If you use intellisense, you'll notice that you're never even given an inapplicable option at any point
 as you build your queries. Also, since you define the type when you define your query model, everything
 is type safe. No need to worry about someone passing an integer to a string field, etc.
 
 ```java
 
+// define a query object for each of your domain models
 public class PersonQuery extends QBuilder<PersonQuery> {
 
     public StringProperty<PersonQuery> firstName() {
@@ -87,8 +89,7 @@ Criteria mongoCriteria = q.query(new MongoCriteriaVisitor());
 
 
 
-//how about some static imports?
-
+// everybody loves static imports, right?
 public class PersonQuery extends QBuilder<PersonQuery> {
 
     public static class PersonQueryPredef {
