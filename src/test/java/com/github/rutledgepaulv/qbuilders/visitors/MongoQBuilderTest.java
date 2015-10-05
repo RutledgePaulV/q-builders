@@ -15,6 +15,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         String_GT = "{ \"myString\" : { \"$gt\" : \"abcdefg\"}}";
         String_EX = "{ \"myString\" : { \"$exists\" : true}}";
         String_DNE = "{ \"myString\" : { \"$exists\" : false}}";
+        String_IN = "{ \"myString\" : { \"$in\" : [ \"a\" , \"b\" , \"c\"]}}";
+        String_NIN = "{ \"myString\" : { \"$nin\" : [ \"d\" , \"e\" , \"f\"]}}";
 
         Boolean_TRUE = "{ \"myBoolean\" : true}";
         Boolean_FALSE = "{ \"myBoolean\" : false}";
@@ -29,6 +31,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         Short_GTE = "{ \"myShort\" : { \"$gte\" : 100}}";
         Short_EX = "{ \"myShort\" : { \"$exists\" : true}}";
         Short_DNE = "{ \"myShort\" : { \"$exists\" : false}}";
+        Short_IN = "{ \"myShort\" : { \"$in\" : [ 98 , 99 , 100]}}";
+        Short_NIN = "{ \"myShort\" : { \"$nin\" : [ 101 , 102 , 103]}}";
 
         Integer_EQ = "{ \"myInteger\" : 100}";
         Integer_NE = "{ \"myInteger\" : { \"$ne\" : 100}}";
@@ -38,6 +42,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         Integer_GTE = "{ \"myInteger\" : { \"$gte\" : 100}}";
         Integer_EX = "{ \"myInteger\" : { \"$exists\" : true}}";
         Integer_DNE = "{ \"myInteger\" : { \"$exists\" : false}}";
+        Integer_IN = "{ \"myInteger\" : { \"$in\" : [ 98 , 99 , 100]}}";
+        Integer_NIN = "{ \"myInteger\" : { \"$nin\" : [ 101 , 102 , 103]}}";
 
         Long_EQ = "{ \"myLong\" : 100}";
         Long_NE = "{ \"myLong\" : { \"$ne\" : 100}}";
@@ -47,6 +53,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         Long_GTE = "{ \"myLong\" : { \"$gte\" : 100}}";
         Long_EX = "{ \"myLong\" : { \"$exists\" : true}}";
         Long_DNE = "{ \"myLong\" : { \"$exists\" : false}}";
+        Long_IN = "{ \"myLong\" : { \"$in\" : [ 98 , 99 , 100]}}";
+        Long_NIN = "{ \"myLong\" : { \"$nin\" : [ 101 , 102 , 103]}}";
 
         Float_EQ = "{ \"myFloat\" : 100.0}";
         Float_NE = "{ \"myFloat\" : { \"$ne\" : 100.0}}";
@@ -56,6 +64,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         Float_GTE = "{ \"myFloat\" : { \"$gte\" : 100.0}}";
         Float_EX = "{ \"myFloat\" : { \"$exists\" : true}}";
         Float_DNE = "{ \"myFloat\" : { \"$exists\" : false}}";
+        Float_IN = "{ \"myFloat\" : { \"$in\" : [ 98.0 , 99.0 , 100.0]}}";
+        Float_NIN = "{ \"myFloat\" : { \"$nin\" : [ 101.0 , 102.0 , 103.0]}}";
 
         Double_EQ = "{ \"myDouble\" : 100.0}";
         Double_NE = "{ \"myDouble\" : { \"$ne\" : 100.0}}";
@@ -65,6 +75,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<MongoCriteriaVisitor, Cr
         Double_GTE = "{ \"myDouble\" : { \"$gte\" : 100.0}}";
         Double_EX = "{ \"myDouble\" : { \"$exists\" : true}}";
         Double_DNE = "{ \"myDouble\" : { \"$exists\" : false}}";
+        Double_IN = "{ \"myDouble\" : { \"$in\" : [ 98.0 , 99.0 , 100.0]}}";
+        Double_NIN = "{ \"myDouble\" : { \"$nin\" : [ 101.0 , 102.0 , 103.0]}}";
 
 
         INLINE_ANDING = "{ \"$and\" : [ { \"myString\" : \"Thing\"} , { \"myLong\" : { \"$exists\" : false}}]}";

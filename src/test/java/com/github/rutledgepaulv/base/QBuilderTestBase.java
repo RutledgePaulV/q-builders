@@ -20,6 +20,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> GT = myString().lexicallyAfter("abcdefg");
             CompleteCondition<QModel> EX = myString().exists();
             CompleteCondition<QModel> DNE = myString().doesNotExist();
+            CompleteCondition<QModel> IN = myString().in("a", "b", "c");
+            CompleteCondition<QModel> NIN = myString().nin("d", "e", "f");
         }
 
         interface Boolean {
@@ -38,6 +40,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> LTE = myShort().lte((short)100);
             CompleteCondition<QModel> EX = myShort().exists();
             CompleteCondition<QModel> DNE = myShort().doesNotExist();
+            CompleteCondition<QModel> IN = myShort().in((short)98, (short)99, (short)100);
+            CompleteCondition<QModel> NIN = myShort().nin((short)101, (short)102, (short)103);
         }
 
         interface Integer {
@@ -49,6 +53,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> LTE = myInteger().lte(100);
             CompleteCondition<QModel> EX = myInteger().exists();
             CompleteCondition<QModel> DNE = myInteger().doesNotExist();
+            CompleteCondition<QModel> IN = myInteger().in(98, 99, 100);
+            CompleteCondition<QModel> NIN = myInteger().nin(101, 102, 103);
         }
 
         interface Long {
@@ -60,6 +66,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> LTE = myLong().lte(100L);
             CompleteCondition<QModel> EX = myLong().exists();
             CompleteCondition<QModel> DNE = myLong().doesNotExist();
+            CompleteCondition<QModel> IN = myLong().in(98L, 99L, 100L);
+            CompleteCondition<QModel> NIN = myLong().nin(101L, 102L, 103L);
         }
 
         interface Float {
@@ -71,6 +79,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> LTE = myFloat().lte(100f);
             CompleteCondition<QModel> EX = myFloat().exists();
             CompleteCondition<QModel> DNE = myFloat().doesNotExist();
+            CompleteCondition<QModel> IN = myFloat().in(98f, 99f, 100f);
+            CompleteCondition<QModel> NIN = myFloat().nin(101f, 102f, 103f);
         }
 
         interface Double {
@@ -82,6 +92,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             CompleteCondition<QModel> LTE = myDouble().lte(100.0);
             CompleteCondition<QModel> EX = myDouble().exists();
             CompleteCondition<QModel> DNE = myDouble().doesNotExist();
+            CompleteCondition<QModel> IN = myDouble().in(98.0, 99.0, 100.0);
+            CompleteCondition<QModel> NIN = myDouble().nin(101.0, 102.0, 103.0);
         }
     }
 
@@ -113,6 +125,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String String_GT;
     protected String String_EX;
     protected String String_DNE;
+    protected String String_IN;
+    protected String String_NIN;
 
     @Test
     public void simple_String() {
@@ -122,6 +136,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(String_GT, Simple.String.GT);
         compare(String_EX, Simple.String.EX);
         compare(String_DNE, Simple.String.DNE);
+        compare(String_IN, Simple.String.IN);
+        compare(String_NIN, Simple.String.NIN);
     }
 
     protected String Boolean_TRUE;
@@ -145,7 +161,9 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String Short_GTE;
     protected String Short_EX;
     protected String Short_DNE;
-    
+    protected String Short_IN;
+    protected String Short_NIN;
+
     @Test
     public void simple_Short() {
         compare(Short_EQ, Simple.Short.EQ);
@@ -156,6 +174,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Short_GTE, Simple.Short.GTE);
         compare(Short_EX, Simple.Short.EX);
         compare(Short_DNE, Simple.Short.DNE);
+        compare(Short_IN, Simple.Short.IN);
+        compare(Short_NIN, Simple.Short.NIN);
     }
 
     protected String Integer_EQ;
@@ -166,6 +186,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String Integer_GTE;
     protected String Integer_EX;
     protected String Integer_DNE;
+    protected String Integer_IN;
+    protected String Integer_NIN;
 
     @Test
     public void simple_Integer() {
@@ -177,6 +199,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Integer_GTE, Simple.Integer.GTE);
         compare(Integer_EX, Simple.Integer.EX);
         compare(Integer_DNE, Simple.Integer.DNE);
+        compare(Integer_IN, Simple.Integer.IN);
+        compare(Integer_NIN, Simple.Integer.NIN);
     }
 
     protected String Long_EQ;
@@ -187,6 +211,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String Long_GTE;
     protected String Long_EX;
     protected String Long_DNE;
+    protected String Long_IN;
+    protected String Long_NIN;
 
     @Test
     public void simple_Long() {
@@ -198,6 +224,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Long_GTE, Simple.Long.GTE);
         compare(Long_EX, Simple.Long.EX);
         compare(Long_DNE, Simple.Long.DNE);
+        compare(Long_IN, Simple.Long.IN);
+        compare(Long_NIN, Simple.Long.NIN);
     }
 
     protected String Float_EQ;
@@ -208,6 +236,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String Float_GTE;
     protected String Float_EX;
     protected String Float_DNE;
+    protected String Float_IN;
+    protected String Float_NIN;
 
     @Test
     public void simple_Float() {
@@ -219,6 +249,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Float_GTE, Simple.Float.GTE);
         compare(Float_EX, Simple.Float.EX);
         compare(Float_DNE, Simple.Float.DNE);
+        compare(Float_IN, Simple.Float.IN);
+        compare(Float_NIN, Simple.Float.NIN);
     }
 
     protected String Double_EQ;
@@ -229,6 +261,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String Double_GTE;
     protected String Double_EX;
     protected String Double_DNE;
+    protected String Double_IN;
+    protected String Double_NIN;
 
     @Test
     public void simple_Double() {
@@ -240,6 +274,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Double_GTE, Simple.Double.GTE);
         compare(Double_EX, Simple.Double.EX);
         compare(Double_DNE, Simple.Double.DNE);
+        compare(Double_IN, Simple.Double.IN);
+        compare(Double_NIN, Simple.Double.NIN);
     }
 
     protected String INLINE_ANDING;

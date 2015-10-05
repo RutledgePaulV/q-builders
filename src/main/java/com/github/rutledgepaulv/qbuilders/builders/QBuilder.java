@@ -300,7 +300,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     }
 
-    private class StringPropertyDelegate extends EquitablePropertyDelegate<String> implements StringProperty<T> {
+    private class StringPropertyDelegate extends ListablePropertyDelegate<String> implements StringProperty<T> {
 
         public StringPropertyDelegate(String field, T canonical) {
             super(field, canonical);
