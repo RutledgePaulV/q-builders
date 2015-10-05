@@ -5,16 +5,52 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.rutledgepaulv</groupId>
-    <artifactId>query-builders</artifactId>
+    <artifactId>q-builders</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <developers>
+        <developer>
+            <name>Paul Rutledge</name>
+            <email>paul.v.rutledge@gmail.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>http://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://github.com/rutledgepaulv/q-builders</url>
+        <connection>scm:git:git@github.com:rutledgepaulv/q-builders.git</connection>
+    </scm>
+
+    <ciManagement>
+        <system>travis</system>
+        <url>https://travis-ci.org/rutledgepaulv/q-builders</url>
+    </ciManagement>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/rutledgepaulv/q-builders/issues</url>
+    </issueManagement>
+
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

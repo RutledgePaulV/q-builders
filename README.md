@@ -1,4 +1,4 @@
-## What
+## Overview
 
 A generic abstraction for building queries for arbitrary domain models that minimizes
 magic strings, provides type safety, produces queries that read like a sentence,
@@ -19,7 +19,7 @@ and straight mongo queries on the API side.
 _submit a PR to add more!_
 
 
-## Why
+## Why does this exist?
 A lot of existing query builders are bad. It's *hard* to write a query builder that always restricts you to the
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
 call methods that you shouldn't be able to call at that time. Additionally, sometimes it's not clear when
@@ -32,7 +32,8 @@ _spring data mongodb_:
 ```java
 // notice that there's no type restrictions on the values, and you can pass multiple lists of integers to a string field
 // you'll get an exception at runtime but everything will compile just fine.
-Criteria crit = Criteria.where("myStringField").in(Collections.singletonList(1), Collections.singletonList(2));
+Criteria crit = Criteria.where("myStringField")
+                .in(Collections.singletonList(1), Collections.singletonList(2));
 
 
 // you can define the value for a field without even saying what the field is. huh?
@@ -52,14 +53,17 @@ String finalQuery = builder.query();
 ```
 
 
-## Breathe easy, friend.
+# q-builders
+
+
+## Enough of that. Breathe easy, friend
 If you use intellisense, you'll notice that you're never even given an inapplicable option at any point
 as you build your queries. Also, since you define the type when you define your query model, everything
 is type safe. No need to worry about someone passing an integer to a string field, etc.
 
 ```java
 
-public class PersonQuery extends QueryBuilder<PersonQuery> {
+public class PersonQuery extends QBuilder<PersonQuery> {
 
     public StringProperty<PersonQuery> firstName() {
         return stringField("firstName");
@@ -72,17 +76,20 @@ public class PersonQuery extends QueryBuilder<PersonQuery> {
 }
 
 
-CompleteCondition<PersonQuery> q = new PersonQuery().firstName().equalTo("Paul").and().age().equalTo(23);
+CompleteCondition<PersonQuery> q = new PersonQuery().firstName()
+                                       .equalTo("Paul").and().age().equalTo(23);
 
-String rsql = q.query(new RSQLVisitor()); // firstName==Paul;age==23
+String rsql = q.query(new RSQLVisitor()); 
+// firstName==Paul;age==23
 
-Criteria mongoCriteria = q.query(new MongoCriteriaVisitor()); // {firstName: "Paul", age: 23}
+Criteria mongoCriteria = q.query(new MongoCriteriaVisitor()); 
+// {firstName: "Paul", age: 23}
 
 
 
 //how about some static imports?
 
-public class PersonQuery extends QueryBuilder<PersonQuery> {
+public class PersonQuery extends QBuilder<PersonQuery> {
 
     public static class PersonQueryPredef {
         public static StringProperty<PersonQuery> firstName() {
@@ -105,7 +112,8 @@ public class PersonQuery extends QueryBuilder<PersonQuery> {
 
 
 String rsql = firstName().lexicallyAfter("Pam").or()
-              .and(age().greaterThan(20), age().lessThan(25)).query(new RSQLVisitor());
+              .and(age().greaterThan(20), age().lessThan(25))
+              .query(new RSQLVisitor());
               
 // firstName=gt=Pam,(age=gt=20;age=lt=25)
 ```
