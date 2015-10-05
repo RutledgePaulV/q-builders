@@ -55,7 +55,8 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
     }
 
     @SafeVarargs
-    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2,
+            CompleteCondition<T>... cn) {
         return and(VarArgUtils.combine(c1, c2, cn));
     }
 
@@ -67,8 +68,7 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
     public final CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
 
         List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QueryBuilder<T>) condition).self().current)
-                .collect(Collectors.toList());
+                .map(condition -> ((QueryBuilder<T>) condition).self().current).collect(Collectors.toList());
 
         AndNode node = new AndNode(self().current, children);
         self().current.getChildren().add(node);
@@ -79,8 +79,7 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
     public final CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
 
         List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QueryBuilder<T>) condition).self().current)
-                .collect(Collectors.toList());
+                .map(condition -> ((QueryBuilder<T>) condition).self().current).collect(Collectors.toList());
 
         OrNode node = new OrNode(self().current, children);
         self().current.getChildren().add(node);
@@ -121,7 +120,7 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
             AndNode node = new AndNode(current.getParent(), children);
-            if(current == self().root) {
+            if (current == self().root) {
                 self().root = node;
             }
             self().current = node;
@@ -133,7 +132,7 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
             OrNode node = new OrNode(current.getParent(), children);
-            if(current == self().root) {
+            if (current == self().root) {
                 self().root = node;
             }
             self().current = node;
@@ -171,16 +170,17 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
         }
 
         public CompleteCondition<T> exists() {
-            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(Boolean.toString(true)));
+            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(true));
         }
 
         public CompleteCondition<T> doesNotExist() {
-            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(Boolean.toString(false)));
+            return condition(getField(), ComparisonOperator.EX, Collections.singletonList(false));
         }
 
     }
 
-    private abstract class EquitablePropertyDelegate<S> extends ExistentialPropertyDelegate implements EquitableProperty<T,S> {
+    private abstract class EquitablePropertyDelegate<S> extends ExistentialPropertyDelegate
+            implements EquitableProperty<T, S> {
 
         public EquitablePropertyDelegate(String field, T canonical) {
             super(field, canonical);
@@ -195,7 +195,8 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
         }
     }
 
-    private abstract class ListablePropertyDelegate<S> extends EquitablePropertyDelegate<S> implements ListableProperty<T, S> {
+    private abstract class ListablePropertyDelegate<S> extends EquitablePropertyDelegate<S>
+            implements ListableProperty<T, S> {
 
         public ListablePropertyDelegate(String field, T canonical) {
             super(field, canonical);
@@ -218,7 +219,8 @@ public class QueryBuilder<T extends QueryBuilder> implements PartialCondition<T>
         }
     }
 
-    private class NumberPropertyDelegate<S extends Number> extends ListablePropertyDelegate<S> implements NumberProperty<T, S> {
+    private class NumberPropertyDelegate<S extends Number> extends ListablePropertyDelegate<S>
+            implements NumberProperty<T, S> {
 
         public NumberPropertyDelegate(String field, T canonical) {
             super(field, canonical);
