@@ -138,6 +138,16 @@ public class PredicateBuilderTest {
         compare(myListOfStrings().nin(Arrays.asList("abcd", "abc")), AAA, ABA, BBA, ABB, BBB);
     }
 
+    @Test
+    public void testAnding() {
+        compare(myString().doesNotExist().and().myLong().eq(6L), ABB);
+    }
+
+    @Test
+    public void testOring() {
+        compare(myString().doesNotExist().or().myString().eq("testing8"), BAA, ABB, BBB);
+    }
+
     private void compare(CompleteCondition<QModel> query, Q... expected) {
         Predicate<Q> predicate = query.query(new PredicateVisitor<>());
         Set<Q> ex = new HashSet<>(Arrays.asList(expected));
