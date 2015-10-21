@@ -114,8 +114,9 @@ String rsql = firstName().lexicallyAfter("Pam").or()
 
 ### Supported Target Types:
 - [RSQL - (a text query syntax)](https://github.com/jirutka/rsql-parser)
-- Spring Data's MongoDB Criteria
-- Elasticsearch's FilterBuilder
+- Elasticsearch FilterBuilder
+- Spring Data MongoDB Criteria
+- Java function predicate (for in-memory filtering of collections, etc)
 
 _submit a PR to add more!_
 
@@ -146,7 +147,13 @@ _submit a PR to add more!_
         <version>1.7.2</version>
     </dependency>
 
-
+    <!-- only necessary if you're using the java.util.function.Predicate target type -->
+     <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.6.1</version>
+     </dependency>
+            
 </dependencies>
 ```
 

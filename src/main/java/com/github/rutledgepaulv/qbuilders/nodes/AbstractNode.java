@@ -10,10 +10,6 @@ public abstract class AbstractNode implements Visitable {
     private AbstractNode parent;
     private List<AbstractNode> children = new ArrayList<>();
 
-    public AbstractNode() {
-        this.parent = null;
-    }
-
     public AbstractNode(AbstractNode parent) {
         this.parent = parent;
     }

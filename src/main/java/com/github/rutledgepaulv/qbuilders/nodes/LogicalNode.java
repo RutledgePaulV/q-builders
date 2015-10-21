@@ -8,11 +8,6 @@ public abstract class LogicalNode extends AbstractNode {
 
     private LogicalOperator operator;
 
-    public LogicalNode(AbstractNode parent, LogicalOperator operator) {
-        super(parent);
-        this.operator = operator;
-    }
-
     public LogicalNode(AbstractNode parent, LogicalOperator operator, List<AbstractNode> children) {
         super(parent, children);
         this.operator = operator;

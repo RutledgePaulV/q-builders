@@ -6,6 +6,7 @@ import com.github.rutledgepaulv.qbuilders.nodes.*;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.concrete.*;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.*;
+import com.github.rutledgepaulv.qbuilders.utilities.ObjectUtils;
 import com.github.rutledgepaulv.qbuilders.utilities.VarArgUtils;
 import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
 
@@ -55,8 +56,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
     }
 
     @SafeVarargs
-    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2,
-            CompleteCondition<T>... cn) {
+    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
         return and(VarArgUtils.combine(c1, c2, cn));
     }
 
@@ -65,26 +65,24 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
         return or(VarArgUtils.combine(c1, c2, cn));
     }
 
-    public final CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
+    private <S extends LogicalNode> CompleteCondition<T> combine(List<CompleteCondition<T>> conditions, Class<S> type) {
 
-        List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QBuilder<T>) condition).self().current).collect(Collectors.toList());
+        List<AbstractNode> children = conditions.stream()
+                .map(condition -> ((QBuilder<T>) condition).self().current)
+                .collect(Collectors.toList());
 
-        AndNode node = new AndNode(self().current, children);
+        S node = ObjectUtils.init(type, self().current, children);
         self().current.getChildren().add(node);
 
         return new CompleteConditionDelegate(self());
     }
 
+    public final CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
+        return combine(completeConditions, AndNode.class);
+    }
+
     public final CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
-
-        List<AbstractNode> children = completeConditions.stream()
-                .map(condition -> ((QBuilder<T>) condition).self().current).collect(Collectors.toList());
-
-        OrNode node = new OrNode(self().current, children);
-        self().current.getChildren().add(node);
-
-        return new CompleteConditionDelegate(self());
+        return combine(completeConditions, OrNode.class);
     }
 
     protected CompleteCondition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
