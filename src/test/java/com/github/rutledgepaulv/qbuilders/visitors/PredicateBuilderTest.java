@@ -118,6 +118,26 @@ public class PredicateBuilderTest {
         compare(myListOfStrings().nin("abcd", "abc"), AAA, ABA, BBA, ABB, BBB);
     }
 
+    @Test
+    public void inNonListFieldArray() {
+        compare(myString().in(Arrays.asList("testing6", "testing5")), BAB, BBA);
+    }
+
+    @Test
+    public void inListFieldArray() {
+        compare(myListOfStrings().in(Arrays.asList("abcd", "abc")), BAB, BAA, AAB);
+    }
+
+    @Test
+    public void ninNonListFieldArray() {
+        compare(myString().nin(Arrays.asList("testing6", "testing5")), AAA, AAB, ABA, BAA, ABB, BBB);
+    }
+
+    @Test
+    public void ninListFieldArray() {
+        compare(myListOfStrings().nin(Arrays.asList("abcd", "abc")), AAA, ABA, BBA, ABB, BBB);
+    }
+
     private void compare(CompleteCondition<QModel> query, Q... expected) {
         Predicate<Q> predicate = query.query(new PredicateVisitor<>());
         Set<Q> ex = new HashSet<>(Arrays.asList(expected));

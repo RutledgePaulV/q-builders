@@ -10,11 +10,8 @@ public class ComparisonNode extends AbstractNode {
     private ComparisonOperator operator;
     private Collection<?> values;
 
-    public ComparisonNode(AbstractNode parent, String field, ComparisonOperator operator, Collection<?> values) {
+    public ComparisonNode(AbstractNode parent) {
         super(parent);
-        this.operator = operator;
-        this.field = field;
-        this.values = values;
     }
 
     public String getField() {

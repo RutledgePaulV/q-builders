@@ -3,6 +3,7 @@ package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.github.rutledgepaulv.qbuilders.nodes.*;
 
+@SuppressWarnings("ConstantConditions")
 public abstract class NodeVisitor<T> {
 
     protected abstract T visit(AndNode node);
@@ -22,11 +23,10 @@ public abstract class NodeVisitor<T> {
             return visit((AndNode)node);
         } else if (node instanceof OrNode){
             return visit((OrNode)node);
-        } else if (node instanceof ComparisonNode) {
+        } else {
             return visit((ComparisonNode)node);
         }
 
-        return null;
     }
 
 }
