@@ -3,7 +3,9 @@ package com.github.rutledgepaulv.qbuilders.utilities;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Objects;
 
+@SuppressWarnings({"unchecked", "Convert2MethodRef"})
 public final class ObjectUtils {
     private ObjectUtils() {
     }
@@ -11,12 +13,23 @@ public final class ObjectUtils {
 
     public static <T> T init(Class<T> clazz, Object... args) {
         try {
-            Constructor<T> constructor = clazz.getConstructor((Class<?>[])
-                    Arrays.stream(args).map(Object::getClass).toArray());
+            Class<?>[] clazzes = Arrays.stream(args).map(Object::getClass).toArray(length -> new Class<?>[length]);
 
-            return constructor.newInstance(args);
+            Constructor<?> constructor = Arrays.stream(clazz.getConstructors())
+                    .filter(construct -> Objects.equals(clazzes.length, construct.getParameterCount()))
+                    .filter(construct -> {
+                        Class<?>[] params = construct.getParameterTypes();
+                        for (int i = 0; i < clazzes.length; i++) {
+                            if(!params[i].isAssignableFrom(clazzes[i])) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }).findFirst().orElseThrow(() -> new RuntimeException("Could not find compatible constructor."));
 
-        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
+            return (T) constructor.newInstance(args);
+
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException("Could not instantiate class for provided arguments.");
         }
     }
