@@ -10,14 +10,12 @@ public class QModel extends QBuilder<QModel> {
 
     public static class QueryModelPredef {
         @SafeVarargs
-        public static CompleteCondition<QModel> and(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2,
-                CompleteCondition<QModel>... cn) {
+        public static CompleteCondition<QModel> and(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2, CompleteCondition<QModel>... cn) {
             return new QModel().and(c1, c2, cn);
         }
 
         @SafeVarargs
-        public static CompleteCondition<QModel> or(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2,
-                CompleteCondition<QModel>... cn) {
+        public static CompleteCondition<QModel> or(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2, CompleteCondition<QModel>... cn) {
             return new QModel().or(c1, c2, cn);
         }
 
@@ -55,34 +53,34 @@ public class QModel extends QBuilder<QModel> {
     }
 
     public BooleanProperty<QModel> myBoolean() {
-        return booleanField(getCurrentMethodName());
+        return bool(getCurrentMethodName());
     }
 
     public StringProperty<QModel> myString() {
-        return stringField(getCurrentMethodName());
+        return string(getCurrentMethodName());
     }
 
     public LongProperty<QModel> myLong() {
-        return longField(getCurrentMethodName());
+        return longNum(getCurrentMethodName());
     }
 
     public DoubleProperty<QModel> myDouble() {
-        return doubleField(getCurrentMethodName());
+        return doubleNum(getCurrentMethodName());
     }
 
     public IntegerProperty<QModel> myInteger() {
-        return integerField(getCurrentMethodName());
+        return intNum(getCurrentMethodName());
     }
 
     public ShortProperty<QModel> myShort() {
-        return shortField(getCurrentMethodName());
+        return shortNum(getCurrentMethodName());
     }
 
     public FloatProperty<QModel> myFloat() {
-        return floatField(getCurrentMethodName());
+        return floatNum(getCurrentMethodName());
     }
 
     public StringProperty<QModel> myListOfStrings() {
-        return stringField(getCurrentMethodName());
+        return string(getCurrentMethodName());
     }
 }

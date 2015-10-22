@@ -27,31 +27,31 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
         current = root;
     }
 
-    public final BooleanProperty<T> booleanField(String field) {
+    public final BooleanProperty<T> bool(String field) {
         return new BooleanPropertyDelegate(field, self());
     }
 
-    public final StringProperty<T> stringField(String field) {
+    public final StringProperty<T> string(String field) {
         return new StringPropertyDelegate(field, self());
     }
 
-    public final ShortProperty<T> shortField(String field) {
+    public final ShortProperty<T> shortNum(String field) {
         return new ShortPropertyDelegate(field, self());
     }
 
-    public final IntegerProperty<T> integerField(String field) {
+    public final IntegerProperty<T> intNum(String field) {
         return new IntegerPropertyDelegate(field, self());
     }
 
-    public final LongProperty<T> longField(String field) {
+    public final LongProperty<T> longNum(String field) {
         return new LongPropertyDelegate(field, self());
     }
 
-    public final FloatProperty<T> floatField(String field) {
+    public final FloatProperty<T> floatNum(String field) {
         return new FloatPropertyDelegate(field, self());
     }
 
-    public final DoubleProperty<T> doubleField(String field) {
+    public final DoubleProperty<T> doubleNum(String field) {
         return new DoublePropertyDelegate(field, self());
     }
 
@@ -104,23 +104,23 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
     private abstract class Delegate extends QBuilder<T> {
         private T canonical;
 
-        public Delegate(T canonical) {
+        protected Delegate(T canonical) {
             this.canonical = canonical;
         }
 
         @Override
-        protected T self() {
+        protected final T self() {
             return canonical;
         }
     }
 
     private final class CompleteConditionDelegate extends Delegate implements CompleteCondition<T> {
 
-        public CompleteConditionDelegate(T canonical) {
+        protected CompleteConditionDelegate(T canonical) {
             super(canonical);
         }
 
-        public T and() {
+        public final T and() {
             LogicalNode current = self().current;
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
@@ -132,7 +132,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
             return self();
         }
 
-        public T or() {
+        public final T or() {
             LogicalNode current = self().current;
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
@@ -144,7 +144,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
             return self();
         }
 
-        public <Q> Q query(NodeVisitor<Q> visitor) {
+        public final <Q> Q query(NodeVisitor<Q> visitor) {
             return self().root.visit(visitor);
         }
 
@@ -159,7 +159,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
             this.field = field;
         }
 
-        public String getField() {
+        protected final String getField() {
             return field;
         }
 
@@ -167,15 +167,15 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private abstract class ExistentialPropertyDelegate extends PropertyDelegate implements ExistentialProperty<T> {
 
-        public ExistentialPropertyDelegate(String field, T canonical) {
+        protected ExistentialPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> exists() {
+        public final CompleteCondition<T> exists() {
             return condition(getField(), ComparisonOperator.EX, Collections.singletonList(true));
         }
 
-        public CompleteCondition<T> doesNotExist() {
+        public final CompleteCondition<T> doesNotExist() {
             return condition(getField(), ComparisonOperator.EX, Collections.singletonList(false));
         }
 
@@ -184,15 +184,15 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
     private abstract class EquitablePropertyDelegate<S> extends ExistentialPropertyDelegate
             implements EquitableProperty<T, S> {
 
-        public EquitablePropertyDelegate(String field, T canonical) {
+        protected EquitablePropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> eq(S value) {
+        public final CompleteCondition<T> eq(S value) {
             return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(value));
         }
 
-        public CompleteCondition<T> ne(S value) {
+        public final CompleteCondition<T> ne(S value) {
             return condition(getField(), ComparisonOperator.NE, Collections.singletonList(value));
         }
     }
@@ -200,23 +200,23 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
     private abstract class ListablePropertyDelegate<S> extends EquitablePropertyDelegate<S>
             implements ListableProperty<T, S> {
 
-        public ListablePropertyDelegate(String field, T canonical) {
+        protected ListablePropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> in(S... values) {
+        public final CompleteCondition<T> in(S... values) {
             return condition(getField(), ComparisonOperator.IN, VarArgUtils.list(values));
         }
 
-        public CompleteCondition<T> in(Collection<S> values) {
+        public final CompleteCondition<T> in(Collection<S> values) {
             return condition(getField(), ComparisonOperator.IN, values);
         }
 
-        public CompleteCondition<T> nin(S... values) {
+        public final CompleteCondition<T> nin(S... values) {
             return condition(getField(), ComparisonOperator.NIN, VarArgUtils.list(values));
         }
 
-        public CompleteCondition<T> nin(Collection<S> values) {
+        public final CompleteCondition<T> nin(Collection<S> values) {
             return condition(getField(), ComparisonOperator.NIN, values);
         }
     }
@@ -224,23 +224,23 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
     private abstract class NumberPropertyDelegate<S extends Number> extends ListablePropertyDelegate<S>
             implements NumberProperty<T, S> {
 
-        public NumberPropertyDelegate(String field, T canonical) {
+        protected NumberPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> gt(S number) {
+        public final CompleteCondition<T> gt(S number) {
             return condition(getField(), ComparisonOperator.GT, Collections.singletonList(number));
         }
 
-        public CompleteCondition<T> lt(S number) {
+        public final CompleteCondition<T> lt(S number) {
             return condition(getField(), ComparisonOperator.LT, Collections.singletonList(number));
         }
 
-        public CompleteCondition<T> gte(S number) {
+        public final CompleteCondition<T> gte(S number) {
             return condition(getField(), ComparisonOperator.GTE, Collections.singletonList(number));
         }
 
-        public CompleteCondition<T> lte(S number) {
+        public final CompleteCondition<T> lte(S number) {
             return condition(getField(), ComparisonOperator.LTE, Collections.singletonList(number));
         }
 
@@ -248,15 +248,15 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class BooleanPropertyDelegate extends ExistentialPropertyDelegate implements BooleanProperty<T> {
 
-        public BooleanPropertyDelegate(String field, T canonical) {
+        protected BooleanPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> isTrue() {
+        public final CompleteCondition<T> isTrue() {
             return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(true));
         }
 
-        public CompleteCondition<T> isFalse() {
+        public final CompleteCondition<T> isFalse() {
             return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(false));
         }
 
@@ -264,7 +264,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class ShortPropertyDelegate extends NumberPropertyDelegate<Short> implements ShortProperty<T> {
 
-        public ShortPropertyDelegate(String field, T canonical) {
+        protected ShortPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
@@ -272,7 +272,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class IntegerPropertyDelegate extends NumberPropertyDelegate<Integer> implements IntegerProperty<T> {
 
-        public IntegerPropertyDelegate(String field, T canonical) {
+        protected IntegerPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
@@ -280,7 +280,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class LongPropertyDelegate extends NumberPropertyDelegate<Long> implements LongProperty<T> {
 
-        public LongPropertyDelegate(String field, T canonical) {
+        protected LongPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
@@ -288,7 +288,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class FloatPropertyDelegate extends NumberPropertyDelegate<Float> implements FloatProperty<T> {
 
-        public FloatPropertyDelegate(String field, T canonical) {
+        protected FloatPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
@@ -296,7 +296,7 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class DoublePropertyDelegate extends NumberPropertyDelegate<Double> implements DoubleProperty<T> {
 
-        public DoublePropertyDelegate(String field, T canonical) {
+        protected DoublePropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
@@ -304,15 +304,15 @@ public class QBuilder<T extends QBuilder> implements PartialCondition<T> {
 
     private final class StringPropertyDelegate extends ListablePropertyDelegate<String> implements StringProperty<T> {
 
-        public StringPropertyDelegate(String field, T canonical) {
+        protected StringPropertyDelegate(String field, T canonical) {
             super(field, canonical);
         }
 
-        public CompleteCondition<T> lexicallyAfter(String value) {
+        public final CompleteCondition<T> lexicallyAfter(String value) {
             return condition(getField(), ComparisonOperator.GT, Collections.singletonList(value));
         }
 
-        public CompleteCondition<T> lexicallyBefore(String value) {
+        public final CompleteCondition<T> lexicallyBefore(String value) {
             return condition(getField(), ComparisonOperator.LT, Collections.singletonList(value));
         }
 

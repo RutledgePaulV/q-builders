@@ -4,18 +4,21 @@ import com.github.rutledgepaulv.qbuilders.properties.concrete.*;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public interface PartialCondition<T extends PartialCondition> {
 
-    BooleanProperty<T> booleanField(String field);
-    StringProperty<T> stringField(String field);
-    ShortProperty<T> shortField(String field);
-    IntegerProperty<T> integerField(String field);
-    LongProperty<T> longField(String field);
-    FloatProperty<T> floatField(String field);
-    DoubleProperty<T> doubleField(String field);
-    CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
-    CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
-    CompleteCondition<T> and(List<CompleteCondition<T>> conditions);
+    BooleanProperty<T> bool(String field);
+    StringProperty<T> string(String field);
+    LongProperty<T> longNum(String field);
+    IntegerProperty<T> intNum(String field);
+    ShortProperty<T> shortNum(String field);
+    FloatProperty<T> floatNum(String field);
+    DoubleProperty<T> doubleNum(String field);
+
     CompleteCondition<T> or(List<CompleteCondition<T>> conditions);
+    CompleteCondition<T> and(List<CompleteCondition<T>> conditions);
+
+    CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
+    CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
 
 }
