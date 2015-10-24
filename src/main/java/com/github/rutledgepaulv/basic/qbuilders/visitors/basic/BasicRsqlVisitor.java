@@ -14,13 +14,13 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
     @Override
     protected final String visit(AndNode node) {
         String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(";"));
-        return nodeHasMultipleChildrenAndParent(node) ? "(" + body + ")" : body;
+        return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
     @Override
     protected final String visit(OrNode node) {
         String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(","));
-        return nodeHasMultipleChildrenAndParent(node) ? "(" + body + ")" : body;
+        return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
         return null;
     }
 
-    private boolean nodeHasMultipleChildrenAndParent(AbstractNode node) {
-        return node.getChildren().size() > 1 && node.getParent() != null;
+    private boolean nodeBelongsToParentExpression(AbstractNode node) {
+        return node.getParent() != null;
     }
 
     private String single(ComparisonNode node, String op) {
