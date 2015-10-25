@@ -48,6 +48,9 @@ If you use intellisense, you'll notice that you're never even given an inapplica
 as you build your queries. Also, since you define the type when you define your query model, everything
 is type safe. No need to worry about someone passing an integer to a string field, etc.
 
+
+
+### Simple Usage:
 ```java
 //--------------------------------------------------------------------------
 // define a single query model for each of the models you want to be able to 
@@ -92,8 +95,10 @@ Criteria mongoCriteria = q.query(new BasicMongoVisitor());
 
 FilterBuilder filter = q.query(new BasicEsVisitor());
 // { "and" : { "filters" : [ { "term" : { "firstName" : "Paul" } }, { "term" : { "age" : 23 } } ] } }
+```
 
-
+### Predicate Usage:
+```java
 
 //--------------------------------------------------------------------------
 // feeling bold? integration tests too much setup? you can build into java 
@@ -105,6 +110,11 @@ List<Person> persons = getPersons();
 Predicate<Person> predicate = q.query(new BasicPredicateVisitor());
 List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(Collectors.toList());
 
+```
+
+
+### Static Import Usage:
+```java
 
 //--------------------------------------------------------------------------
 // prefer the look and feel of static imports? me too.
@@ -134,23 +144,99 @@ public class PersonQuery extends QBuilder<PersonQuery> {
 import static com.company.queries.PersonQuery.PersonQueryPredef.*;
 
 Condition<PersonQuery> query = firstName().eq("Paul").or()
-                               .and(firstName().lexicallyBefore("Richard").and().age().gt(22));
-
-
-
-
+                               .and(firstName().lexicallyBefore("Richard"), age().gt(22));
 ```
 
 
 
+### Customizations:
+It's great to have a single syntax to define queries that can be used against multiple
+backends, but what about features that are specific to certain things? How would I add
+(insert thing here) query support for mongo? I'll provide an example of adding regex 
+searches for mongo (this is more involved than I would like, so please let me know if
+you think of something simpler).
 
-### Supported Target Types:
-- [RSQL - (a text query syntax)](https://github.com/jirutka/rsql-parser)
-- Elasticsearch FilterBuilder
-- Spring Data MongoDB Criteria
-- Java function predicate (for in-memory filtering of collections, etc)
 
-_submit a PR to add more!_
+1) Define a custom operator
+
+```java
+
+public class AdvancedMongoOperator extends ComparisonOperator {
+
+    protected AdvancedMongoOperator(String representation) {
+        super(representation);
+    }
+
+    public static final AdvancedMongoOperator REGEX = new AdvancedMongoOperator("REGEX");
+
+}
+```
+
+2) Define your custom property interface
+
+```java
+
+public interface AdvancedStringField<T extends Partial<T>> extends StringProperty<T> {
+
+    Condition<T> regex(String pattern);
+
+}
+```
+
+3) Define an implementation for that interface using your operator
+```java
+
+public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPropertyDelegate<T>
+        implements AdvancedStringField<T> {
+
+    public AdvancedStringFieldDelegate(String field, T canonical) {
+        super(field, canonical);
+    }
+
+    @Override
+    public final Condition<T> regex(String pattern) {
+        return condition(getField(), AdvancedMongoOperator.REGEX, Collections.singletonList(pattern));
+    }
+
+}
+```
+
+4) Define an 'advanced visitor' that builds onto the 'basic visitor' with your functionality
+```java
+
+public class AdvancedMongoVisitor extends BasicMongoVisitor {
+
+    @Override
+    protected Criteria visit(ComparisonNode node) {
+        Criteria parent = super.visit(node);
+        if(parent != null) {
+            return parent;
+        }
+
+        ComparisonOperator operator = node.getOperator();
+
+        if(operator.equals(AdvancedMongoOperator.REGEX)) {
+            return Criteria.where(node.getField()).regex((String) node.getValues().iterator().next());
+        }
+
+        return null;
+    }
+
+}
+```
+
+5) Use the custom property in your query builders, and use your visitor when you build the query into the representation.
+```java
+
+public class AdvancedPersonQuery extends QBuilder<AdvancedPersonQuery> {
+    
+    public AdvancedStringField<AdvancedQModel> firstName() {
+        return prop(getCurrentMethodName(), AdvancedStringFieldDelegate.class, AdvancedStringField.class);
+    }
+    
+}
+```
+
 
 
 ### Installation 
