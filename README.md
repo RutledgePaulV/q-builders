@@ -49,6 +49,12 @@ as you build your queries. Also, since you define the type when you define your 
 is type safe. No need to worry about someone passing an integer to a string field, etc.
 
 
+### Supported Target Query Expressions:
+- Spring Data's MongoDB Criteria
+- Elasticsearch's FilterBuilder
+- A string in RSQL format
+- Java Predicates
+
 
 ### Simple Usage:
 ```java
