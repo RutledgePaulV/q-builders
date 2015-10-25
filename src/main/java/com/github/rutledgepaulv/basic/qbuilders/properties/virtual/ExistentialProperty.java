@@ -1,12 +1,12 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.PartialCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
-public interface ExistentialProperty<T extends PartialCondition> extends Property<T> {
+public interface ExistentialProperty<T extends Partial> extends Property<T> {
 
-    CompleteCondition<T> exists();
+    Condition<T> exists();
 
-    CompleteCondition<T> doesNotExist();
+    Condition<T> doesNotExist();
 
 }

@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.basic;
 
 import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.*;
 
 import static com.github.rutledgepaulv.dirty.FieldUtil.getCurrentMethodName;
@@ -10,12 +10,12 @@ public class QModel extends QBuilder<QModel> {
 
     public static class QueryModelPredef {
         @SafeVarargs
-        public static CompleteCondition<QModel> and(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2, CompleteCondition<QModel>... cn) {
+        public static Condition<QModel> and(Condition<QModel> c1, Condition<QModel> c2, Condition<QModel>... cn) {
             return new QModel().and(c1, c2, cn);
         }
 
         @SafeVarargs
-        public static CompleteCondition<QModel> or(CompleteCondition<QModel> c1, CompleteCondition<QModel> c2, CompleteCondition<QModel>... cn) {
+        public static Condition<QModel> or(Condition<QModel> c1, Condition<QModel> c2, Condition<QModel>... cn) {
             return new QModel().or(c1, c2, cn);
         }
 

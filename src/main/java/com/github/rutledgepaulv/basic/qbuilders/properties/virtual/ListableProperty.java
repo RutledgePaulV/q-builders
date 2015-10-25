@@ -1,18 +1,18 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.PartialCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
 import java.util.Collection;
 
-public interface ListableProperty<T extends PartialCondition, S> extends Property<T> {
+public interface ListableProperty<T extends Partial, S> extends Property<T> {
 
-    CompleteCondition<T> in(S... values);
+    Condition<T> in(S... values);
 
-    CompleteCondition<T> in(Collection<S> values);
+    Condition<T> in(Collection<S> values);
 
-    CompleteCondition<T> nin(S... values);
+    Condition<T> nin(S... values);
 
-    CompleteCondition<T> nin(Collection<S> values);
+    Condition<T> nin(Collection<S> values);
 
 }

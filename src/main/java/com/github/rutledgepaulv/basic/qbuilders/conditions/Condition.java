@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.basic.qbuilders.conditions;
 
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 
-public interface CompleteCondition<T extends PartialCondition> {
+public interface Condition<T extends Partial> {
 
     T and();
 

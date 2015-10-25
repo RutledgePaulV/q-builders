@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.advanced;
 
 import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.concrete.StringPropertyDelegate;
 import com.github.rutledgepaulv.basic.qbuilders.operators.advanced.AdvancedMongoOperator;
 
@@ -18,7 +18,7 @@ public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPr
     }
 
     @Override
-    public CompleteCondition<T> regex(String pattern) {
+    public Condition<T> regex(String pattern) {
         return condition(getField(), AdvancedMongoOperator.REGEX, Collections.singletonList(pattern));
     }
 

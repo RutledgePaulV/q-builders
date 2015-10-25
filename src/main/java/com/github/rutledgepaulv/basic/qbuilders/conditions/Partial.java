@@ -5,7 +5,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.*;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public interface PartialCondition<T extends PartialCondition> {
+public interface Partial<T extends Partial> {
 
     BooleanProperty<T> bool(String field);
     StringProperty<T> string(String field);
@@ -15,10 +15,10 @@ public interface PartialCondition<T extends PartialCondition> {
     FloatProperty<T> floatNum(String field);
     DoubleProperty<T> doubleNum(String field);
 
-    CompleteCondition<T> or(List<CompleteCondition<T>> conditions);
-    CompleteCondition<T> and(List<CompleteCondition<T>> conditions);
+    Condition<T> or(List<Condition<T>> conditions);
+    Condition<T> and(List<Condition<T>> conditions);
 
-    CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
-    CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn);
+    Condition<T> or(Condition<T> c1, Condition<T> c2, Condition<T>... cn);
+    Condition<T> and(Condition<T> c1, Condition<T> c2, Condition<T>... cn);
 
 }

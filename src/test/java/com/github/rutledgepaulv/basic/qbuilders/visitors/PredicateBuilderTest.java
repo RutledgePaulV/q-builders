@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.basic.qbuilders.visitors;
 
 import com.github.rutledgepaulv.basic.Q;
 import com.github.rutledgepaulv.basic.QModel;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.basic.BasicPredicateVisitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -147,7 +147,7 @@ public class PredicateBuilderTest {
         compare(myString().doesNotExist().or().myString().eq("testing8"), BAA, ABB, BBB);
     }
 
-    private void compare(CompleteCondition<QModel> query, Q... expected) {
+    private void compare(Condition<QModel> query, Q... expected) {
         Predicate<Q> predicate = query.query(new BasicPredicateVisitor<>());
         Set<Q> ex = new HashSet<>(Arrays.asList(expected));
         Set<Q> ac = actual.stream().filter(predicate).collect(Collectors.toSet());

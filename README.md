@@ -19,33 +19,26 @@ A lot of existing query builders are bad. It's *hard* to write a query builder t
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
 call methods that you shouldn't be able to call at that time. Additionally, sometimes it's not clear when
 you've got the final result versus when you can continue to build on it. What happens if you grab the final
-result and then make more changes to the builder? Some examples of poor query builders:
+result and then make more changes to the builder? Some examples of the things I take issue with in other builders:
 
 
 *spring data mongodb*:
 
 ```java
-// notice that there's no type restrictions on the values, and you can pass 
-// multiple lists of integers to a string field you'll get an exception at 
-// runtime but everything will compile just fine.
+
 Criteria crit = Criteria.where("myStringField")
                 .in(Collections.singletonList(1), Collections.singletonList(2));
-
-
-// you can define the value for a field without even saying what the field is. huh?
-// again, you'll get an exception at runtime
+                
 crit = new Critera().is("cats");
 ```
 
-
 *apache cxf*:
 ```java
-// I think this one speaks for itself
+
 FiqlSearchConditionBuilder builder = new FiqlSearchConditionBuilder();
 builder.is("cats").notAfter(new Date()).or().is("cats").equalTo(3, 3, 3, 3, 4).query();
 builder.and(new ArrayList<>()).wrap().wrap().wrap().and().is("cats");
 String finalQuery = builder.query();
-
 ```
 
 
@@ -56,8 +49,12 @@ as you build your queries. Also, since you define the type when you define your 
 is type safe. No need to worry about someone passing an integer to a string field, etc.
 
 ```java
+//--------------------------------------------------------------------------
+// define a single query model for each of the models you want to be able to 
+// query against. Return the appropriate property interface for each field
+// based on the type of the value on your model
+//--------------------------------------------------------------------------
 
-// define a query object for each of your domain models
 public class PersonQuery extends QBuilder<PersonQuery> {
 
     public StringProperty<PersonQuery> firstName() {
@@ -71,18 +68,48 @@ public class PersonQuery extends QBuilder<PersonQuery> {
 }
 
 
-CompleteCondition<PersonQuery> q = new PersonQuery().firstName()
-                                       .equalTo("Paul").and().age().equalTo(23);
 
-String rsql = q.query(new RSQLVisitor()); 
+//--------------------------------------------------------------------------
+// write your queries using a straightforward and intuitive syntax that 
+// enforces type safety
+//--------------------------------------------------------------------------
+
+Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul")
+                                                    .and().age().eq(23);
+
+
+
+//--------------------------------------------------------------------------
+// build the abstract representation of the query into the format of your 
+// choice. currently supports rsql, mongo, and elasticsearch out of box
+//--------------------------------------------------------------------------
+
+String rsql = q.query(new BasicRsqlVisitor()); 
 // firstName==Paul;age==23
 
-Criteria mongoCriteria = q.query(new MongoCriteriaVisitor()); 
+Criteria mongoCriteria = q.query(new BasicMongoVisitor()); 
 // {firstName: "Paul", age: 23}
 
+FilterBuilder filter = q.query(new BasicEsVisitor());
+// { "and" : { "filters" : [ { "term" : { "firstName" : "Paul" } }, { "term" : { "age" : 23 } } ] } }
 
 
-// everybody loves static imports, right?
+
+//--------------------------------------------------------------------------
+// feeling bold? integration tests too much setup? you can build into java 
+// predicates too, so you can test your queries using an in-memory list or the
+// like (not recommended for production code use)
+//--------------------------------------------------------------------------
+
+List<Person> persons = getPersons();
+Predicate<Person> predicate = q.query(new BasicPredicateVisitor());
+List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(Collectors.toList());
+
+
+//--------------------------------------------------------------------------
+// prefer the look and feel of static imports? me too.
+//--------------------------------------------------------------------------
+
 public class PersonQuery extends QBuilder<PersonQuery> {
 
     public static class PersonQueryPredef {
@@ -104,13 +131,18 @@ public class PersonQuery extends QBuilder<PersonQuery> {
     
 }
 
+import static com.company.queries.PersonQuery.PersonQueryPredef.*;
 
-String rsql = firstName().lexicallyAfter("Pam").or()
-              .and(age().greaterThan(20), age().lessThan(25))
-              .query(new RSQLVisitor());
-              
-// firstName=gt=Pam,(age=gt=20;age=lt=25)
+Condition<PersonQuery> query = firstName().eq("Paul").or()
+                               .and(firstName().lexicallyBefore("Richard").and().age().gt(22));
+
+
+
+
 ```
+
+
+
 
 ### Supported Target Types:
 - [RSQL - (a text query syntax)](https://github.com/jirutka/rsql-parser)

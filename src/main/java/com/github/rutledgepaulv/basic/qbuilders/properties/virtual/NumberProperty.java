@@ -1,17 +1,17 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.PartialCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
-public interface NumberProperty<T extends PartialCondition, S extends Number>
+public interface NumberProperty<T extends Partial, S extends Number>
         extends ListableProperty<T, S>, EquitableProperty<T, S> {
 
-    CompleteCondition<T> gt(S number);
+    Condition<T> gt(S number);
 
-    CompleteCondition<T> lt(S number);
+    Condition<T> lt(S number);
 
-    CompleteCondition<T> gte(S number);
+    Condition<T> gte(S number);
 
-    CompleteCondition<T> lte(S number);
+    Condition<T> lte(S number);
 
 }

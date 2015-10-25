@@ -1,6 +1,6 @@
 package com.github.rutledgepaulv.basic;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 import org.junit.Test;
 
@@ -14,106 +14,106 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
 
     protected interface Simple {
         interface String {
-            CompleteCondition<QModel> EQ = myString().eq("abcdefg");
-            CompleteCondition<QModel> NE = myString().ne("abcdefg");
-            CompleteCondition<QModel> LT = myString().lexicallyBefore("abcdefg");
-            CompleteCondition<QModel> GT = myString().lexicallyAfter("abcdefg");
-            CompleteCondition<QModel> EX = myString().exists();
-            CompleteCondition<QModel> DNE = myString().doesNotExist();
-            CompleteCondition<QModel> IN = myString().in("a", "b", "c");
-            CompleteCondition<QModel> NIN = myString().nin("d", "e", "f");
+            Condition<QModel> EQ = myString().eq("abcdefg");
+            Condition<QModel> NE = myString().ne("abcdefg");
+            Condition<QModel> LT = myString().lexicallyBefore("abcdefg");
+            Condition<QModel> GT = myString().lexicallyAfter("abcdefg");
+            Condition<QModel> EX = myString().exists();
+            Condition<QModel> DNE = myString().doesNotExist();
+            Condition<QModel> IN = myString().in("a", "b", "c");
+            Condition<QModel> NIN = myString().nin("d", "e", "f");
         }
 
         interface Boolean {
-            CompleteCondition<QModel> TRUE = myBoolean().isTrue();
-            CompleteCondition<QModel> FALSE = myBoolean().isFalse();
-            CompleteCondition<QModel> EX = myBoolean().exists();
-            CompleteCondition<QModel> DNE = myBoolean().doesNotExist();
+            Condition<QModel> TRUE = myBoolean().isTrue();
+            Condition<QModel> FALSE = myBoolean().isFalse();
+            Condition<QModel> EX = myBoolean().exists();
+            Condition<QModel> DNE = myBoolean().doesNotExist();
         }
 
         interface Short {
-            CompleteCondition<QModel> EQ = myShort().eq((short)100);
-            CompleteCondition<QModel> NE = myShort().ne((short)100);
-            CompleteCondition<QModel> GT = myShort().gt((short)100);
-            CompleteCondition<QModel> LT = myShort().lt((short)100);
-            CompleteCondition<QModel> GTE = myShort().gte((short)100);
-            CompleteCondition<QModel> LTE = myShort().lte((short)100);
-            CompleteCondition<QModel> EX = myShort().exists();
-            CompleteCondition<QModel> DNE = myShort().doesNotExist();
-            CompleteCondition<QModel> IN = myShort().in((short)98, (short)99, (short)100);
-            CompleteCondition<QModel> NIN = myShort().nin((short)101, (short)102, (short)103);
+            Condition<QModel> EQ = myShort().eq((short)100);
+            Condition<QModel> NE = myShort().ne((short)100);
+            Condition<QModel> GT = myShort().gt((short)100);
+            Condition<QModel> LT = myShort().lt((short)100);
+            Condition<QModel> GTE = myShort().gte((short)100);
+            Condition<QModel> LTE = myShort().lte((short)100);
+            Condition<QModel> EX = myShort().exists();
+            Condition<QModel> DNE = myShort().doesNotExist();
+            Condition<QModel> IN = myShort().in((short)98, (short)99, (short)100);
+            Condition<QModel> NIN = myShort().nin((short)101, (short)102, (short)103);
         }
 
         interface Integer {
-            CompleteCondition<QModel> EQ = myInteger().eq(100);
-            CompleteCondition<QModel> NE = myInteger().ne(100);
-            CompleteCondition<QModel> GT = myInteger().gt(100);
-            CompleteCondition<QModel> LT = myInteger().lt(100);
-            CompleteCondition<QModel> GTE = myInteger().gte(100);
-            CompleteCondition<QModel> LTE = myInteger().lte(100);
-            CompleteCondition<QModel> EX = myInteger().exists();
-            CompleteCondition<QModel> DNE = myInteger().doesNotExist();
-            CompleteCondition<QModel> IN = myInteger().in(98, 99, 100);
-            CompleteCondition<QModel> NIN = myInteger().nin(101, 102, 103);
+            Condition<QModel> EQ = myInteger().eq(100);
+            Condition<QModel> NE = myInteger().ne(100);
+            Condition<QModel> GT = myInteger().gt(100);
+            Condition<QModel> LT = myInteger().lt(100);
+            Condition<QModel> GTE = myInteger().gte(100);
+            Condition<QModel> LTE = myInteger().lte(100);
+            Condition<QModel> EX = myInteger().exists();
+            Condition<QModel> DNE = myInteger().doesNotExist();
+            Condition<QModel> IN = myInteger().in(98, 99, 100);
+            Condition<QModel> NIN = myInteger().nin(101, 102, 103);
         }
 
         interface Long {
-            CompleteCondition<QModel> EQ = myLong().eq(100L);
-            CompleteCondition<QModel> NE = myLong().ne(100L);
-            CompleteCondition<QModel> GT = myLong().gt(100L);
-            CompleteCondition<QModel> LT = myLong().lt(100L);
-            CompleteCondition<QModel> GTE = myLong().gte(100L);
-            CompleteCondition<QModel> LTE = myLong().lte(100L);
-            CompleteCondition<QModel> EX = myLong().exists();
-            CompleteCondition<QModel> DNE = myLong().doesNotExist();
-            CompleteCondition<QModel> IN = myLong().in(98L, 99L, 100L);
-            CompleteCondition<QModel> NIN = myLong().nin(101L, 102L, 103L);
+            Condition<QModel> EQ = myLong().eq(100L);
+            Condition<QModel> NE = myLong().ne(100L);
+            Condition<QModel> GT = myLong().gt(100L);
+            Condition<QModel> LT = myLong().lt(100L);
+            Condition<QModel> GTE = myLong().gte(100L);
+            Condition<QModel> LTE = myLong().lte(100L);
+            Condition<QModel> EX = myLong().exists();
+            Condition<QModel> DNE = myLong().doesNotExist();
+            Condition<QModel> IN = myLong().in(98L, 99L, 100L);
+            Condition<QModel> NIN = myLong().nin(101L, 102L, 103L);
         }
 
         interface Float {
-            CompleteCondition<QModel> EQ = myFloat().eq(100f);
-            CompleteCondition<QModel> NE = myFloat().ne(100f);
-            CompleteCondition<QModel> GT = myFloat().gt(100f);
-            CompleteCondition<QModel> LT = myFloat().lt(100f);
-            CompleteCondition<QModel> GTE = myFloat().gte(100f);
-            CompleteCondition<QModel> LTE = myFloat().lte(100f);
-            CompleteCondition<QModel> EX = myFloat().exists();
-            CompleteCondition<QModel> DNE = myFloat().doesNotExist();
-            CompleteCondition<QModel> IN = myFloat().in(98f, 99f, 100f);
-            CompleteCondition<QModel> NIN = myFloat().nin(101f, 102f, 103f);
+            Condition<QModel> EQ = myFloat().eq(100f);
+            Condition<QModel> NE = myFloat().ne(100f);
+            Condition<QModel> GT = myFloat().gt(100f);
+            Condition<QModel> LT = myFloat().lt(100f);
+            Condition<QModel> GTE = myFloat().gte(100f);
+            Condition<QModel> LTE = myFloat().lte(100f);
+            Condition<QModel> EX = myFloat().exists();
+            Condition<QModel> DNE = myFloat().doesNotExist();
+            Condition<QModel> IN = myFloat().in(98f, 99f, 100f);
+            Condition<QModel> NIN = myFloat().nin(101f, 102f, 103f);
         }
 
         interface Double {
-            CompleteCondition<QModel> EQ = myDouble().eq(100.0);
-            CompleteCondition<QModel> NE = myDouble().ne(100.0);
-            CompleteCondition<QModel> GT = myDouble().gt(100.0);
-            CompleteCondition<QModel> LT = myDouble().lt(100.0);
-            CompleteCondition<QModel> GTE = myDouble().gte(100.0);
-            CompleteCondition<QModel> LTE = myDouble().lte(100.0);
-            CompleteCondition<QModel> EX = myDouble().exists();
-            CompleteCondition<QModel> DNE = myDouble().doesNotExist();
-            CompleteCondition<QModel> IN = myDouble().in(98.0, 99.0, 100.0);
-            CompleteCondition<QModel> NIN = myDouble().nin(101.0, 102.0, 103.0);
+            Condition<QModel> EQ = myDouble().eq(100.0);
+            Condition<QModel> NE = myDouble().ne(100.0);
+            Condition<QModel> GT = myDouble().gt(100.0);
+            Condition<QModel> LT = myDouble().lt(100.0);
+            Condition<QModel> GTE = myDouble().gte(100.0);
+            Condition<QModel> LTE = myDouble().lte(100.0);
+            Condition<QModel> EX = myDouble().exists();
+            Condition<QModel> DNE = myDouble().doesNotExist();
+            Condition<QModel> IN = myDouble().in(98.0, 99.0, 100.0);
+            Condition<QModel> NIN = myDouble().nin(101.0, 102.0, 103.0);
         }
     }
 
     protected interface Logical {
-        CompleteCondition<QModel> INLINE_ANDING = myString().eq("Thing").and().myLong().doesNotExist();
-        CompleteCondition<QModel> INLINE_ORING = myString().eq("Thing").or().myLong().doesNotExist();
-        CompleteCondition<QModel> LIST_ANDING = and(myString().eq("Thing"), myLong().doesNotExist());
-        CompleteCondition<QModel> LIST_ORING = or(myString().eq("Thing"), myLong().doesNotExist());
-        CompleteCondition<QModel> LIST_ORING_OF_INLINE_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
+        Condition<QModel> INLINE_ANDING = myString().eq("Thing").and().myLong().doesNotExist();
+        Condition<QModel> INLINE_ORING = myString().eq("Thing").or().myLong().doesNotExist();
+        Condition<QModel> LIST_ANDING = and(myString().eq("Thing"), myLong().doesNotExist());
+        Condition<QModel> LIST_ORING = or(myString().eq("Thing"), myLong().doesNotExist());
+        Condition<QModel> LIST_ORING_OF_INLINE_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
                                                                         myString().ne("Cats").and().myLong().gt(30L));
 
-        CompleteCondition<QModel> LIST_ANDING_OF_INLINE_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
+        Condition<QModel> LIST_ANDING_OF_INLINE_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
                                                                         myString().ne("Cats").or().myLong().gt(30L));
 
-        CompleteCondition<QModel> LIST_ANDING_OR_LIST_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
+        Condition<QModel> LIST_ANDING_OR_LIST_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
                                                                         myString().ne("Cats").or().myLong().gt(30L))
                                                                     .or().or(myString().eq("Thing").and().myLong().doesNotExist(),
                                                                             myString().ne("Cats").and().myLong().gt(30L));
 
-        CompleteCondition<QModel> LIST_ORING_ANDLIST_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
+        Condition<QModel> LIST_ORING_ANDLIST_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
                                                                         myString().ne("Cats").and().myLong().gt(30L))
                                                                     .and().and(myString().eq("Thing").or().myLong().doesNotExist(),
                                                                             myString().ne("Cats").or().myLong().gt(30L));
@@ -335,7 +335,7 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(LIST_ORING_AND_LIST_ANDING, Logical.LIST_ORING_ANDLIST_ANDING);
     }
 
-    protected void compare(String expected, CompleteCondition<QModel> condition) {
+    protected void compare(String expected, Condition<QModel> condition) {
         T visitor = getVisitor();
         compare(expected, condition.query(visitor));
     }

@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.basic.qbuilders.delegates.concrete;
 
 import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.virtual.ExistentialPropertyDelegate;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.BooleanProperty;
@@ -14,11 +14,11 @@ public class BooleanPropertyDelegate<T extends QBuilder<T>> extends ExistentialP
         super(field, canonical);
     }
 
-    public final CompleteCondition<T> isTrue() {
+    public final Condition<T> isTrue() {
         return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(true));
     }
 
-    public final CompleteCondition<T> isFalse() {
+    public final Condition<T> isFalse() {
         return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(false));
     }
 

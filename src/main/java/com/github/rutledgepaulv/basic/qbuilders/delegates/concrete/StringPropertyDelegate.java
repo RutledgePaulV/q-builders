@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.basic.qbuilders.delegates.concrete;
 
 import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.virtual.ListablePropertyDelegate;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.StringProperty;
@@ -15,11 +15,11 @@ public class StringPropertyDelegate<T extends QBuilder<T>>
         super(field, canonical);
     }
 
-    public final CompleteCondition<T> lexicallyAfter(String value) {
+    public final Condition<T> lexicallyAfter(String value) {
         return condition(getField(), ComparisonOperator.GT, Collections.singletonList(value));
     }
 
-    public final CompleteCondition<T> lexicallyBefore(String value) {
+    public final Condition<T> lexicallyBefore(String value) {
         return condition(getField(), ComparisonOperator.LT, Collections.singletonList(value));
     }
 

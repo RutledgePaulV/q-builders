@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.basic.qbuilders.builders;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.CompleteCondition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.PartialCondition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.concrete.*;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.virtual.Delegate;
 import com.github.rutledgepaulv.basic.qbuilders.delegates.virtual.PropertyDelegate;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
-public class QBuilder<T extends QBuilder<T>> implements PartialCondition<T> {
+public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
     private LogicalNode root;
     private LogicalNode current;
@@ -66,25 +66,25 @@ public class QBuilder<T extends QBuilder<T>> implements PartialCondition<T> {
     }
 
     @SafeVarargs
-    public final CompleteCondition<T> and(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+    public final Condition<T> and(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
         return and(VarArgUtils.combine(c1, c2, cn));
     }
 
     @SafeVarargs
-    public final CompleteCondition<T> or(CompleteCondition<T> c1, CompleteCondition<T> c2, CompleteCondition<T>... cn) {
+    public final Condition<T> or(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
         return or(VarArgUtils.combine(c1, c2, cn));
     }
 
-    public final CompleteCondition<T> and(List<CompleteCondition<T>> completeConditions) {
-        return combine(completeConditions, AndNode.class);
+    public final Condition<T> and(List<Condition<T>> conditions) {
+        return combine(conditions, AndNode.class);
     }
 
-    public final CompleteCondition<T> or(List<CompleteCondition<T>> completeConditions) {
-        return combine(completeConditions, OrNode.class);
+    public final Condition<T> or(List<Condition<T>> conditions) {
+        return combine(conditions, OrNode.class);
     }
 
 
-    private <S extends LogicalNode> CompleteCondition<T> combine(List<CompleteCondition<T>> conditions, Class<S> type) {
+    private <S extends LogicalNode> Condition<T> combine(List<Condition<T>> conditions, Class<S> type) {
 
         List<AbstractNode> children = conditions.stream()
                 .map(condition -> ((QBuilder<T>)((QBuilder<T>) condition).self()).current)
@@ -93,10 +93,10 @@ public class QBuilder<T extends QBuilder<T>> implements PartialCondition<T> {
         S node = ObjectUtils.init(type, ((QBuilder<T>)self()).current, children);
         ((QBuilder<T>)self()).current.getChildren().add(node);
 
-        return new CompleteConditionDelegate(self());
+        return new ConditionDelegate(self());
     }
 
-    protected final CompleteCondition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
+    protected final Condition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
         ComparisonNode node = new ComparisonNode(((QBuilder<T>)self()).current);
 
         node.setField(field);
@@ -104,16 +104,16 @@ public class QBuilder<T extends QBuilder<T>> implements PartialCondition<T> {
         node.setValues(values);
 
         ((QBuilder<T>)self()).current.getChildren().add(node);
-        return new CompleteConditionDelegate(self());
+        return new ConditionDelegate(self());
     }
 
     protected T self() {
         return (T) this;
     }
 
-    private final class CompleteConditionDelegate extends Delegate<T> implements CompleteCondition<T> {
+    private final class ConditionDelegate extends Delegate<T> implements Condition<T> {
 
-        private CompleteConditionDelegate(T canonical) {
+        private ConditionDelegate(T canonical) {
             super(canonical);
         }
 
