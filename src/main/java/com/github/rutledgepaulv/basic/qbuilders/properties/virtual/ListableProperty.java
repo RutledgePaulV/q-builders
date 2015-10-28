@@ -5,7 +5,7 @@ import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
 import java.util.Collection;
 
-public interface ListableProperty<T extends Partial, S> extends Property<T> {
+public interface ListableProperty<T extends Partial<T>, S> extends Property<T> {
 
     Condition<T> in(S... values);
 

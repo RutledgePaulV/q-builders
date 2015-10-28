@@ -540,6 +540,103 @@ public class ESQBuilderTest
                 "  }\n" +
                 "}";
 
+        DateTime_EQ = "{\n" +
+                "  \"term\" : {\n" +
+                "    \"myDateTime\" : \"1970-01-01T00:00:00.000Z\"\n" +
+                "  }\n" +
+                "}";
+
+
+        DateTime_NE = "{\n" +
+                "  \"not\" : {\n" +
+                "    \"filter\" : {\n" +
+                "      \"term\" : {\n" +
+                "        \"myDateTime\" : \"1970-01-01T00:00:00.000Z\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_LT = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myDateTime\" : {\n" +
+                "      \"from\" : null,\n" +
+                "      \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "      \"include_lower\" : true,\n" +
+                "      \"include_upper\" : false\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_LTE = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myDateTime\" : {\n" +
+                "      \"from\" : null,\n" +
+                "      \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "      \"include_lower\" : true,\n" +
+                "      \"include_upper\" : true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_GT = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myDateTime\" : {\n" +
+                "      \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "      \"to\" : null,\n" +
+                "      \"include_lower\" : false,\n" +
+                "      \"include_upper\" : true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_GTE = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myDateTime\" : {\n" +
+                "      \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "      \"to\" : null,\n" +
+                "      \"include_lower\" : true,\n" +
+                "      \"include_upper\" : true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_EX = "{\n" +
+                "  \"exists\" : {\n" +
+                "    \"field\" : \"myDateTime\"\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_DNE = "{\n" +
+                "  \"missing\" : {\n" +
+                "    \"field\" : \"myDateTime\"\n" +
+                "  }\n" +
+                "}";
+
+        DateTime_BETWEEN = "{\n" +
+                "  \"and\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"range\" : {\n" +
+                "        \"myDateTime\" : {\n" +
+                "          \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "          \"to\" : null,\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myDateTime\" : {\n" +
+                "          \"from\" : null,\n" +
+                "          \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
+
         INLINE_ANDING = "{\n" +
                 "  \"and\" : {\n" +
                 "    \"filters\" : [ {\n" +

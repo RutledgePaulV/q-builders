@@ -18,6 +18,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The single class that can be used to construct an abstract representation of a query. Designed
+ * to be extended for each domain model that might be queried against, with each field exposed as
+ * a property condition builder.
+ *
+ * @param <T>
+ */
 @SuppressWarnings("unchecked")
 public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
@@ -55,6 +62,10 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
     public final DoubleProperty<T> doubleNum(String field) {
         return prop(field, DoublePropertyDelegate.class, DoubleProperty.class);
+    }
+
+    public final InstantProperty<T> instant(String field) {
+        return prop(field, InstantPropertyDelegate.class, InstantProperty.class);
     }
 
     public final <S extends PropertyDelegate<T>, Q extends Property<T>> Q prop(String field, Class<S> delegate, Class<Q> inter) {
@@ -96,6 +107,15 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         return new ConditionDelegate(self());
     }
 
+    /**
+     * Call this method to add a condition to the current logical node of the underlying query tree.
+     *
+     * @param field The field that this condition belongs to.
+     * @param operator The operator indicating how the values provided should be interpreted against the field.
+     * @param values The values to use in the comparison against the value of the field.
+     *
+     * @return A completed {@link Condition} that can be built into a query or logically composed into other conditions.
+     */
     protected final Condition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
         ComparisonNode node = new ComparisonNode(((QBuilder<T>)self()).current);
 
@@ -107,10 +127,24 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         return new ConditionDelegate(self());
     }
 
+    /**
+     * Since we have delegate classes that extend this class but not its potential end-user imposed subclasses
+     * we instead pass the original instance of whatever the final QBuilder class is around as
+     * a delegate which each view calls for any operations instead of calling 'this' thereby providing type safe
+     * compatibility with extensions.
+     *
+     * @return The instance that should be modified on actions.
+     */
     protected T self() {
         return (T) this;
     }
 
+
+    /**
+     * A delegate view of this builder that represents a logically complete condition. A logically complete
+     * condition can either be directly built into a query or it can be composed with other conditions in
+     * the form of 'AND' or 'OR'
+     */
     private final class ConditionDelegate extends Delegate<T> implements Condition<T> {
 
         private ConditionDelegate(T canonical) {
@@ -123,6 +157,8 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
             AndNode node = new AndNode(current.getParent(), children);
+
+            // referential comparison intended.
             if (current == self.root) {
                 self.root = node;
             }
@@ -136,6 +172,8 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
             List<AbstractNode> children = new ArrayList<>();
             children.add(current);
             OrNode node = new OrNode(current.getParent(), children);
+
+            // referential comparison intended.
             if (current == self.root) {
                 self.root = node;
             }

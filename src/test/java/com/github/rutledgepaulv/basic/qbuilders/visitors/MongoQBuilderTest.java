@@ -79,6 +79,17 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
         Double_IN = "{ \"myDouble\" : { \"$in\" : [ 98.0 , 99.0 , 100.0]}}";
         Double_NIN = "{ \"myDouble\" : { \"$nin\" : [ 101.0 , 102.0 , 103.0]}}";
 
+        DateTime_EQ = "{ \"myDateTime\" : { \"$date\" : \"1970-01-01T00:00:00.000Z\"}}";
+        DateTime_NE = "{ \"myDateTime\" : { \"$ne\" : { \"$date\" : \"1970-01-01T00:00:00.000Z\"}}}";
+        DateTime_LT = "{ \"myDateTime\" : { \"$lt\" : { \"$date\" : \"1971-01-01T00:00:00.000Z\"}}}";
+        DateTime_LTE = "{ \"myDateTime\" : { \"$lte\" : { \"$date\" : \"1971-01-01T00:00:00.000Z\"}}}";
+        DateTime_GT = "{ \"myDateTime\" : { \"$gt\" : { \"$date\" : \"1970-01-01T00:00:00.000Z\"}}}";
+        DateTime_GTE = "{ \"myDateTime\" : { \"$gte\" : { \"$date\" : \"1970-01-01T00:00:00.000Z\"}}}";
+        DateTime_EX = "{ \"myDateTime\" : { \"$exists\" : true}}";
+        DateTime_DNE = "{ \"myDateTime\" : { \"$exists\" : false}}";
+        DateTime_BETWEEN = "{ \"$and\" : [ { \"myDateTime\" : { \"$gte\" : { \"$date\" : \"1970-01-01T00:00:00.000Z\"}}} , " +
+                "{ \"myDateTime\" : { \"$lte\" : { \"$date\" : \"1971-01-01T00:00:00.000Z\"}}}]}";
+
 
         INLINE_ANDING = "{ \"$and\" : [ { \"myString\" : \"Thing\"} , { \"myLong\" : { \"$exists\" : false}}]}";
 

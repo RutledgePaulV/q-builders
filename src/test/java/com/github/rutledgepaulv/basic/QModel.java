@@ -50,6 +50,10 @@ public class QModel extends QBuilder<QModel> {
         public static StringProperty<QModel> myListOfStrings() {
             return new QModel().myListOfStrings();
         }
+
+        public static InstantProperty<QModel> myDateTime() {
+            return new QModel().myDateTime();
+        }
     }
 
     public BooleanProperty<QModel> myBoolean() {
@@ -83,4 +87,9 @@ public class QModel extends QBuilder<QModel> {
     public StringProperty<QModel> myListOfStrings() {
         return string(getCurrentMethodName());
     }
+
+    public InstantProperty<QModel> myDateTime() {
+        return instant(getCurrentMethodName());
+    }
+
 }

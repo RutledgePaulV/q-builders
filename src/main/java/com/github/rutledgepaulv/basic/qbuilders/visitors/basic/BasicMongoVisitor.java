@@ -7,6 +7,9 @@ import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperat
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.sql.Date;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,28 +38,45 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
 
         ComparisonOperator operator = node.getOperator();
 
+        Collection<?> values = node.getValues().stream().map(this::normalize).collect(Collectors.toList());
+
         if(ComparisonOperator.EQ.equals(operator)) {
-            return where(node.getField()).is(node.getValues().iterator().next());
+            return where(node.getField()).is(single(values));
         } else if(ComparisonOperator.NE.equals(operator)) {
-            return where(node.getField()).ne(node.getValues().iterator().next());
+            return where(node.getField()).ne(single(values));
         } else if (ComparisonOperator.EX.equals(operator)) {
-            return where(node.getField()).exists((Boolean)node.getValues().iterator().next());
+            return where(node.getField()).exists((Boolean)single(values));
         } else if (ComparisonOperator.GT.equals(operator)) {
-            return where(node.getField()).gt(node.getValues().iterator().next());
+            return where(node.getField()).gt(single(values));
         } else if (ComparisonOperator.LT.equals(operator)) {
-            return where(node.getField()).lt(node.getValues().iterator().next());
+            return where(node.getField()).lt(single(values));
         } else if (ComparisonOperator.GTE.equals(operator)) {
-            return where(node.getField()).gte(node.getValues().iterator().next());
+            return where(node.getField()).gte(single(values));
         } else if (ComparisonOperator.LTE.equals(operator)) {
-            return where(node.getField()).lte(node.getValues().iterator().next());
+            return where(node.getField()).lte(single(values));
         } else if (ComparisonOperator.IN.equals(operator)) {
-            return where(node.getField()).in(node.getValues());
+            return where(node.getField()).in(values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
-            return where(node.getField()).nin(node.getValues());
+            return where(node.getField()).nin(values);
         }
 
         return null;
 
+    }
+
+
+    protected Object single(Collection<?> values) {
+        return values.stream().findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("You must provide a non-null query value for the condition."));
+
+    }
+
+    protected Object normalize(Object value) {
+        if(value instanceof Instant) {
+            return Date.from((Instant) value);
+        }
+
+        return value;
     }
 
 }

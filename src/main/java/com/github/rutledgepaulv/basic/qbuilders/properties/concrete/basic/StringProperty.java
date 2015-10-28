@@ -6,7 +6,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.virtual.EquitableProp
 import com.github.rutledgepaulv.basic.qbuilders.properties.virtual.ListableProperty;
 
 
-public interface StringProperty<T extends Partial> extends EquitableProperty<T, String>, ListableProperty<T, String> {
+public interface StringProperty<T extends Partial<T>> extends EquitableProperty<T, String>, ListableProperty<T, String> {
 
     Condition<T> lexicallyAfter(String value);
     Condition<T> lexicallyBefore(String value);

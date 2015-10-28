@@ -78,6 +78,15 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
         Double_IN = "myDouble=in=(98.0,99.0,100.0)";
         Double_NIN = "myDouble=nin=(101.0,102.0,103.0)";
 
+        DateTime_EQ = "myDateTime==1970-01-01T00:00:00Z";
+        DateTime_NE = "myDateTime!=1970-01-01T00:00:00Z";
+        DateTime_LT = "myDateTime=lt=1971-01-01T00:00:00Z";
+        DateTime_LTE = "myDateTime=le=1971-01-01T00:00:00Z";
+        DateTime_GT = "myDateTime=gt=1970-01-01T00:00:00Z";
+        DateTime_GTE = "myDateTime=ge=1970-01-01T00:00:00Z";
+        DateTime_EX = "myDateTime=ex=true";
+        DateTime_DNE = "myDateTime=ex=false";
+        DateTime_BETWEEN = "(myDateTime=ge=1970-01-01T00:00:00Z;myDateTime=le=1971-01-01T00:00:00Z)";
 
         INLINE_ANDING = "myString==Thing;myLong=ex=false";
 

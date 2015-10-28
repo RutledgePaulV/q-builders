@@ -4,12 +4,16 @@ import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 import org.junit.Test;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import static com.github.rutledgepaulv.basic.QModel.QueryModelPredef.*;
 
 
 public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
 
     protected abstract T getVisitor();
+
     protected abstract void compare(String expected, S converted);
 
     protected interface Simple {
@@ -32,16 +36,16 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         }
 
         interface Short {
-            Condition<QModel> EQ = myShort().eq((short)100);
-            Condition<QModel> NE = myShort().ne((short)100);
-            Condition<QModel> GT = myShort().gt((short)100);
-            Condition<QModel> LT = myShort().lt((short)100);
-            Condition<QModel> GTE = myShort().gte((short)100);
-            Condition<QModel> LTE = myShort().lte((short)100);
+            Condition<QModel> EQ = myShort().eq((short) 100);
+            Condition<QModel> NE = myShort().ne((short) 100);
+            Condition<QModel> GT = myShort().gt((short) 100);
+            Condition<QModel> LT = myShort().lt((short) 100);
+            Condition<QModel> GTE = myShort().gte((short) 100);
+            Condition<QModel> LTE = myShort().lte((short) 100);
             Condition<QModel> EX = myShort().exists();
             Condition<QModel> DNE = myShort().doesNotExist();
-            Condition<QModel> IN = myShort().in((short)98, (short)99, (short)100);
-            Condition<QModel> NIN = myShort().nin((short)101, (short)102, (short)103);
+            Condition<QModel> IN = myShort().in((short) 98, (short) 99, (short) 100);
+            Condition<QModel> NIN = myShort().nin((short) 101, (short) 102, (short) 103);
         }
 
         interface Integer {
@@ -95,6 +99,24 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             Condition<QModel> IN = myDouble().in(98.0, 99.0, 100.0);
             Condition<QModel> NIN = myDouble().nin(101.0, 102.0, 103.0);
         }
+
+        interface Instant {
+            java.time.Instant epoch = OffsetDateTime.of(1970, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
+                    .toInstant();
+
+            java.time.Instant yearAfterEpoch = OffsetDateTime.of(1970, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
+                    .plusYears(1).toInstant();
+
+            Condition<QModel> EQ = myDateTime().eq(epoch);
+            Condition<QModel> NE = myDateTime().ne(epoch);
+            Condition<QModel> GT = myDateTime().after(epoch, true);
+            Condition<QModel> GTE = myDateTime().after(epoch, false);
+            Condition<QModel> LT = myDateTime().before(yearAfterEpoch, true);
+            Condition<QModel> LTE = myDateTime().before(yearAfterEpoch, false);
+            Condition<QModel> BETWEEN = myDateTime().between(epoch, false, yearAfterEpoch, false);
+            Condition<QModel> EX = myDateTime().exists();
+            Condition<QModel> DNE = myDateTime().doesNotExist();
+        }
     }
 
     protected interface Logical {
@@ -103,20 +125,18 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         Condition<QModel> LIST_ANDING = and(myString().eq("Thing"), myLong().doesNotExist());
         Condition<QModel> LIST_ORING = or(myString().eq("Thing"), myLong().doesNotExist());
         Condition<QModel> LIST_ORING_OF_INLINE_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
-                                                                        myString().ne("Cats").and().myLong().gt(30L));
+                myString().ne("Cats").and().myLong().gt(30L));
 
         Condition<QModel> LIST_ANDING_OF_INLINE_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
-                                                                        myString().ne("Cats").or().myLong().gt(30L));
+                myString().ne("Cats").or().myLong().gt(30L));
 
         Condition<QModel> LIST_ANDING_OR_LIST_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
-                                                                        myString().ne("Cats").or().myLong().gt(30L))
-                                                                    .or().or(myString().eq("Thing").and().myLong().doesNotExist(),
-                                                                            myString().ne("Cats").and().myLong().gt(30L));
+                myString().ne("Cats").or().myLong().gt(30L)).or()
+                .or(myString().eq("Thing").and().myLong().doesNotExist(), myString().ne("Cats").and().myLong().gt(30L));
 
         Condition<QModel> LIST_ORING_ANDLIST_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
-                                                                        myString().ne("Cats").and().myLong().gt(30L))
-                                                                    .and().and(myString().eq("Thing").or().myLong().doesNotExist(),
-                                                                            myString().ne("Cats").or().myLong().gt(30L));
+                myString().ne("Cats").and().myLong().gt(30L)).and()
+                .and(myString().eq("Thing").or().myLong().doesNotExist(), myString().ne("Cats").or().myLong().gt(30L));
     }
 
     protected String String_EQ;
@@ -276,6 +296,29 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(Double_DNE, Simple.Double.DNE);
         compare(Double_IN, Simple.Double.IN);
         compare(Double_NIN, Simple.Double.NIN);
+    }
+
+    protected String DateTime_EQ;
+    protected String DateTime_NE;
+    protected String DateTime_LT;
+    protected String DateTime_GT;
+    protected String DateTime_LTE;
+    protected String DateTime_GTE;
+    protected String DateTime_EX;
+    protected String DateTime_DNE;
+    protected String DateTime_BETWEEN;
+
+    @Test
+    public void simple_DateTime() {
+        compare(DateTime_EQ, Simple.Instant.EQ);
+        compare(DateTime_NE, Simple.Instant.NE);
+        compare(DateTime_LT, Simple.Instant.LT);
+        compare(DateTime_LTE, Simple.Instant.LTE);
+        compare(DateTime_GT, Simple.Instant.GT);
+        compare(DateTime_GTE, Simple.Instant.GTE);
+        compare(DateTime_EX, Simple.Instant.EX);
+        compare(DateTime_DNE, Simple.Instant.DNE);
+        compare(DateTime_BETWEEN, Simple.Instant.BETWEEN);
     }
 
     protected String INLINE_ANDING;
