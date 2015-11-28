@@ -127,6 +127,7 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         return new ConditionDelegate(self());
     }
 
+
     /**
      * Since we have delegate classes that extend this class but not its potential end-user imposed subclasses
      * we instead pass the original instance of whatever the final QBuilder class is around as
@@ -154,30 +155,40 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         public final T and() {
             QBuilder<T> self = self();
             LogicalNode current = self.current;
-            List<AbstractNode> children = new ArrayList<>();
-            children.add(current);
-            AndNode node = new AndNode(current.getParent(), children);
 
-            // referential comparison intended.
-            if (current == self.root) {
-                self.root = node;
+            if(!(current instanceof AndNode)) {
+                List<AbstractNode> children = new ArrayList<>();
+                children.add(current);
+                AndNode node = new AndNode(current.getParent(), children);
+
+                // referential comparison intended.
+                if (current == self.root) {
+                    self.root = node;
+                }
+
+                self.current = node;
             }
-            self.current = node;
+
+
             return (T) self;
         }
 
         public final T or() {
             QBuilder<T> self = self();
             LogicalNode current = self.current;
-            List<AbstractNode> children = new ArrayList<>();
-            children.add(current);
-            OrNode node = new OrNode(current.getParent(), children);
 
-            // referential comparison intended.
-            if (current == self.root) {
-                self.root = node;
+            if(!(current instanceof OrNode)) {
+                List<AbstractNode> children = new ArrayList<>();
+                children.add(current);
+                OrNode node = new OrNode(current.getParent(), children);
+
+                // referential comparison intended.
+                if (current == self.root) {
+                    self.root = node;
+                }
+                self.current = node;
             }
-            self.current = node;
+
             return (T) self;
         }
 

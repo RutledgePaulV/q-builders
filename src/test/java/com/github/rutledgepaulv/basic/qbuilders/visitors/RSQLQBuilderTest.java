@@ -105,6 +105,12 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
 
         LIST_ORING_AND_LIST_ANDING = "((myString==Thing;myLong=ex=false),(myString!=Cats;myLong=gt=30));" +
                 "((myString==Thing,myLong=ex=false);(myString!=Cats,myLong=gt=30))";
+
+        CHAINED_ORS = "myString==thing,myInteger=gt=0,myInteger=lt=5,myLong=in=(0,1,2),myDouble=le=2.9,myBoolean==false,myDateTime=ex=false";
+        CHAINED_ANDS_AND_ORS = "(((myString==thing;myInteger=gt=0),myInteger=lt=5,myLong=in=(0,1,2));myDouble=le=2.9;myBoolean==false),myDateTime=ex=false";
+        CHAINED_ANDS = "myString==thing;myInteger=gt=0;myInteger=lt=5;myLong=in=(0,1,2);myDouble=le=2.9;myBoolean==false;myDateTime=ex=false";
+        CHAINED_ORS_AND_ANDS = "(((myString==thing,myInteger=gt=0);myInteger=lt=5;myLong=in=(0,1,2)),myDouble=le=2.9,myBoolean==false);myDateTime=ex=false";
+
     }
 
 

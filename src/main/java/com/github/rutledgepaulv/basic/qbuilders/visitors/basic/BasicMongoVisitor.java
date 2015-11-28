@@ -21,7 +21,7 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
     protected Criteria visit(AndNode node) {
         Criteria criteria = new Criteria();
         List<Criteria> children = node.getChildren().stream()
-                .map(this::visit).collect(Collectors.toList());
+                .map(this::visitAny).collect(Collectors.toList());
         return criteria.andOperator(children.toArray(new Criteria[children.size()]));
     }
 
@@ -29,7 +29,7 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
     protected Criteria visit(OrNode node) {
         Criteria criteria = new Criteria();
         List<Criteria> children = node.getChildren().stream()
-                .map(this::visit).collect(Collectors.toList());
+                .map(this::visitAny).collect(Collectors.toList());
         return criteria.orOperator(children.toArray(new Criteria[children.size()]));
     }
 

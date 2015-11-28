@@ -139,6 +139,26 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
                 .and(myString().eq("Thing").or().myLong().doesNotExist(), myString().ne("Cats").or().myLong().gt(30L));
     }
 
+
+    protected interface Chained {
+            Condition<QModel> CHAINED_ANDS = myString().eq("thing").and().myInteger().gt(0)
+                    .and().myInteger().lt(5).and().myLong().in(0L, 1L, 2L).and().myDouble().lte(2.9)
+                    .and().myBoolean().isFalse().and().myDateTime().doesNotExist();
+
+            Condition<QModel> CHAINED_ORS = myString().eq("thing").or().myInteger().gt(0).or()
+                    .myInteger().lt(5).or().myLong().in(0L, 1L, 2L).or().myDouble().lte(2.9).or()
+                    .myBoolean().isFalse().or().myDateTime().doesNotExist();
+
+            Condition<QModel> CHAINED_ANDS_AND_ORS = myString().eq("thing").and().myInteger()
+                    .gt(0).or().myInteger().lt(5).or().myLong().in(0L, 1L, 2L).and().myDouble()
+                    .lte(2.9).and().myBoolean().isFalse().or().myDateTime().doesNotExist();
+
+            Condition<QModel> CHAINED_ORS_AND_ANDS = myString().eq("thing").or().myInteger()
+                    .gt(0).and().myInteger().lt(5).and().myLong().in(0L, 1L, 2L).or().myDouble()
+                    .lte(2.9).or().myBoolean().isFalse().and().myDateTime().doesNotExist();
+    }
+
+
     protected String String_EQ;
     protected String String_NE;
     protected String String_LT;
@@ -376,6 +396,34 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     @Test
     public void listOringAndListAnding() {
         compare(LIST_ORING_AND_LIST_ANDING, Logical.LIST_ORING_ANDLIST_ANDING);
+    }
+
+    protected String CHAINED_ANDS;
+
+    @Test
+    public void chainedAnds() {
+        compare(CHAINED_ANDS, Chained.CHAINED_ANDS);
+    }
+
+    protected String CHAINED_ORS;
+
+    @Test
+    public void chainedOrs() {
+        compare(CHAINED_ORS, Chained.CHAINED_ORS);
+    }
+
+    protected String CHAINED_ANDS_AND_ORS;
+
+    @Test
+    public void chainedAndsAndOrs() {
+        compare(CHAINED_ANDS_AND_ORS, Chained.CHAINED_ANDS_AND_ORS);
+    }
+
+    protected String CHAINED_ORS_AND_ANDS;
+
+    @Test
+    public void chainedOrsAndAnds() {
+        compare(CHAINED_ORS_AND_ANDS, Chained.CHAINED_ORS_AND_ANDS);
     }
 
     protected void compare(String expected, Condition<QModel> condition) {

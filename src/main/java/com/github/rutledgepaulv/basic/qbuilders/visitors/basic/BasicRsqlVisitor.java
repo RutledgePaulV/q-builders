@@ -13,13 +13,13 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
 
     @Override
     protected final String visit(AndNode node) {
-        String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(";"));
+        String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(";"));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
     @Override
     protected final String visit(OrNode node) {
-        String body = node.getChildren().stream().map(this::visit).collect(Collectors.joining(","));
+        String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(","));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 

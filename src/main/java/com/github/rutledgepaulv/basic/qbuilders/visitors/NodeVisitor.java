@@ -12,11 +12,11 @@ public abstract class NodeVisitor<T> {
 
     protected abstract T visit(ComparisonNode node);
 
-    public final T visit(AbstractNode node) {
+    public final T visitAny(AbstractNode node) {
 
         // skip straight to the children if it's a logical node with one member
         if(node instanceof LogicalNode && node.getChildren().size() == 1) {
-            return visit(node.getChildren().get(0));
+            return visitAny(node.getChildren().get(0));
         }
 
         if(node instanceof AndNode){

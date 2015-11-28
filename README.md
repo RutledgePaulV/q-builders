@@ -153,6 +153,15 @@ Condition<PersonQuery> query = firstName().eq("Paul").or()
                                .and(firstName().lexicallyBefore("Richard"), age().gt(22));
 ```
 
+### Caveats:
+Chaining both with ```and()``` and ```or()``` is complicated when you begin to talk about
+precedence. The implementation is such that whenever you change from a chain of ```and()``` to
+a chain of ```or()```, then the previous statements are wrapped together and the existing set
+becomes one of the elements in the new ```or()``` chain, and vice versa for a chain of ```or()``` followed
+by a chain of ```and()```. In general, to avoid unintended precedence concerns, it's best to limit your chains
+to only ```and()``` or ```or()``` operators and use the parameterized 
+```and(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` and 
+```or(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` for more complicated queries.
 
 
 ### Customizations:

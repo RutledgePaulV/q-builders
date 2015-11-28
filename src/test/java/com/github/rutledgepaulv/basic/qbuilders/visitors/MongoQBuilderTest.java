@@ -122,6 +122,27 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
                 " { \"myLong\" : { \"$gt\" : 30}}]}]} , { \"$and\" : [ { \"$or\" : [ { \"myString\" : \"Thing\"} , " +
                 "{ \"myLong\" : { \"$exists\" : false}}]} , { \"$or\" : [ { \"myString\" : { \"$ne\" : \"Cats\"}} , " +
                 "{ \"myLong\" : { \"$gt\" : 30}}]}]}]}";
+
+        CHAINED_ORS = "{ \"$or\" : [ { \"myString\" : \"thing\"} , { \"myInteger\" : { \"$gt\" : 0}} ," +
+                " { \"myInteger\" : { \"$lt\" : 5}} , { \"myLong\" : { \"$in\" : [ 0 , 1 , 2]}} ," +
+                " { \"myDouble\" : { \"$lte\" : 2.9}} , { \"myBoolean\" : false} ," +
+                " { \"myDateTime\" : { \"$exists\" : false}}]}";
+
+        CHAINED_ANDS_AND_ORS = "{ \"$or\" : [ { \"$and\" : [ { \"$or\" : [ { \"$and\" : [ { \"myString\" : \"thing\"} ," +
+                " { \"myInteger\" : { \"$gt\" : 0}}]} , { \"myInteger\" : { \"$lt\" : 5}} , { \"myLong\" : { \"$in\" :" +
+                " [ 0 , 1 , 2]}}]} , { \"myDouble\" : { \"$lte\" : 2.9}} , { \"myBoolean\" : false}]} , { \"myDateTime\" " +
+                ": { \"$exists\" : false}}]}";
+
+        CHAINED_ANDS = "{ \"$and\" : [ { \"myString\" : \"thing\"} , { \"myInteger\" : { \"$gt\" : 0}} ," +
+                " { \"myInteger\" : { \"$lt\" : 5}} , { \"myLong\" : { \"$in\" : [ 0 , 1 , 2]}} ," +
+                " { \"myDouble\" : { \"$lte\" : 2.9}} , { \"myBoolean\" : false} , { \"myDateTime\" :" +
+                " { \"$exists\" : false}}]}";
+
+        CHAINED_ORS_AND_ANDS = "{ \"$and\" : [ { \"$or\" : [ { \"$and\" : [ { \"$or\" : [ { \"myString\" :" +
+                " \"thing\"} , { \"myInteger\" : { \"$gt\" : 0}}]} , { \"myInteger\" : { \"$lt\" : 5}} ," +
+                " { \"myLong\" : { \"$in\" : [ 0 , 1 , 2]}}]} , { \"myDouble\" : { \"$lte\" : 2.9}} , " +
+                "{ \"myBoolean\" : false}]} , { \"myDateTime\" : { \"$exists\" : false}}]}";
+
     }
 
 

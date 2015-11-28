@@ -39,6 +39,6 @@ public abstract class AbstractNode implements Visitable {
 
     @Override
     public <T> T visit(NodeVisitor<T> visitor) {
-        return visitor.visit(this);
+        return visitor.visitAny(this);
     }
 }

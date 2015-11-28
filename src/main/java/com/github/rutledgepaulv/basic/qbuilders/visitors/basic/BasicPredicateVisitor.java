@@ -23,12 +23,12 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
     @Override
     protected Predicate<T> visit(AndNode node) {
-        return (t) -> node.getChildren().stream().map(this::visit).allMatch(p -> p.test(t));
+        return (t) -> node.getChildren().stream().map(this::visitAny).allMatch(p -> p.test(t));
     }
 
     @Override
     protected Predicate<T> visit(OrNode node) {
-        return (t) -> node.getChildren().stream().map(this::visit).anyMatch(p -> p.test(t));
+        return (t) -> node.getChildren().stream().map(this::visitAny).anyMatch(p -> p.test(t));
     }
 
     @Override

@@ -932,6 +932,225 @@ public class ESQBuilderTest
                 "  }\n" +
                 "}";
 
+        CHAINED_ORS = "{\n" +
+                "  \"or\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"term\" : {\n" +
+                "        \"myString\" : \"thing\"\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myInteger\" : {\n" +
+                "          \"from\" : 0,\n" +
+                "          \"to\" : null,\n" +
+                "          \"include_lower\" : false,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myInteger\" : {\n" +
+                "          \"from\" : null,\n" +
+                "          \"to\" : 5,\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : false\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"terms\" : {\n" +
+                "        \"myLong\" : [ 0, 1, 2 ]\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myDouble\" : {\n" +
+                "          \"from\" : null,\n" +
+                "          \"to\" : 2.9,\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"term\" : {\n" +
+                "        \"myBoolean\" : false\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"missing\" : {\n" +
+                "        \"field\" : \"myDateTime\"\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
+
+        CHAINED_ANDS_AND_ORS = "{\n" +
+                "  \"or\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"and\" : {\n" +
+                "        \"filters\" : [ {\n" +
+                "          \"or\" : {\n" +
+                "            \"filters\" : [ {\n" +
+                "              \"and\" : {\n" +
+                "                \"filters\" : [ {\n" +
+                "                  \"term\" : {\n" +
+                "                    \"myString\" : \"thing\"\n" +
+                "                  }\n" +
+                "                }, {\n" +
+                "                  \"range\" : {\n" +
+                "                    \"myInteger\" : {\n" +
+                "                      \"from\" : 0,\n" +
+                "                      \"to\" : null,\n" +
+                "                      \"include_lower\" : false,\n" +
+                "                      \"include_upper\" : true\n" +
+                "                    }\n" +
+                "                  }\n" +
+                "                } ]\n" +
+                "              }\n" +
+                "            }, {\n" +
+                "              \"range\" : {\n" +
+                "                \"myInteger\" : {\n" +
+                "                  \"from\" : null,\n" +
+                "                  \"to\" : 5,\n" +
+                "                  \"include_lower\" : true,\n" +
+                "                  \"include_upper\" : false\n" +
+                "                }\n" +
+                "              }\n" +
+                "            }, {\n" +
+                "              \"terms\" : {\n" +
+                "                \"myLong\" : [ 0, 1, 2 ]\n" +
+                "              }\n" +
+                "            } ]\n" +
+                "          }\n" +
+                "        }, {\n" +
+                "          \"range\" : {\n" +
+                "            \"myDouble\" : {\n" +
+                "              \"from\" : null,\n" +
+                "              \"to\" : 2.9,\n" +
+                "              \"include_lower\" : true,\n" +
+                "              \"include_upper\" : true\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }, {\n" +
+                "          \"term\" : {\n" +
+                "            \"myBoolean\" : false\n" +
+                "          }\n" +
+                "        } ]\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"missing\" : {\n" +
+                "        \"field\" : \"myDateTime\"\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
+
+        CHAINED_ANDS = "{\n" +
+                "  \"and\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"term\" : {\n" +
+                "        \"myString\" : \"thing\"\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myInteger\" : {\n" +
+                "          \"from\" : 0,\n" +
+                "          \"to\" : null,\n" +
+                "          \"include_lower\" : false,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myInteger\" : {\n" +
+                "          \"from\" : null,\n" +
+                "          \"to\" : 5,\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : false\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"terms\" : {\n" +
+                "        \"myLong\" : [ 0, 1, 2 ]\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"range\" : {\n" +
+                "        \"myDouble\" : {\n" +
+                "          \"from\" : null,\n" +
+                "          \"to\" : 2.9,\n" +
+                "          \"include_lower\" : true,\n" +
+                "          \"include_upper\" : true\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"term\" : {\n" +
+                "        \"myBoolean\" : false\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"missing\" : {\n" +
+                "        \"field\" : \"myDateTime\"\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
+
+        CHAINED_ORS_AND_ANDS = "{\n" +
+                "  \"and\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"or\" : {\n" +
+                "        \"filters\" : [ {\n" +
+                "          \"and\" : {\n" +
+                "            \"filters\" : [ {\n" +
+                "              \"or\" : {\n" +
+                "                \"filters\" : [ {\n" +
+                "                  \"term\" : {\n" +
+                "                    \"myString\" : \"thing\"\n" +
+                "                  }\n" +
+                "                }, {\n" +
+                "                  \"range\" : {\n" +
+                "                    \"myInteger\" : {\n" +
+                "                      \"from\" : 0,\n" +
+                "                      \"to\" : null,\n" +
+                "                      \"include_lower\" : false,\n" +
+                "                      \"include_upper\" : true\n" +
+                "                    }\n" +
+                "                  }\n" +
+                "                } ]\n" +
+                "              }\n" +
+                "            }, {\n" +
+                "              \"range\" : {\n" +
+                "                \"myInteger\" : {\n" +
+                "                  \"from\" : null,\n" +
+                "                  \"to\" : 5,\n" +
+                "                  \"include_lower\" : true,\n" +
+                "                  \"include_upper\" : false\n" +
+                "                }\n" +
+                "              }\n" +
+                "            }, {\n" +
+                "              \"terms\" : {\n" +
+                "                \"myLong\" : [ 0, 1, 2 ]\n" +
+                "              }\n" +
+                "            } ]\n" +
+                "          }\n" +
+                "        }, {\n" +
+                "          \"range\" : {\n" +
+                "            \"myDouble\" : {\n" +
+                "              \"from\" : null,\n" +
+                "              \"to\" : 2.9,\n" +
+                "              \"include_lower\" : true,\n" +
+                "              \"include_upper\" : true\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }, {\n" +
+                "          \"term\" : {\n" +
+                "            \"myBoolean\" : false\n" +
+                "          }\n" +
+                "        } ]\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"missing\" : {\n" +
+                "        \"field\" : \"myDateTime\"\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
     }
 
 

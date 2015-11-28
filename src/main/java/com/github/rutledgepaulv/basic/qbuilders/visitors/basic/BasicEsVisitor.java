@@ -20,13 +20,13 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
 
     @Override
     protected FilterBuilder visit(AndNode node) {
-        List<FilterBuilder> children = node.getChildren().stream().map(this::visit).collect(Collectors.toList());
+        List<FilterBuilder> children = node.getChildren().stream().map(this::visitAny).collect(Collectors.toList());
         return FilterBuilders.andFilter(children.toArray(new FilterBuilder[children.size()]));
     }
 
     @Override
     protected FilterBuilder visit(OrNode node) {
-        List<FilterBuilder> children = node.getChildren().stream().map(this::visit).collect(Collectors.toList());
+        List<FilterBuilder> children = node.getChildren().stream().map(this::visitAny).collect(Collectors.toList());
         return FilterBuilders.orFilter(children.toArray(new FilterBuilder[children.size()]));
     }
 
