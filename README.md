@@ -29,7 +29,7 @@ result and then make more changes to the builder? Some examples of the things I 
 Criteria crit = Criteria.where("myStringField")
                 .in(Collections.singletonList(1), Collections.singletonList(2));
                 
-crit = new Critera().is("cats");
+crit = new Criteria().is("cats");
 ```
 
 *apache cxf*:
