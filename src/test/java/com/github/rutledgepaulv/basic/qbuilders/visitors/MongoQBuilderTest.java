@@ -13,7 +13,9 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
         String_EQ = "{ \"myString\" : \"abcdefg\"}";
         String_NE = "{ \"myString\" : { \"$ne\" : \"abcdefg\"}}";
         String_LT = "{ \"myString\" : { \"$lt\" : \"abcdefg\"}}";
+        String_GTE = "{ \"myString\" : { \"$gte\" : \"abcdefg\"}}";
         String_GT = "{ \"myString\" : { \"$gt\" : \"abcdefg\"}}";
+        String_LTE = "{ \"myString\" : { \"$lte\" : \"abcdefg\"}}";
         String_EX = "{ \"myString\" : { \"$exists\" : true}}";
         String_DNE = "{ \"myString\" : { \"$exists\" : false}}";
         String_IN = "{ \"myString\" : { \"$in\" : [ \"a\" , \"b\" , \"c\"]}}";

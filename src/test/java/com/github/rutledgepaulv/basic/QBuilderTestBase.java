@@ -22,6 +22,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             Condition<QModel> NE = myString().ne("abcdefg");
             Condition<QModel> LT = myString().lexicallyBefore("abcdefg");
             Condition<QModel> GT = myString().lexicallyAfter("abcdefg");
+            Condition<QModel> GTE = myString().lexicallyNotBefore("abcdefg");
+            Condition<QModel> LTE = myString().lexicallyNotAfter("abcdefg");
             Condition<QModel> EX = myString().exists();
             Condition<QModel> DNE = myString().doesNotExist();
             Condition<QModel> IN = myString().in("a", "b", "c");
@@ -163,6 +165,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected String String_NE;
     protected String String_LT;
     protected String String_GT;
+    protected String String_LTE;
+    protected String String_GTE;
     protected String String_EX;
     protected String String_DNE;
     protected String String_IN;
@@ -174,6 +178,8 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(String_NE, Simple.String.NE);
         compare(String_LT, Simple.String.LT);
         compare(String_GT, Simple.String.GT);
+        compare(String_LTE, Simple.String.LTE);
+        compare(String_GTE, Simple.String.GTE);
         compare(String_EX, Simple.String.EX);
         compare(String_DNE, Simple.String.DNE);
         compare(String_IN, Simple.String.IN);

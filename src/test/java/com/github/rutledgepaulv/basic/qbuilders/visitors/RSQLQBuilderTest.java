@@ -12,7 +12,9 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
         String_EQ = "myString==abcdefg";
         String_NE = "myString!=abcdefg";
         String_LT = "myString=lt=abcdefg";
+        String_LTE = "myString=le=abcdefg";
         String_GT = "myString=gt=abcdefg";
+        String_GTE = "myString=ge=abcdefg";
         String_EX = "myString=ex=true";
         String_DNE = "myString=ex=false";
         String_IN = "myString=in=(a,b,c)";

@@ -37,12 +37,34 @@ public class ESQBuilderTest
                 "  }\n" +
                 "}";
 
+        String_LTE = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myString\" : {\n" +
+                "      \"from\" : null,\n" +
+                "      \"to\" : \"abcdefg\",\n" +
+                "      \"include_lower\" : true,\n" +
+                "      \"include_upper\" : true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
         String_GT = "{\n" +
                 "  \"range\" : {\n" +
                 "    \"myString\" : {\n" +
                 "      \"from\" : \"abcdefg\",\n" +
                 "      \"to\" : null,\n" +
                 "      \"include_lower\" : false,\n" +
+                "      \"include_upper\" : true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        String_GTE = "{\n" +
+                "  \"range\" : {\n" +
+                "    \"myString\" : {\n" +
+                "      \"from\" : \"abcdefg\",\n" +
+                "      \"to\" : null,\n" +
+                "      \"include_lower\" : true,\n" +
                 "      \"include_upper\" : true\n" +
                 "    }\n" +
                 "  }\n" +

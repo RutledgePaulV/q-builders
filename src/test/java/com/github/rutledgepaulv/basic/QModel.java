@@ -27,6 +27,9 @@ public class QModel extends QBuilder<QModel> {
             return new QModel().myString();
         }
 
+        public static StringProperty<QModel> myString2() {
+            return new QModel().myString2();
+        }
         public static LongProperty<QModel> myLong() {
             return new QModel().myLong();
         }
@@ -54,6 +57,10 @@ public class QModel extends QBuilder<QModel> {
         public static InstantProperty<QModel> myDateTime() {
             return new QModel().myDateTime();
         }
+    }
+
+    private StringProperty<QModel> myString2() {
+        return string(getCurrentMethodName());
     }
 
     public BooleanProperty<QModel> myBoolean() {

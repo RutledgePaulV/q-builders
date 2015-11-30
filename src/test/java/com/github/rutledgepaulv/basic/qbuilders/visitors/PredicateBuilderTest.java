@@ -20,14 +20,14 @@ public class PredicateBuilderTest {
 
     private Set<Q> actual = new HashSet<>();
 
-    private Q AAA = get((byte) 7, (short) 5, 4, 0, 3, 2, 'a', "testing1", "a");
-    private Q ABA = get((byte) 5, (short) 3, 6, 2, 1, 4, 'c', "testing3", "ab", "a");
-    private Q AAB = get((byte) 6, (short) 4, 5, 1, 2, 3, 'b', "testing2", "abc", "ab", "a");
-    private Q BAA = get((byte) 4, (short) 2, 7, 3, 0, 5, 'd', null, "abcd", "abc", "ab", "a");
-    private Q BAB = get((byte) 3, (short) 1, 0, 4, 7, 6, 'e', "testing5", "abcde", "abcd", "abc", "ab", "a");
-    private Q BBA = get((byte) 2, (short) 0, 1, 5, 6, 7, 'f', "testing6");
-    private Q ABB = get((byte) 1, (short) 7, 2, 6, 5, 0, 'g', null);
-    private Q BBB = get((byte) 0, (short) 6, 3, 7, 4, 1, 'h', "testing8");
+    private Q AAA = get((byte) 7, (short) 5, 4, 0, 3, 2, 'a', "testing1", "test_a", "a");
+    private Q ABA = get((byte) 5, (short) 3, 6, 2, 1, 4, 'c', "testing3", "test_b", "ab", "a");
+    private Q AAB = get((byte) 6, (short) 4, 5, 1, 2, 3, 'b', "testing2", "test_c", "abc", "ab", "a");
+    private Q BAA = get((byte) 4, (short) 2, 7, 3, 0, 5, 'd', null, "test_d", "abcd", "abc", "ab", "a");
+    private Q BAB = get((byte) 3, (short) 1, 0, 4, 7, 6, 'e', "testing5", "test_e", "abcde", "abcd", "abc", "ab", "a");
+    private Q BBA = get((byte) 2, (short) 0, 1, 5, 6, 7, 'f', "testing6", "test_f");
+    private Q ABB = get((byte) 1, (short) 7, 2, 6, 5, 0, 'g', null, "test_g");
+    private Q BBB = get((byte) 0, (short) 6, 3, 7, 4, 1, 'h', "testing8", "test_h");
 
 
     @Before
@@ -60,21 +60,25 @@ public class PredicateBuilderTest {
     @Test
     public void testGreaterThan() {
         compare(myLong().gt(5L), ABB, BBB);
+        compare(myString2().lexicallyAfter("test_a"), AAB, ABA, BBA, BAA, BAB, ABB, BBB);
     }
 
     @Test
     public void testGreaterThanOrEqualTo() {
         compare(myLong().gte(5L), BBA, ABB, BBB);
+        compare(myString2().lexicallyNotBefore("test_a"), AAA, AAB, ABA, BBA, BAA, BAB, ABB, BBB);
     }
 
     @Test
     public void testLessThan() {
         compare(myLong().lt(5L), AAA, AAB, ABA, BAA, BAB);
+        compare(myString2().lexicallyBefore("test_h"), AAA, AAB, ABA, BBA, BAA, BAB, ABB);
     }
 
     @Test
     public void testLessThanOrEqualTo() {
         compare(myLong().lte(5L), AAA, AAB, ABA, BAA, BAB, BBA);
+        compare(myString2().lexicallyNotAfter("test_h"), AAA, AAB, ABA, BBA, BAA, BAB, ABB, BBB);
     }
 
     @Test
@@ -155,7 +159,7 @@ public class PredicateBuilderTest {
     }
 
 
-    private Q get(byte val1, short val2, int val3, long val4, float val5, double val6, char val7, String val8,
+    private Q get(byte val1, short val2, int val3, long val4, float val5, double val6, char val7, String val8, String val9,
             String... myStrings) {
         Q q = new Q();
         q.setMyByte(val1);
@@ -166,6 +170,7 @@ public class PredicateBuilderTest {
         q.setMyDouble(val6);
         q.setMyCharacter(val7);
         q.setMyString(val8);
+        q.setMyString2(val9);
         q.setMyListOfStrings(Arrays.asList(myStrings));
         return q;
     }
