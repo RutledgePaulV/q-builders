@@ -6,9 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "Convert2MethodRef"})
-public final class ObjectUtils {
-    private ObjectUtils() {
-    }
+public abstract class ObjectUtils {
 
 
     public static <T> T init(Class<T> clazz, Object... args) {

@@ -61,7 +61,6 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
         }
 
         return null;
-
     }
 
 

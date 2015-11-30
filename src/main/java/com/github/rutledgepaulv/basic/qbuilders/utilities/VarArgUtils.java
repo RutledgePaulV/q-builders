@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class VarArgUtils {
-    private VarArgUtils(){
-    }
+public abstract class VarArgUtils {
 
     @SafeVarargs
     public static <S> List<S> combine(S v1, S v2, S... vn){

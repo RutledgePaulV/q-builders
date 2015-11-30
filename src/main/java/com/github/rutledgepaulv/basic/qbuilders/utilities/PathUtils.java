@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public final class PathUtils {
+public abstract class PathUtils {
     private PathUtils() {
     }
 

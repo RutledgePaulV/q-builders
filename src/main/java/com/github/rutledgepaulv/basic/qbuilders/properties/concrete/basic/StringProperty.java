@@ -10,4 +10,7 @@ public interface StringProperty<T extends Partial<T>> extends EquitableProperty<
 
     Condition<T> lexicallyAfter(String value);
     Condition<T> lexicallyBefore(String value);
+    Condition<T> lexicallyNotAfter(String value);
+    Condition<T> lexicallyNotBefore(String value);
+
 }

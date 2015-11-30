@@ -23,4 +23,12 @@ public class StringPropertyDelegate<T extends QBuilder<T>>
         return condition(getField(), ComparisonOperator.LT, Collections.singletonList(value));
     }
 
+    public final Condition<T> lexicallyNotAfter(String value) {
+        return condition(getField(), ComparisonOperator.LTE, Collections.singletonList(value));
+    }
+
+    public final Condition<T> lexicallyNotBefore(String value) {
+        return condition(getField(), ComparisonOperator.GTE, Collections.singletonList(value));
+    }
+
 }

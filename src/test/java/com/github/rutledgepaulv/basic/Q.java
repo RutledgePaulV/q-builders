@@ -13,6 +13,7 @@ public class Q {
     private Integer myInteger;
     private Short myShort;
     private String myString;
+    private String myString2;
     private Character myCharacter;
     private List<String> myListOfStrings = new ArrayList<>();
 
@@ -113,4 +114,11 @@ public class Q {
     }
 
 
+    public String getMyString2() {
+        return myString2;
+    }
+
+    public void setMyString2(String myString2) {
+        this.myString2 = myString2;
+    }
 }
