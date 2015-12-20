@@ -172,22 +172,7 @@ searches for mongo (this is more involved than I would like, so please let me kn
 you think of something simpler).
 
 
-1) Define a custom operator
-
-```java
-
-public class AdvancedMongoOperator extends ComparisonOperator {
-
-    protected AdvancedMongoOperator(String representation) {
-        super(representation);
-    }
-
-    public static final AdvancedMongoOperator REGEX = new AdvancedMongoOperator("REGEX");
-
-}
-```
-
-2) Define your custom property interface
+1) Define your custom property interface
 
 ```java
 
@@ -198,11 +183,13 @@ public interface AdvancedStringField<T extends Partial<T>> extends StringPropert
 }
 ```
 
-3) Define an implementation for that interface using your operator
+2) Define an implementation for that interface using your operator
 ```java
 
 public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPropertyDelegate<T>
         implements AdvancedStringField<T> {
+
+    public static final ComparisonOperator REGEX = new ComparisonOperator("REGEX");
 
     public AdvancedStringFieldDelegate(String field, T canonical) {
         super(field, canonical);
@@ -210,13 +197,13 @@ public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPr
 
     @Override
     public final Condition<T> regex(String pattern) {
-        return condition(getField(), AdvancedMongoOperator.REGEX, Collections.singletonList(pattern));
+        return condition(getField(), REGEX, Collections.singletonList(pattern));
     }
 
 }
 ```
 
-4) Define an 'advanced visitor' that builds onto the 'basic visitor' with your functionality
+3) Define an 'advanced visitor' that builds onto the 'basic visitor' with your functionality
 ```java
 
 public class AdvancedMongoVisitor extends BasicMongoVisitor {
@@ -226,7 +213,7 @@ public class AdvancedMongoVisitor extends BasicMongoVisitor {
 
         ComparisonOperator operator = node.getOperator();
 
-        if(operator.equals(AdvancedMongoOperator.REGEX)) {
+        if(operator.equals(AdvancedStringFieldDelegate.REGEX)) {
             return Criteria.where(node.getField()).regex((String) node.getValues().iterator().next());
         } else {
             return super.visit(node);
@@ -237,7 +224,7 @@ public class AdvancedMongoVisitor extends BasicMongoVisitor {
 }
 ```
 
-5) Use the custom property in your query builders, and use your visitor when you build the query into the representation.
+4) Use the custom property in your query builders
 ```java
 
 public class AdvancedPersonQuery extends QBuilder<AdvancedPersonQuery> {
@@ -249,7 +236,13 @@ public class AdvancedPersonQuery extends QBuilder<AdvancedPersonQuery> {
 }
 ```
 
+5) Use your custom visitor when building queries that might contain the new property type.
+```java
 
+Condition<AdvancedQModel> q = firstName().regex("^pau.*");
+Criteria criteria = q.query(new AdvancedMongoVisitor());
+
+```
 
 ### Installation 
 (coming soon to a maven repository near you)
