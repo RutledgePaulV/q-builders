@@ -223,18 +223,15 @@ public class AdvancedMongoVisitor extends BasicMongoVisitor {
 
     @Override
     protected Criteria visit(ComparisonNode node) {
-        Criteria parent = super.visit(node);
-        if(parent != null) {
-            return parent;
-        }
 
         ComparisonOperator operator = node.getOperator();
 
         if(operator.equals(AdvancedMongoOperator.REGEX)) {
             return Criteria.where(node.getField()).regex((String) node.getValues().iterator().next());
+        } else {
+            return super.visit(node);
         }
 
-        return null;
     }
 
 }
