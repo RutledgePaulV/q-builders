@@ -58,9 +58,11 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
             return where(node.getField()).in(values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return where(node.getField()).nin(values);
+        } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
+            return where(node.getField()).elemMatch(condition(node));
         }
 
-        return null;
+        throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
     }
 
 

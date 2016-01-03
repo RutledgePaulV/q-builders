@@ -57,6 +57,10 @@ public class QModel extends QBuilder<QModel> {
         public static InstantProperty<QModel> myDateTime() {
             return new QModel().myDateTime();
         }
+
+        public static ConditionProperty<QModel, QModel> mySubList() {
+            return new QModel().mySubList();
+        }
     }
 
     private StringProperty<QModel> myString2() {
@@ -99,4 +103,7 @@ public class QModel extends QBuilder<QModel> {
         return instant(getCurrentMethodName());
     }
 
+    public ConditionProperty<QModel, QModel> mySubList() {
+        return condition(getCurrentMethodName());
+    }
 }

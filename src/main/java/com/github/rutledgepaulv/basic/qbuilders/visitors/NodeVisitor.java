@@ -1,7 +1,9 @@
 package com.github.rutledgepaulv.basic.qbuilders.visitors;
 
 
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.*;
+import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 
 @SuppressWarnings("ConstantConditions")
 public abstract class NodeVisitor<T> {
@@ -11,6 +13,25 @@ public abstract class NodeVisitor<T> {
     protected abstract T visit(OrNode node);
 
     protected abstract T visit(ComparisonNode node);
+
+    /**
+     * Build a comparison node value into a visited value so that
+     * it can be composed into the larger query being built.
+     *
+     * @param node The node with a condition argument to build into a visited value.
+     *
+     * @return The visited value.
+     */
+    protected final T condition(ComparisonNode node) {
+        if(!node.getOperator().equals(ComparisonOperator.SUB_CONDITION_ANY)) {
+            throw new IllegalArgumentException("You can only build a condition for sub-condition operator nodes.");
+        }
+
+        Condition<?> condition = (Condition<?>) node.getValues().iterator().next();
+
+        return condition.query(this);
+    }
+
 
     public final T visitAny(AbstractNode node) {
 

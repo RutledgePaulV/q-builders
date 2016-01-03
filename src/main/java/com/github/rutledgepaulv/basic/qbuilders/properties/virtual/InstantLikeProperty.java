@@ -1,9 +1,9 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
+import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
-public interface InstantLikeProperty<T extends Partial<T>, S> extends EquitableProperty<T, S> {
+public interface InstantLikeProperty<T extends QBuilder<T>, S> extends EquitableProperty<T, S> {
 
     Condition<T> before(S dateTime, boolean exclusive);
 

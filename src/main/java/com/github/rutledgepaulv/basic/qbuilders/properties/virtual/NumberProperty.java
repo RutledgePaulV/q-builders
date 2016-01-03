@@ -1,9 +1,9 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
+import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
 
-public interface NumberProperty<T extends Partial<T>, S extends Number>
+public interface NumberProperty<T extends QBuilder<T>, S extends Number>
         extends ListableProperty<T, S>, EquitableProperty<T, S> {
 
     Condition<T> gt(S number);

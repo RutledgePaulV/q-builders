@@ -15,6 +15,7 @@ public class Q {
     private String myString;
     private String myString2;
     private Character myCharacter;
+    private List<Q> mySubList = new ArrayList<>();
     private List<String> myListOfStrings = new ArrayList<>();
 
     public Byte getMyByte() {
@@ -120,5 +121,13 @@ public class Q {
 
     public void setMyString2(String myString2) {
         this.myString2 = myString2;
+    }
+
+    public List<Q> getMySubList() {
+        return mySubList;
+    }
+
+    public void setMySubList(List<Q> mySubList) {
+        this.mySubList = mySubList;
     }
 }

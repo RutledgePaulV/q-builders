@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 public class BasicRsqlVisitor extends NodeVisitor<String> {
 
+    private static final CharSequence DOUBLE_QUOTE = "\"";
+    private static final CharSequence SINGLE_QUOTE = "\'";
+
     @Override
     protected final String visit(AndNode node) {
         String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(";"));
@@ -24,7 +27,7 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
     }
 
     @Override
-    protected final String visit(ComparisonNode node) {
+    protected String visit(ComparisonNode node) {
 
         ComparisonOperator operator = node.getOperator();
 
@@ -46,26 +49,35 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
             return list(node, "=in=");
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return list(node, "=nin=");
+        } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
+            return node.getField() + "=q=" + serialize(condition(node));
         }
 
-        return null;
+        throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
     }
 
-    private boolean nodeBelongsToParentExpression(AbstractNode node) {
+    protected boolean nodeBelongsToParentExpression(AbstractNode node) {
         return node.getParent() != null;
     }
 
-    private String single(ComparisonNode node, String op) {
+    protected String single(ComparisonNode node, String op) {
         return node.getField() + op + serialize(node.getValues().iterator().next());
     }
 
-    private String list(ComparisonNode node, String op) {
+    protected String list(ComparisonNode node, String op) {
         return node.getField() + op + node.getValues().stream()
                 .map(this::serialize).collect(Collectors.joining(",", "(", ")"));
     }
 
     protected String serialize(Object value) {
-        return value.toString();
+        String rawValue = value.toString();
+        if (!rawValue.contains(DOUBLE_QUOTE)) {
+            return DOUBLE_QUOTE + rawValue + DOUBLE_QUOTE;
+        } else if (!rawValue.contains(SINGLE_QUOTE)) {
+            return SINGLE_QUOTE + rawValue + SINGLE_QUOTE;
+        } else {
+            throw new IllegalArgumentException("Your query values cannot contain both a single quote and a double quote.");
+        }
     }
 
 }

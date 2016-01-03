@@ -54,9 +54,25 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
             return multi(node, this::in);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return multi(node, this::nin);
+        } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
+            Predicate test = condition(node);
+            // subquery condition is ignored because a predicate has already been built.
+            return single(node, (fieldValue, subQueryCondition) -> this.subquery(fieldValue, test));
         }
 
-        return null;
+        throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
+    }
+
+    private boolean subquery(Object actual, Predicate<Object> func) {
+        if (actual != null && actual.getClass().isArray()) {
+            Object[] values = (Object[]) actual;
+            return Arrays.stream(values).anyMatch(func);
+        } else if (actual != null && Collection.class.isAssignableFrom(actual.getClass())) {
+            Collection<?> values = (Collection<?>) actual;
+            return values.stream().anyMatch(func);
+        } else {
+            throw new IllegalArgumentException("You cannot do a subquery against a single element.");
+        }
     }
 
 

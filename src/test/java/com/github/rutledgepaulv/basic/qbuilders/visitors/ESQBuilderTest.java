@@ -1173,6 +1173,34 @@ public class ESQBuilderTest
                 "    } ]\n" +
                 "  }\n" +
                 "}";
+
+
+        SUB_QUERY = "{\n" +
+                "  \"and\" : {\n" +
+                "    \"filters\" : [ {\n" +
+                "      \"nested\" : {\n" +
+                "        \"filter\" : {\n" +
+                "          \"and\" : {\n" +
+                "            \"filters\" : [ {\n" +
+                "              \"term\" : {\n" +
+                "                \"myString\" : \"Thing\"\n" +
+                "              }\n" +
+                "            }, {\n" +
+                "              \"missing\" : {\n" +
+                "                \"field\" : \"myLong\"\n" +
+                "              }\n" +
+                "            } ]\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"path\" : \"mySubList\"\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"term\" : {\n" +
+                "        \"myBoolean\" : true\n" +
+                "      }\n" +
+                "    } ]\n" +
+                "  }\n" +
+                "}";
     }
 
 

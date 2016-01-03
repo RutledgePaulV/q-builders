@@ -160,6 +160,9 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
                     .lte(2.9).or().myBoolean().isFalse().and().myDateTime().doesNotExist();
     }
 
+    protected interface Composed {
+        Condition<QModel> SUB_QUERY = mySubList().any(Logical.INLINE_ANDING).and().myBoolean().isTrue();
+    }
 
     protected String String_EQ;
     protected String String_NE;
@@ -430,6 +433,13 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     @Test
     public void chainedOrsAndAnds() {
         compare(CHAINED_ORS_AND_ANDS, Chained.CHAINED_ORS_AND_ANDS);
+    }
+
+    protected String SUB_QUERY;
+
+    @Test
+    public void subquery() {
+        compare(SUB_QUERY, Composed.SUB_QUERY);
     }
 
     protected void compare(String expected, Condition<QModel> condition) {

@@ -1,5 +1,6 @@
 package com.github.rutledgepaulv.basic.qbuilders.conditions;
 
+import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface Partial<T extends Partial<T>> {
+public interface Partial<T extends QBuilder<T>> {
 
     /**
      * For usage when the field is known to contain values of a boolean type.
@@ -84,6 +85,16 @@ public interface Partial<T extends Partial<T>> {
      * @return The property interface so that a constraint can be set against the field.
      */
     InstantProperty<T> instant(String field);
+
+    /**
+     * For usage when the field is a multivalued field of objects who themselves can
+     * be tested against a condition.
+     *
+     * @param field The name of the multivalued field.
+     *
+     * @return The property interface so that a condition constraint can be set against the field.
+     */
+    <S extends QBuilder<S>> ConditionProperty<T,S> condition(String field);
 
     /**
      * Allows for composing a list of conditions in a "any match" fashion.

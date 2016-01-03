@@ -68,6 +68,10 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         return prop(field, InstantPropertyDelegate.class, InstantProperty.class);
     }
 
+    public <S extends QBuilder<S>> ConditionProperty<T, S> condition(String field) {
+        return prop(field, ConditionPropertyDelegate.class, ConditionProperty.class);
+    }
+
     public final <S extends PropertyDelegate<T>, Q extends Property<T>> Q prop(String field, Class<S> delegate, Class<Q> inter) {
         if(!inter.isAssignableFrom(delegate)) {
             throw new IllegalArgumentException("Must provide a delegate that implements the interface to be returned.");

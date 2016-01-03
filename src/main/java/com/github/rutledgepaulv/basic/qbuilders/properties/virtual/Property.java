@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.basic.qbuilders.properties.virtual;
 
-import com.github.rutledgepaulv.basic.qbuilders.conditions.Partial;
+import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 
 @SuppressWarnings("unused")
-public interface Property<T extends Partial<T>> {
+public interface Property<T extends QBuilder<T>> {
 }

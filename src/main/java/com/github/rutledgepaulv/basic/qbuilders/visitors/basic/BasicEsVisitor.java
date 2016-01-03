@@ -58,9 +58,11 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
             return termsFilter(node.getField(), values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return notFilter(termsFilter(node.getField(), values));
+        } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
+            return nestedFilter(node.getField(), condition(node));
         }
 
-        return null;
+        throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
     }
 
 

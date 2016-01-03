@@ -145,6 +145,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
                 " { \"myLong\" : { \"$in\" : [ 0 , 1 , 2]}}]} , { \"myDouble\" : { \"$lte\" : 2.9}} , " +
                 "{ \"myBoolean\" : false}]} , { \"myDateTime\" : { \"$exists\" : false}}]}";
 
+        SUB_QUERY = "{ \"$and\" : [ { \"mySubList\" : { \"$elemMatch\" : { \"$and\" : [ { \"myString\" : \"Thing\"} , " +
+                "{ \"myLong\" : { \"$exists\" : false}}]}}} , { \"myBoolean\" : true}]}";
     }
 
 

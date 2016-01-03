@@ -1,5 +1,6 @@
 package com.github.rutledgepaulv.basic.qbuilders.conditions;
 
+import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.OrNode;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface Condition<T extends Partial<T>> {
+public interface Condition<T extends QBuilder<T>> {
 
     /**
      * Prepare to append another condition onto the current node in the condition tree

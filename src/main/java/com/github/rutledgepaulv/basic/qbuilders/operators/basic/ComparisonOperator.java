@@ -6,7 +6,7 @@ public class ComparisonOperator {
 
     private String representation;
 
-    protected ComparisonOperator(String representation) {
+    public ComparisonOperator(String representation) {
         this.representation = representation;
     }
 
@@ -19,6 +19,7 @@ public class ComparisonOperator {
     public static final ComparisonOperator IN = new ComparisonOperator("IN");
     public static final ComparisonOperator NIN = new ComparisonOperator("NIN");
     public static final ComparisonOperator EX = new ComparisonOperator("EX");
+    public static final ComparisonOperator SUB_CONDITION_ANY = new ComparisonOperator("SUB_CONDITION_ANY");
 
     @Override
     public final boolean equals(Object o) {
