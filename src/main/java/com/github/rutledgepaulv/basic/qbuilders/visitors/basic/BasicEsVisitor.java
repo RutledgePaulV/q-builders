@@ -34,7 +34,8 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
     protected FilterBuilder visit(ComparisonNode node) {
         ComparisonOperator operator = node.getOperator();
 
-        Collection<?> values = node.getValues().stream().map(this::normalize).collect(Collectors.toList());
+        Collection<?> values = node.getValues().stream()
+                .map(this::normalize).collect(Collectors.toList());
 
         if(ComparisonOperator.EQ.equals(operator)) {
             return termFilter(node.getField(), single(values));
@@ -67,8 +68,11 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
 
 
     protected Object single(Collection<?> values) {
-        return values.stream().findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("You must provide a non-null query value for the condition."));
+        if(!values.isEmpty()) {
+            return values.iterator().next();
+        } else {
+            throw new IllegalArgumentException("You must provide a query value for the condition.");
+        }
     }
 
     protected Object normalize(Object value) {

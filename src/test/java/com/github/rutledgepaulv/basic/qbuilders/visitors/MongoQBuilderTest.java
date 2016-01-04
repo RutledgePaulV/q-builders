@@ -147,6 +147,9 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
 
         SUB_QUERY = "{ \"$and\" : [ { \"mySubList\" : { \"$elemMatch\" : { \"$and\" : [ { \"myString\" : \"Thing\"} , " +
                 "{ \"myLong\" : { \"$exists\" : false}}]}}} , { \"myBoolean\" : true}]}";
+
+        NULL_EQUALITY = "{ \"myString\" : { \"$exists\" : false}}";
+        NULL_INEQUALITY = "{ \"myString\" : { \"$exists\" : true}}";
     }
 
 

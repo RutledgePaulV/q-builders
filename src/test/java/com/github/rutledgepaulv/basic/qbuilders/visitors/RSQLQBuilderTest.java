@@ -121,6 +121,10 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
                 "myLong=in=(\"0\",\"1\",\"2\")),myDouble=le=\"2.9\",myBoolean==\"false\");myDateTime=ex=\"false\"";
 
         SUB_QUERY = "mySubList=q='myString==\"Thing\";myLong=ex=\"false\"';myBoolean==\"true\"";
+
+        NULL_EQUALITY = "myString=ex=\"false\"";
+        NULL_INEQUALITY = "myString=ex=\"true\"";
+
     }
 
 
