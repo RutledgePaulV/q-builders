@@ -5,8 +5,7 @@ import com.github.rutledgepaulv.basic.qbuilders.visitors.basic.BasicEsVisitor;
 
 import static org.junit.Assert.assertEquals;
 
-public class ESQBuilderTest
-        extends QBuilderTestBase<BasicEsVisitor, org.elasticsearch.index.query.FilterBuilder> {
+public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elasticsearch.index.query.FilterBuilder> {
 
     public ESQBuilderTest() {
 
@@ -1199,6 +1198,19 @@ public class ESQBuilderTest
                 "        \"myBoolean\" : true\n" +
                 "      }\n" +
                 "    } ]\n" +
+                "  }\n" +
+                "}";
+
+
+        NULL_EQUALITY = "{\n" +
+                "  \"missing\" : {\n" +
+                "    \"field\" : \"myString\"\n" +
+                "  }\n" +
+                "}";
+
+        NULL_INEQUALITY = "{\n" +
+                "  \"exists\" : {\n" +
+                "    \"field\" : \"myString\"\n" +
                 "  }\n" +
                 "}";
     }

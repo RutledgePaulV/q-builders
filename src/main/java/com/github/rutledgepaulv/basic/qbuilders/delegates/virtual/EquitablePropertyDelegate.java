@@ -15,10 +15,16 @@ public abstract class EquitablePropertyDelegate<T extends QBuilder<T>, S>
     }
 
     public final Condition<T> eq(S value) {
+        if(value == null) {
+            return condition(getField(), ComparisonOperator.EX, Collections.singleton(false));
+        }
         return condition(getField(), ComparisonOperator.EQ, Collections.singletonList(value));
     }
 
     public final Condition<T> ne(S value) {
+        if(value == null) {
+            return condition(getField(), ComparisonOperator.EX, Collections.singleton(true));
+        }
         return condition(getField(), ComparisonOperator.NE, Collections.singletonList(value));
     }
 

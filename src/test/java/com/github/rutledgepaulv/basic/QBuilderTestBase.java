@@ -164,6 +164,11 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         Condition<QModel> SUB_QUERY = mySubList().any(Logical.INLINE_ANDING).and().myBoolean().isTrue();
     }
 
+    protected interface VariedInputs {
+        Condition<QModel> NULL_EQUALITY = myString().eq(null);
+        Condition<QModel> NULL_INEQUALITY = myString().ne(null);
+    }
+
     protected String String_EQ;
     protected String String_NE;
     protected String String_LT;
@@ -440,6 +445,15 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     @Test
     public void subquery() {
         compare(SUB_QUERY, Composed.SUB_QUERY);
+    }
+
+    protected String NULL_EQUALITY;
+    protected String NULL_INEQUALITY;
+
+    @Test
+    public void variedInputs() {
+        compare(NULL_EQUALITY, VariedInputs.NULL_EQUALITY);
+        compare(NULL_INEQUALITY, VariedInputs.NULL_INEQUALITY);
     }
 
     protected void compare(String expected, Condition<QModel> condition) {

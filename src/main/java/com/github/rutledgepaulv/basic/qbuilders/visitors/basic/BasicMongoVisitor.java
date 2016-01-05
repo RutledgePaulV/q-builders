@@ -67,9 +67,11 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
 
 
     protected Object single(Collection<?> values) {
-        return values.stream().findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("You must provide a non-null query value for the condition."));
-
+        if(!values.isEmpty()) {
+            return values.iterator().next();
+        } else {
+            throw new IllegalArgumentException("You must provide a non-null query value for the condition.");
+        }
     }
 
     protected Object normalize(Object value) {
