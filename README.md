@@ -113,8 +113,8 @@ FilterBuilder filter = q.query(new BasicEsVisitor());
 //--------------------------------------------------------------------------
 
 List<Person> persons = getPersons();
-Predicate<Person> predicate = q.query(new BasicPredicateVisitor());
-List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(Collectors.toList());
+Predicate<Person> predicate = q.query(new BasicPredicateVisitor<>());
+List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(toList());
 
 ```
 
@@ -168,8 +168,8 @@ to only ```and()``` or ```or()``` operators and use the parameterized
 It's great to have a single syntax to define queries that can be used against multiple
 backends, but what about features that are specific to certain things? How would I add
 (insert thing here) query support for mongo? I'll provide an example of adding regex 
-searches for mongo (this is more involved than I would like, so please let me know if
-you think of something simpler).
+searches for mongo (something I chose to leave out of the core library due to the complexity of
+supporting same-interface regex searches on each backend).
 
 
 1) Define your custom property interface
