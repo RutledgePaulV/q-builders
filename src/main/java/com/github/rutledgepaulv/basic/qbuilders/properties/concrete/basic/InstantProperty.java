@@ -5,7 +5,9 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.virtual.InstantLikePr
 
 import java.time.Instant;
 
-public interface InstantProperty<T extends QBuilder<T>> extends InstantLikeProperty<T, Instant> {
-
-
-}
+/**
+ * A property view for fields with {@link Instant} values.
+ *
+ * @param <T> The type of the final builder.
+ */
+public interface InstantProperty<T extends QBuilder<T>> extends InstantLikeProperty<T, Instant> {}

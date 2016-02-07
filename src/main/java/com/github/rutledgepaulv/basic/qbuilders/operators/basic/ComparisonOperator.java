@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.basic.qbuilders.operators.basic;
 
 import java.util.Objects;
 
-public class ComparisonOperator {
+public final class ComparisonOperator {
 
     private String representation;
 
