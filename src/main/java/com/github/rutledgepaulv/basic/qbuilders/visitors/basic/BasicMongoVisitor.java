@@ -11,11 +11,23 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
+@SuppressWarnings("WeakerAccess")
 public class BasicMongoVisitor extends NodeVisitor<Criteria> {
+
+    protected final Function<Object, Object> normalizer;
+
+    public BasicMongoVisitor() {
+        this(DefaultNormalizer.INSTANCE);
+    }
+
+    public BasicMongoVisitor(Function<Object, Object> normalizer) {
+        this.normalizer = normalizer;
+    }
 
     @Override
     protected Criteria visit(AndNode node) {
@@ -38,7 +50,7 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
 
         ComparisonOperator operator = node.getOperator();
 
-        Collection<?> values = node.getValues().stream().map(this::normalize).collect(Collectors.toList());
+        Collection<?> values = node.getValues().stream().map(normalizer).collect(Collectors.toList());
 
         if(ComparisonOperator.EQ.equals(operator)) {
             return where(node.getField()).is(single(values));
@@ -74,12 +86,21 @@ public class BasicMongoVisitor extends NodeVisitor<Criteria> {
         }
     }
 
-    protected Object normalize(Object value) {
-        if(value instanceof Instant) {
-            return Date.from((Instant) value);
+
+
+    protected static class DefaultNormalizer implements Function<Object, Object> {
+
+        protected static DefaultNormalizer INSTANCE = new DefaultNormalizer();
+
+        @Override
+        public Object apply(Object o) {
+            if(o instanceof Instant) {
+                return Date.from((Instant) o);
+            }
+            return o;
         }
 
-        return value;
     }
+
 
 }

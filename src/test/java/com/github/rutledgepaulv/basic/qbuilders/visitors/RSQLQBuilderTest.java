@@ -1,8 +1,12 @@
 package com.github.rutledgepaulv.basic.qbuilders.visitors;
 
 import com.github.rutledgepaulv.basic.QBuilderTestBase;
+import com.github.rutledgepaulv.basic.QModel;
+import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.basic.BasicRsqlVisitor;
+import org.junit.Test;
 
+import static com.github.rutledgepaulv.basic.QModel.QueryModelPredef.myString;
 import static org.junit.Assert.assertEquals;
 
 public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String> {
@@ -127,6 +131,16 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
 
     }
 
+
+    @Test
+    public void testDoubleAndSingleQuoteWithEscapeCharacterEscaping() {
+
+        Condition<QModel> q =myString().eq("people's \\of \\the world").and().myBoolean()
+                .isTrue().and().myListOfStrings().in("\"cats", "'demo'\"", "\"test");
+
+        compare("myString==\"people's \\\\of \\\\the world\";myBoolean==\"true\";" +
+                "myListOfStrings=in=('\"cats',\"'demo'\\\"\",'\"test')", q);
+    }
 
 
     @Override
