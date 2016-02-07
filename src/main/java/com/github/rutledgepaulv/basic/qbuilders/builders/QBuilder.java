@@ -10,13 +10,14 @@ import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperat
 import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.*;
 import com.github.rutledgepaulv.basic.qbuilders.properties.virtual.Property;
 import com.github.rutledgepaulv.basic.qbuilders.utilities.ObjectUtils;
-import com.github.rutledgepaulv.basic.qbuilders.utilities.VarArgUtils;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 /**
  * The single class that can be used to construct an abstract representation of a query. Designed
@@ -82,12 +83,16 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
     @SafeVarargs
     public final Condition<T> and(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
-        return and(VarArgUtils.combine(c1, c2, cn));
+        List<Condition<T>> conditions = asList(c1,c2);
+        conditions.addAll(asList(cn));
+        return and(conditions);
     }
 
     @SafeVarargs
     public final Condition<T> or(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
-        return or(VarArgUtils.combine(c1, c2, cn));
+        List<Condition<T>> conditions = asList(c1,c2);
+        conditions.addAll(asList(cn));
+        return or(conditions);
     }
 
     public final Condition<T> and(List<Condition<T>> conditions) {

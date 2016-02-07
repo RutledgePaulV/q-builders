@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public abstract class PathUtils {
+public final class PathUtils {
+    private PathUtils(){}
 
     public static Stream<String> stream(String path) {
         return Arrays.stream(path.split("\\."));
