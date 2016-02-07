@@ -7,7 +7,6 @@ import com.github.rutledgepaulv.basic.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.basic.qbuilders.utilities.PathUtils;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 
 import java.util.Arrays;
@@ -183,7 +182,8 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
     protected Object obj(String fieldName, Object actual) {
         JsonNode node = mapper.valueToTree(actual);
-        Iterator<String> iter = PathUtils.iterator(fieldName);
+
+        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
 
         while(iter.hasNext()) {
             node = node.path(iter.next());
@@ -201,7 +201,8 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
     protected boolean exists(String fieldName, Object actual) {
         JsonNode node = mapper.valueToTree(actual);
-        Iterator<String> iter = PathUtils.iterator(fieldName);
+
+        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
 
         while(iter.hasNext()) {
             node = node.path(iter.next());
