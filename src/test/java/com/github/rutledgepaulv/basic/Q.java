@@ -3,6 +3,7 @@ package com.github.rutledgepaulv.basic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Q {
 
@@ -90,6 +91,39 @@ public class Q {
         this.myListOfStrings = myListOfStrings;
     }
 
+
+    public String getMyString2() {
+        return myString2;
+    }
+
+    public void setMyString2(String myString2) {
+        this.myString2 = myString2;
+    }
+
+    public List<Q> getMySubList() {
+        return mySubList;
+    }
+
+    public void setMySubList(List<Q> mySubList) {
+        this.mySubList = mySubList;
+    }
+
+    public Q copy() {
+        Q q = new Q();
+        q.setMyByte(getMyByte());
+        q.setMyCharacter(getMyCharacter());
+        q.setMyDouble(getMyDouble());
+        q.setMyFloat(getMyFloat());
+        q.setMyInteger(getMyInteger());
+        q.setMyListOfStrings(getMyListOfStrings().stream().collect(Collectors.toList()));
+        q.setMyLong(getMyLong());
+        q.setMyShort(getMyShort());
+        q.setMyString(getMyString());
+        q.setMyString2(getMyString2());
+        q.setMySubList(getMySubList().stream().map(Q::copy).collect(Collectors.toList()));
+        return q;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -106,28 +140,15 @@ public class Q {
                 Objects.equals(myInteger, q.myInteger) &&
                 Objects.equals(myShort, q.myShort) &&
                 Objects.equals(myString, q.myString) &&
-                Objects.equals(myCharacter, q.myCharacter);
+                Objects.equals(myString2, q.myString2) &&
+                Objects.equals(myCharacter, q.myCharacter) &&
+                Objects.equals(mySubList, q.mySubList) &&
+                Objects.equals(myListOfStrings, q.myListOfStrings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myByte, myFloat, myDouble, myLong, myInteger, myShort, myString, myCharacter);
-    }
-
-
-    public String getMyString2() {
-        return myString2;
-    }
-
-    public void setMyString2(String myString2) {
-        this.myString2 = myString2;
-    }
-
-    public List<Q> getMySubList() {
-        return mySubList;
-    }
-
-    public void setMySubList(List<Q> mySubList) {
-        this.mySubList = mySubList;
+        return Objects.hash(myByte, myFloat, myDouble, myLong, myInteger, myShort, myString, myString2, myCharacter,
+                mySubList, myListOfStrings);
     }
 }
