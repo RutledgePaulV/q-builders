@@ -5,7 +5,7 @@ import com.github.rutledgepaulv.basic.qbuilders.visitors.basic.BasicEsVisitor;
 
 import static org.junit.Assert.assertEquals;
 
-public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elasticsearch.index.query.FilterBuilder> {
+public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elasticsearch.index.query.QueryBuilder> {
 
     public ESQBuilderTest() {
 
@@ -16,8 +16,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         String_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"abcdefg\"\n" +
                 "      }\n" +
@@ -76,8 +76,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         String_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myString\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myString\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -88,8 +92,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         String_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myString\" : [ \"d\", \"e\", \"f\" ]\n" +
                 "      }\n" +
@@ -116,8 +120,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Boolean_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myBoolean\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myBoolean\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -128,8 +136,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Short_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myShort\" : 100\n" +
                 "      }\n" +
@@ -188,8 +196,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Short_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myShort\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myShort\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -200,8 +212,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Short_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myShort\" : [ 101, 102, 103 ]\n" +
                 "      }\n" +
@@ -216,8 +228,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Integer_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myInteger\" : 100\n" +
                 "      }\n" +
@@ -276,8 +288,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Integer_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myInteger\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myInteger\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -288,8 +304,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Integer_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myInteger\" : [ 101, 102, 103 ]\n" +
                 "      }\n" +
@@ -304,8 +320,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Long_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myLong\" : 100\n" +
                 "      }\n" +
@@ -364,8 +380,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Long_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myLong\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myLong\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -376,8 +396,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Long_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myLong\" : [ 101, 102, 103 ]\n" +
                 "      }\n" +
@@ -392,8 +412,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Float_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myFloat\" : 100.0\n" +
                 "      }\n" +
@@ -452,8 +472,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Float_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myFloat\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myFloat\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -464,8 +488,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Float_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myFloat\" : [ 101.0, 102.0, 103.0 ]\n" +
                 "      }\n" +
@@ -480,8 +504,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Double_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myDouble\" : 100.0\n" +
                 "      }\n" +
@@ -540,8 +564,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Double_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myDouble\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myDouble\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -552,8 +580,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         Double_NIN = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"terms\" : {\n" +
                 "        \"myDouble\" : [ 101.0, 102.0, 103.0 ]\n" +
                 "      }\n" +
@@ -569,8 +597,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
 
         DateTime_NE = "{\n" +
-                "  \"not\" : {\n" +
-                "    \"filter\" : {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
                 "        \"myDateTime\" : \"1970-01-01T00:00:00.000Z\"\n" +
                 "      }\n" +
@@ -629,14 +657,18 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         DateTime_DNE = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myDateTime\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myDateTime\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
         DateTime_BETWEEN = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
                 "      \"range\" : {\n" +
                 "        \"myDateTime\" : {\n" +
                 "          \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
@@ -659,56 +691,72 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         INLINE_ANDING = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"Thing\"\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myLong\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myLong\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         INLINE_ORING = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"Thing\"\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myLong\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myLong\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         LIST_ANDING = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"Thing\"\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myLong\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myLong\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         LIST_ORING = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"Thing\"\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myLong\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myLong\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
@@ -716,24 +764,28 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
 
         LIST_ORING_OF_INLINE_ANDING = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"and\" : {\n" +
-                "        \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"must\" : [ {\n" +
                 "          \"term\" : {\n" +
                 "            \"myString\" : \"Thing\"\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"missing\" : {\n" +
-                "            \"field\" : \"myLong\"\n" +
+                "          \"bool\" : {\n" +
+                "            \"must_not\" : {\n" +
+                "              \"exists\" : {\n" +
+                "                \"field\" : \"myLong\"\n" +
+                "              }\n" +
+                "            }\n" +
                 "          }\n" +
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"and\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"not\" : {\n" +
-                "            \"filter\" : {\n" +
+                "      \"bool\" : {\n" +
+                "        \"must\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must_not\" : {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Cats\"\n" +
                 "              }\n" +
@@ -755,24 +807,28 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         LIST_ANDING_OF_INLINE_ORING = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"or\" : {\n" +
-                "        \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"should\" : [ {\n" +
                 "          \"term\" : {\n" +
                 "            \"myString\" : \"Thing\"\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"missing\" : {\n" +
-                "            \"field\" : \"myLong\"\n" +
+                "          \"bool\" : {\n" +
+                "            \"must_not\" : {\n" +
+                "              \"exists\" : {\n" +
+                "                \"field\" : \"myLong\"\n" +
+                "              }\n" +
+                "            }\n" +
                 "          }\n" +
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"or\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"not\" : {\n" +
-                "            \"filter\" : {\n" +
+                "      \"bool\" : {\n" +
+                "        \"should\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must_not\" : {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Cats\"\n" +
                 "              }\n" +
@@ -794,26 +850,30 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         LIST_ANDING_OR_LIST_ORING = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"and\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"or\" : {\n" +
-                "            \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"must\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"should\" : [ {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
-                "              \"missing\" : {\n" +
-                "                \"field\" : \"myLong\"\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
+                "                  \"exists\" : {\n" +
+                "                    \"field\" : \"myLong\"\n" +
+                "                  }\n" +
+                "                }\n" +
                 "              }\n" +
                 "            } ]\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"or\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"not\" : {\n" +
-                "                \"filter\" : {\n" +
+                "          \"bool\" : {\n" +
+                "            \"should\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"Cats\"\n" +
                 "                  }\n" +
@@ -833,24 +893,28 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"or\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"should\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
-                "              \"missing\" : {\n" +
-                "                \"field\" : \"myLong\"\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
+                "                  \"exists\" : {\n" +
+                "                    \"field\" : \"myLong\"\n" +
+                "                  }\n" +
+                "                }\n" +
                 "              }\n" +
                 "            } ]\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"not\" : {\n" +
-                "                \"filter\" : {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"Cats\"\n" +
                 "                  }\n" +
@@ -874,26 +938,30 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         LIST_ORING_AND_LIST_ANDING = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"or\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"should\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
-                "              \"missing\" : {\n" +
-                "                \"field\" : \"myLong\"\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
+                "                  \"exists\" : {\n" +
+                "                    \"field\" : \"myLong\"\n" +
+                "                  }\n" +
+                "                }\n" +
                 "              }\n" +
                 "            } ]\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"not\" : {\n" +
-                "                \"filter\" : {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"Cats\"\n" +
                 "                  }\n" +
@@ -913,24 +981,28 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"and\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"or\" : {\n" +
-                "            \"filters\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"must\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"should\" : [ {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
-                "              \"missing\" : {\n" +
-                "                \"field\" : \"myLong\"\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
+                "                  \"exists\" : {\n" +
+                "                    \"field\" : \"myLong\"\n" +
+                "                  }\n" +
+                "                }\n" +
                 "              }\n" +
                 "            } ]\n" +
                 "          }\n" +
                 "        }, {\n" +
-                "          \"or\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"not\" : {\n" +
-                "                \"filter\" : {\n" +
+                "          \"bool\" : {\n" +
+                "            \"should\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"Cats\"\n" +
                 "                  }\n" +
@@ -954,8 +1026,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "}";
 
         CHAINED_ORS = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"thing\"\n" +
                 "      }\n" +
@@ -995,22 +1067,26 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        \"myBoolean\" : false\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myDateTime\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myDateTime\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         CHAINED_ANDS_AND_ORS = "{\n" +
-                "  \"or\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"and\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"or\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"and\" : {\n" +
-                "                \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"should\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"must\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"should\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"must\" : [ {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"thing\"\n" +
                 "                  }\n" +
@@ -1056,16 +1132,20 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myDateTime\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myDateTime\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         CHAINED_ANDS = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
                 "      \"term\" : {\n" +
                 "        \"myString\" : \"thing\"\n" +
                 "      }\n" +
@@ -1105,22 +1185,26 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        \"myBoolean\" : false\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myDateTime\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myDateTime\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
                 "}";
 
         CHAINED_ORS_AND_ANDS = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
-                "      \"or\" : {\n" +
-                "        \"filters\" : [ {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
-                "              \"or\" : {\n" +
-                "                \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
+                "      \"bool\" : {\n" +
+                "        \"should\" : [ {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
+                "              \"bool\" : {\n" +
+                "                \"should\" : [ {\n" +
                 "                  \"term\" : {\n" +
                 "                    \"myString\" : \"thing\"\n" +
                 "                  }\n" +
@@ -1166,8 +1250,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "        } ]\n" +
                 "      }\n" +
                 "    }, {\n" +
-                "      \"missing\" : {\n" +
-                "        \"field\" : \"myDateTime\"\n" +
+                "      \"bool\" : {\n" +
+                "        \"must_not\" : {\n" +
+                "          \"exists\" : {\n" +
+                "            \"field\" : \"myDateTime\"\n" +
+                "          }\n" +
+                "        }\n" +
                 "      }\n" +
                 "    } ]\n" +
                 "  }\n" +
@@ -1175,18 +1263,22 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
 
         SUB_QUERY = "{\n" +
-                "  \"and\" : {\n" +
-                "    \"filters\" : [ {\n" +
+                "  \"bool\" : {\n" +
+                "    \"must\" : [ {\n" +
                 "      \"nested\" : {\n" +
-                "        \"filter\" : {\n" +
-                "          \"and\" : {\n" +
-                "            \"filters\" : [ {\n" +
+                "        \"query\" : {\n" +
+                "          \"bool\" : {\n" +
+                "            \"must\" : [ {\n" +
                 "              \"term\" : {\n" +
                 "                \"myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
-                "              \"missing\" : {\n" +
-                "                \"field\" : \"myLong\"\n" +
+                "              \"bool\" : {\n" +
+                "                \"must_not\" : {\n" +
+                "                  \"exists\" : {\n" +
+                "                    \"field\" : \"myLong\"\n" +
+                "                  }\n" +
+                "                }\n" +
                 "              }\n" +
                 "            } ]\n" +
                 "          }\n" +
@@ -1203,8 +1295,12 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
 
         NULL_EQUALITY = "{\n" +
-                "  \"missing\" : {\n" +
-                "    \"field\" : \"myString\"\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myString\"\n" +
+                "      }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
 
@@ -1222,7 +1318,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
     }
 
     @Override
-    protected void compare(String expected, org.elasticsearch.index.query.FilterBuilder converted) {
+    protected void compare(String expected, org.elasticsearch.index.query.QueryBuilder converted) {
         assertEquals(expected, converted.toString());
     }
 

@@ -260,21 +260,21 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-mongodb</artifactId>
-        <version>1.8.0.RELEASE</version>
+        <version>1.8.2.RELEASE</version>
     </dependency>
     
     <!-- only necessary if you're using the elasticsearch filter builder target type -->
     <dependency>
         <groupId>org.elasticsearch</groupId>
         <artifactId>elasticsearch</artifactId>
-        <version>1.7.2</version>
+        <version>2.2.0</version>
     </dependency>
 
     <!-- only necessary if you're using the java.util.function.Predicate target type -->
      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.6.1</version>
+        <version>2.7.1</version>
      </dependency>
             
 </dependencies>

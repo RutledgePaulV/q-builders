@@ -5,62 +5,63 @@ import com.github.rutledgepaulv.basic.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.FilterBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
-public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
+
+public class BasicEsVisitor extends NodeVisitor<QueryBuilder> {
 
     @Override
-    protected FilterBuilder visit(AndNode node) {
-        List<FilterBuilder> children = node.getChildren().stream().map(this::visitAny).collect(Collectors.toList());
-        return FilterBuilders.andFilter(children.toArray(new FilterBuilder[children.size()]));
+    protected QueryBuilder visit(AndNode node) {
+        BoolQueryBuilder parent = boolQuery();
+        node.getChildren().stream().map(this::visitAny).forEach(parent::must);
+        return parent;
     }
 
     @Override
-    protected FilterBuilder visit(OrNode node) {
-        List<FilterBuilder> children = node.getChildren().stream().map(this::visitAny).collect(Collectors.toList());
-        return FilterBuilders.orFilter(children.toArray(new FilterBuilder[children.size()]));
+    protected QueryBuilder visit(OrNode node) {
+        BoolQueryBuilder parent = boolQuery();
+        node.getChildren().stream().map(this::visitAny).forEach(parent::should);
+        return parent;
     }
 
     @Override
-    protected FilterBuilder visit(ComparisonNode node) {
+    protected QueryBuilder visit(ComparisonNode node) {
         ComparisonOperator operator = node.getOperator();
 
-        Collection<?> values = node.getValues().stream()
-                .map(this::normalize).collect(Collectors.toList());
+        Collection<?> values = node.getValues().stream().map(this::normalize).collect(Collectors.toList());
 
-        if(ComparisonOperator.EQ.equals(operator)) {
-            return termFilter(node.getField(), single(values));
-        } else if(ComparisonOperator.NE.equals(operator)) {
-            return notFilter(termFilter(node.getField(), single(values)));
+        if (ComparisonOperator.EQ.equals(operator)) {
+            return termQuery(node.getField(), single(values));
+        } else if (ComparisonOperator.NE.equals(operator)) {
+            return boolQuery().mustNot(termQuery(node.getField(), single(values)));
         } else if (ComparisonOperator.EX.equals(operator)) {
-            if(single(values).equals(true)) {
-                return existsFilter(node.getField());
+            if (single(values).equals(true)) {
+                return existsQuery(node.getField());
             } else {
-                return missingFilter(node.getField());
+                return boolQuery().mustNot(existsQuery(node.getField()));
             }
         } else if (ComparisonOperator.GT.equals(operator)) {
-            return rangeFilter(node.getField()).gt(single(values));
+            return rangeQuery(node.getField()).gt(single(values));
         } else if (ComparisonOperator.LT.equals(operator)) {
-            return rangeFilter(node.getField()).lt(single(values));
+            return rangeQuery(node.getField()).lt(single(values));
         } else if (ComparisonOperator.GTE.equals(operator)) {
-            return rangeFilter(node.getField()).gte(single(values));
+            return rangeQuery(node.getField()).gte(single(values));
         } else if (ComparisonOperator.LTE.equals(operator)) {
-            return rangeFilter(node.getField()).lte(single(values));
+            return rangeQuery(node.getField()).lte(single(values));
         } else if (ComparisonOperator.IN.equals(operator)) {
-            return termsFilter(node.getField(), values);
+            return termsQuery(node.getField(), values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
-            return notFilter(termsFilter(node.getField(), values));
+            return boolQuery().mustNot(termsQuery(node.getField(), values));
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
-            return nestedFilter(node.getField(), condition(node));
+            return nestedQuery(node.getField(), condition(node));
         }
 
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
@@ -68,7 +69,7 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
 
 
     protected Object single(Collection<?> values) {
-        if(!values.isEmpty()) {
+        if (!values.isEmpty()) {
             return values.iterator().next();
         } else {
             throw new IllegalArgumentException("You must provide a query value for the condition.");
@@ -77,7 +78,7 @@ public class BasicEsVisitor extends NodeVisitor<FilterBuilder> {
 
     protected Object normalize(Object value) {
 
-        if(value instanceof Instant) {
+        if (value instanceof Instant) {
             return Date.from((Instant) value);
         }
 
