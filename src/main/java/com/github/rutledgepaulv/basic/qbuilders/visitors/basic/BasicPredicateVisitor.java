@@ -7,7 +7,6 @@ import com.github.rutledgepaulv.basic.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.basic.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.basic.qbuilders.utilities.PathUtils;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 
 import java.util.Arrays;
@@ -16,10 +15,10 @@ import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-// TODO: replace json nodes with more efficient object graph library (I'm working on one, but it isn't ready)
+@SuppressWarnings("WeakerAccess")
 public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    protected static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     protected Predicate<T> visit(AndNode node) {
@@ -63,7 +62,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
     }
 
-    private boolean subquery(Object actual, Predicate<Object> func) {
+    protected boolean subquery(Object actual, Predicate<Object> func) {
         if (actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
             return Arrays.stream(values).anyMatch(func);
@@ -76,7 +75,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
     }
 
 
-    private boolean equality(Object actual, Object query) {
+    protected boolean equality(Object actual, Object query) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
             return Arrays.stream(values).anyMatch(query::equals);
@@ -88,7 +87,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean inequality(Object actual, Object query) {
+    protected boolean inequality(Object actual, Object query) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
             return Arrays.stream(values).noneMatch(query::equals);
@@ -100,7 +99,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean nin(Object actual, Collection<?> queries) {
+    protected boolean nin(Object actual, Collection<?> queries) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
             return Arrays.stream(values).noneMatch(queries::contains);
@@ -112,7 +111,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean in(Object actual, Collection<?> queries) {
+    protected boolean in(Object actual, Collection<?> queries) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
             return Arrays.stream(values).anyMatch(queries::contains);
@@ -124,7 +123,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean greaterThan(Object actual, Object query) {
+    protected boolean greaterThan(Object actual, Object query) {
         if(query instanceof Number && actual instanceof Number) {
             return ((Number)actual).doubleValue() > ((Number) query).doubleValue();
         } else if (query instanceof String && actual instanceof String) {
@@ -134,7 +133,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean greaterThanOrEqualTo(Object actual, Object query) {
+    protected boolean greaterThanOrEqualTo(Object actual, Object query) {
         if(query instanceof Number && actual instanceof Number) {
             return ((Number)actual).doubleValue() >= ((Number) query).doubleValue();
         } else if (query instanceof String && actual instanceof String) {
@@ -144,7 +143,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean lessThan(Object actual, Object query) {
+    protected boolean lessThan(Object actual, Object query) {
         if(query instanceof Number && actual instanceof Number) {
             return ((Number)actual).doubleValue() < ((Number) query).doubleValue();
         } else if (query instanceof String && actual instanceof String) {
@@ -154,7 +153,7 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
         }
     }
 
-    private boolean lessThanOrEqualTo(Object actual, Object query) {
+    protected boolean lessThanOrEqualTo(Object actual, Object query) {
         if(query instanceof Number && actual instanceof Number) {
             return ((Number)actual).doubleValue() <= ((Number) query).doubleValue();
         } else if (query instanceof String && actual instanceof String) {
@@ -165,25 +164,26 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
     }
 
 
-    private Predicate<T> doesNotExist(ComparisonNode node) {
+    protected Predicate<T> doesNotExist(ComparisonNode node) {
         return t -> !exists(node.getField(), t);
     }
 
-    private Predicate<T> exists(ComparisonNode node) {
+    protected Predicate<T> exists(ComparisonNode node) {
         return t -> exists(node.getField(), t);
     }
 
-    private Predicate<T> single(ComparisonNode node, BiFunction<Object, Object, Boolean> func) {
+    protected Predicate<T> single(ComparisonNode node, BiFunction<Object, Object, Boolean> func) {
         return t -> func.apply(obj(node.getField(), t), node.getValues().iterator().next());
     }
 
-    private Predicate<T> multi(ComparisonNode node, BiFunction<Object, Collection<?>, Boolean> func) {
+    protected Predicate<T> multi(ComparisonNode node, BiFunction<Object, Collection<?>, Boolean> func) {
         return t -> func.apply(obj(node.getField(), t), node.getValues());
     }
 
-    private Object obj(String fieldName, Object actual) {
+    protected Object obj(String fieldName, Object actual) {
         JsonNode node = mapper.valueToTree(actual);
-        Iterator<String> iter = PathUtils.iterator(fieldName);
+
+        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
 
         while(iter.hasNext()) {
             node = node.path(iter.next());
@@ -199,9 +199,10 @@ public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
     }
 
 
-    private boolean exists(String fieldName, Object actual) {
+    protected boolean exists(String fieldName, Object actual) {
         JsonNode node = mapper.valueToTree(actual);
-        Iterator<String> iter = PathUtils.iterator(fieldName);
+
+        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
 
         while(iter.hasNext()) {
             node = node.path(iter.next());

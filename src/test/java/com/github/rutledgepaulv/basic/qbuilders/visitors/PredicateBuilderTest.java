@@ -33,9 +33,20 @@ public class PredicateBuilderTest {
     @Before
     public void setUp() {
         actual.clear();
+
         actual.addAll(Arrays.asList(AAA, AAB, ABA, BBA, BAA, BAB, ABB, BBB));
+        Set<Q> clones = actual.stream().map(Q::copy).collect(Collectors.toSet());
+
+        actual.forEach(entry -> entry.getMySubList().addAll(clones.stream()
+                .filter(thing -> !thing.equals(entry))
+                .collect(Collectors.toList())));
     }
 
+    @Test
+    public void subquery(){
+        compare(mySubList().any(myLong().gt(4L).and().myString().doesNotExist()),
+                AAA, ABA, AAB, BAA, BAB, BBA, BBB);
+    }
 
     @Test
     public void testEquality() {

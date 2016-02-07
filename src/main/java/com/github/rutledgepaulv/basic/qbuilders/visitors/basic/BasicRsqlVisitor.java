@@ -7,21 +7,30 @@ import com.github.rutledgepaulv.basic.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("WeakerAccess")
 public class BasicRsqlVisitor extends NodeVisitor<String> {
 
-    private static final CharSequence DOUBLE_QUOTE = "\"";
-    private static final CharSequence SINGLE_QUOTE = "\'";
+    private final Function<Object, String> serializer;
+
+    public BasicRsqlVisitor() {
+        this(DefaultSerializationStrategy.INSTANCE);
+    }
+
+    public BasicRsqlVisitor(Function<Object, String> serializationStrategy) {
+        this.serializer = serializationStrategy;
+    }
 
     @Override
-    protected final String visit(AndNode node) {
+    protected String visit(AndNode node) {
         String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(";"));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
     @Override
-    protected final String visit(OrNode node) {
+    protected String visit(OrNode node) {
         String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(","));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
@@ -70,14 +79,42 @@ public class BasicRsqlVisitor extends NodeVisitor<String> {
     }
 
     protected String serialize(Object value) {
-        String rawValue = value.toString();
-        if (!rawValue.contains(DOUBLE_QUOTE)) {
-            return DOUBLE_QUOTE + rawValue + DOUBLE_QUOTE;
-        } else if (!rawValue.contains(SINGLE_QUOTE)) {
-            return SINGLE_QUOTE + rawValue + SINGLE_QUOTE;
-        } else {
-            throw new IllegalArgumentException("Your query values cannot contain both a single quote and a double quote.");
-        }
+        return this.serializer.apply(value);
     }
+
+
+    protected static class DefaultSerializationStrategy implements Function<Object ,String> {
+
+        protected final static DefaultSerializationStrategy INSTANCE = new DefaultSerializationStrategy();
+
+        private static final CharSequence DOUBLE_QUOTE = "\"";
+        private static final CharSequence SINGLE_QUOTE = "\'";
+
+
+        @Override
+        public String apply(Object o) {
+            String string = o.toString();
+            if(string.contains("\\")) {
+                string = string.replaceAll("\\\\","\\\\\\\\");
+            }
+
+            boolean containsDoubleQuotes = string.contains("\"");
+            boolean containsSingleQuotes = string.contains("'");
+            boolean containsBoth = containsDoubleQuotes && containsSingleQuotes;
+
+            if (!(containsDoubleQuotes || containsSingleQuotes)) {
+                return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
+            } else if(containsDoubleQuotes && !containsBoth) {
+                return SINGLE_QUOTE + string + SINGLE_QUOTE;
+            } else if (!containsBoth) {
+                return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
+            } else {
+                string = string.replaceAll("\"", "\\\\\"");
+                return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
+            }
+        }
+
+    }
+
 
 }

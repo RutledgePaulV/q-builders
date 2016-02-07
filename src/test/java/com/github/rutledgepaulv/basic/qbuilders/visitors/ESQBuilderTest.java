@@ -591,7 +591,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
         DateTime_EQ = "{\n" +
                 "  \"term\" : {\n" +
-                "    \"myDateTime\" : \"1970-01-01T00:00:00.000Z\"\n" +
+                "    \"myDateTime\" : \"1970-01-01T00:00:00Z\"\n" +
                 "  }\n" +
                 "}";
 
@@ -600,7 +600,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "  \"bool\" : {\n" +
                 "    \"must_not\" : {\n" +
                 "      \"term\" : {\n" +
-                "        \"myDateTime\" : \"1970-01-01T00:00:00.000Z\"\n" +
+                "        \"myDateTime\" : \"1970-01-01T00:00:00Z\"\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
@@ -610,7 +610,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "  \"range\" : {\n" +
                 "    \"myDateTime\" : {\n" +
                 "      \"from\" : null,\n" +
-                "      \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "      \"to\" : \"1971-01-01T00:00:00Z\",\n" +
                 "      \"include_lower\" : true,\n" +
                 "      \"include_upper\" : false\n" +
                 "    }\n" +
@@ -621,7 +621,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "  \"range\" : {\n" +
                 "    \"myDateTime\" : {\n" +
                 "      \"from\" : null,\n" +
-                "      \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "      \"to\" : \"1971-01-01T00:00:00Z\",\n" +
                 "      \"include_lower\" : true,\n" +
                 "      \"include_upper\" : true\n" +
                 "    }\n" +
@@ -631,7 +631,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
         DateTime_GT = "{\n" +
                 "  \"range\" : {\n" +
                 "    \"myDateTime\" : {\n" +
-                "      \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "      \"from\" : \"1970-01-01T00:00:00Z\",\n" +
                 "      \"to\" : null,\n" +
                 "      \"include_lower\" : false,\n" +
                 "      \"include_upper\" : true\n" +
@@ -642,7 +642,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
         DateTime_GTE = "{\n" +
                 "  \"range\" : {\n" +
                 "    \"myDateTime\" : {\n" +
-                "      \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "      \"from\" : \"1970-01-01T00:00:00Z\",\n" +
                 "      \"to\" : null,\n" +
                 "      \"include_lower\" : true,\n" +
                 "      \"include_upper\" : true\n" +
@@ -671,7 +671,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "    \"must\" : [ {\n" +
                 "      \"range\" : {\n" +
                 "        \"myDateTime\" : {\n" +
-                "          \"from\" : \"1970-01-01T00:00:00.000Z\",\n" +
+                "          \"from\" : \"1970-01-01T00:00:00Z\",\n" +
                 "          \"to\" : null,\n" +
                 "          \"include_lower\" : true,\n" +
                 "          \"include_upper\" : true\n" +
@@ -681,7 +681,7 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
                 "      \"range\" : {\n" +
                 "        \"myDateTime\" : {\n" +
                 "          \"from\" : null,\n" +
-                "          \"to\" : \"1971-01-01T00:00:00.000Z\",\n" +
+                "          \"to\" : \"1971-01-01T00:00:00Z\",\n" +
                 "          \"include_lower\" : true,\n" +
                 "          \"include_upper\" : true\n" +
                 "        }\n" +

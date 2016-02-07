@@ -8,15 +8,26 @@ import com.github.rutledgepaulv.basic.qbuilders.visitors.NodeVisitor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 
-import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 
+@SuppressWarnings("WeakerAccess")
 public class BasicEsVisitor extends NodeVisitor<QueryBuilder> {
+
+    protected static final Function<Object, Object> IDENTITY = object -> object;
+    protected final Function<Object, Object> normalizer;
+
+    public BasicEsVisitor() {
+        this(IDENTITY);
+    }
+
+    public BasicEsVisitor(Function<Object, Object> normalizer) {
+        this.normalizer = normalizer;
+    }
 
     @Override
     protected QueryBuilder visit(AndNode node) {
@@ -36,7 +47,7 @@ public class BasicEsVisitor extends NodeVisitor<QueryBuilder> {
     protected QueryBuilder visit(ComparisonNode node) {
         ComparisonOperator operator = node.getOperator();
 
-        Collection<?> values = node.getValues().stream().map(this::normalize).collect(Collectors.toList());
+        Collection<?> values = node.getValues().stream().map(normalizer).collect(Collectors.toList());
 
         if (ComparisonOperator.EQ.equals(operator)) {
             return termQuery(node.getField(), single(values));
@@ -74,15 +85,6 @@ public class BasicEsVisitor extends NodeVisitor<QueryBuilder> {
         } else {
             throw new IllegalArgumentException("You must provide a query value for the condition.");
         }
-    }
-
-    protected Object normalize(Object value) {
-
-        if (value instanceof Instant) {
-            return Date.from((Instant) value);
-        }
-
-        return value;
     }
 
 }

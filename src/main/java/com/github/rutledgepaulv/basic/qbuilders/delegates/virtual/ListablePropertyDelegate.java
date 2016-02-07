@@ -4,9 +4,10 @@ import com.github.rutledgepaulv.basic.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.basic.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.basic.qbuilders.operators.basic.ComparisonOperator;
 import com.github.rutledgepaulv.basic.qbuilders.properties.virtual.ListableProperty;
-import com.github.rutledgepaulv.basic.qbuilders.utilities.VarArgUtils;
 
 import java.util.Collection;
+
+import static java.util.Arrays.asList;
 
 public abstract class ListablePropertyDelegate<T extends QBuilder<T>, S>
         extends EquitablePropertyDelegate<T, S> implements ListableProperty<T, S> {
@@ -17,7 +18,7 @@ public abstract class ListablePropertyDelegate<T extends QBuilder<T>, S>
 
     @SafeVarargs
     public final Condition<T> in(S... values) {
-        return condition(getField(), ComparisonOperator.IN, VarArgUtils.list(values));
+        return condition(getField(), ComparisonOperator.IN, asList(values));
     }
 
     public final Condition<T> in(Collection<S> values) {
@@ -26,7 +27,7 @@ public abstract class ListablePropertyDelegate<T extends QBuilder<T>, S>
 
     @SafeVarargs
     public final Condition<T> nin(S... values) {
-        return condition(getField(), ComparisonOperator.NIN, VarArgUtils.list(values));
+        return condition(getField(), ComparisonOperator.NIN, asList(values));
     }
 
     public final Condition<T> nin(Collection<S> values) {
