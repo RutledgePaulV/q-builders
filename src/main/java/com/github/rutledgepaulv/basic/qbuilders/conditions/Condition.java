@@ -16,7 +16,7 @@ import java.util.List;
  *
  * Note that ANDs take precedence over ORs by default.
  *
- * @param <T>
+ * @param <T> The final type of the builder, used for a fluid chaining interface.
  */
 public interface Condition<T extends QBuilder<T>> {
 

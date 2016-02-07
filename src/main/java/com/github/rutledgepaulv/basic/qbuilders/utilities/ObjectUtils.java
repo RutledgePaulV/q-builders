@@ -18,6 +18,8 @@ public final class ObjectUtils {
      * @param args The arguments for the constructor.
      *             The constructor used will be determined from the arguments provided.
      *
+     * @param <T> The type of the provided class and resulting instance.
+     *
      * @return The new instance.
      */
     public static <T> T init(Class<T> clazz, Object... args) {

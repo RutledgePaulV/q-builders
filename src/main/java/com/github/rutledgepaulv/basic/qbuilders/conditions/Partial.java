@@ -10,7 +10,7 @@ import java.util.List;
  * completion by specifying a field and specifying a constraint against that field,
  * or by logically composing conditions into a new logically complete condition.
  *
- * @param <T>
+ * @param <T> The final type of the builder, used for a fluid chaining interface.
  */
 public interface Partial<T extends QBuilder<T>> {
 
@@ -91,6 +91,7 @@ public interface Partial<T extends QBuilder<T>> {
      * be tested against a condition.
      *
      * @param field The name of the multivalued field.
+     * @param <S> The kind of the subquery condition..
      *
      * @return The property interface so that a condition constraint can be set against the field.
      */

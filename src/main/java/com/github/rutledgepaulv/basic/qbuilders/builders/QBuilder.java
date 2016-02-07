@@ -24,7 +24,7 @@ import static java.util.Arrays.asList;
  * to be extended for each domain model that might be queried against, with each field exposed as
  * a property condition builder.
  *
- * @param <T>
+ * @param <T> The final type of the builder, used for a fluid chaining interface.
  */
 @SuppressWarnings("unchecked")
 public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
