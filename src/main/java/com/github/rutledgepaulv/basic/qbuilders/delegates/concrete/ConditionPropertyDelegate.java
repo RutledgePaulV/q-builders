@@ -8,7 +8,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.Condit
 
 import java.util.Collections;
 
-public class ConditionPropertyDelegate<T extends QBuilder<T>, S extends QBuilder<S>>
+public final class ConditionPropertyDelegate<T extends QBuilder<T>, S extends QBuilder<S>>
         extends PropertyDelegate<T> implements ConditionProperty<T, S> {
 
     public ConditionPropertyDelegate(String field, T canonical) {

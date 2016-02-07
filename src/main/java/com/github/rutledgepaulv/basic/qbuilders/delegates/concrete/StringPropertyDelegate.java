@@ -8,7 +8,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.String
 
 import java.util.Collections;
 
-public class StringPropertyDelegate<T extends QBuilder<T>>
+public final class StringPropertyDelegate<T extends QBuilder<T>>
         extends ListablePropertyDelegate<T, String> implements StringProperty<T> {
 
     public StringPropertyDelegate(String field, T canonical) {

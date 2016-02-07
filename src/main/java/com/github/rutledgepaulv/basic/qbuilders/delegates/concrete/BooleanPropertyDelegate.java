@@ -8,7 +8,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.Boolea
 
 import java.util.Collections;
 
-public class BooleanPropertyDelegate<T extends QBuilder<T>> extends ExistentialPropertyDelegate<T> implements BooleanProperty<T> {
+public final class BooleanPropertyDelegate<T extends QBuilder<T>> extends ExistentialPropertyDelegate<T> implements BooleanProperty<T> {
 
     public BooleanPropertyDelegate(String field, T canonical) {
         super(field, canonical);

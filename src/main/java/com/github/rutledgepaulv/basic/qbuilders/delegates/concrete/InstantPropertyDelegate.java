@@ -6,7 +6,7 @@ import com.github.rutledgepaulv.basic.qbuilders.properties.concrete.basic.Instan
 
 import java.time.Instant;
 
-public class InstantPropertyDelegate<T extends QBuilder<T>>
+public final class InstantPropertyDelegate<T extends QBuilder<T>>
         extends InstantLikePropertyDelegate<T, Instant> implements InstantProperty<T> {
 
     public InstantPropertyDelegate(String field, T canonical) {
