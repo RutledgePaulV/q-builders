@@ -68,13 +68,13 @@ Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul").and().age().
 // choice. currently supports rsql, mongo, and elasticsearch out of box
 //--------------------------------------------------------------------------
 
-String rsql = q.query(new BasicRsqlVisitor()); 
+String rsql = q.query(new RSQLVisitor()); 
 // firstName==Paul;age==23
 
-Criteria mongoCriteria = q.query(new BasicMongoVisitor()); 
+Criteria mongoCriteria = q.query(new MongoVisitor()); 
 // {firstName: "Paul", age: 23}
 
-FilterBuilder filter = q.query(new BasicEsVisitor());
+FilterBuilder filter = q.query(new ElasticsearchVisitor());
 // { "and" : { "filters" : [ { "term" : { "firstName" : "Paul" } }, { "term" : { "age" : 23 } } ] } }
 ```
 
@@ -88,7 +88,7 @@ FilterBuilder filter = q.query(new BasicEsVisitor());
 //--------------------------------------------------------------------------
 
 List<Person> persons = getPersons();
-Predicate<Person> predicate = q.query(new BasicPredicateVisitor<>());
+Predicate<Person> predicate = q.query(new PredicateVisitor<>());
 List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(toList());
 
 ```
@@ -225,7 +225,7 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
 ### RSQL Flavor
 The RSQL builder introduces some new operators to the standard RSQL set. Since this library only
 builds queries it doesn't dictate what you use to parse them. However, it's written specifically
-to be compatible with [rsql-parser](https://github.com/jirutka/rsql-parser). However, you need to
+to be compatible with [rsql-parser](https://github.com/jirutka/rsql-parser). So, you should
 make sure that you add the following operators before parsing:
 
 - "=ex=" The exists clause. It has values of either ```true``` or ```false```.
