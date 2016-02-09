@@ -224,7 +224,7 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
 
 ### RSQL Flavor
 The RSQL builder introduces some new operators to the standard RSQL set. Since this library only
-builds queries, it doesn't dictate what you use to parse them, however it's written specifically
+builds queries it doesn't dictate what you use to parse them. However, it's written specifically
 to be compatible with [rsql-parser](https://github.com/jirutka/rsql-parser). However, you need to
 make sure that you add the following operators before parsing:
 
