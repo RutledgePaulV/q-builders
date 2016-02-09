@@ -4,7 +4,7 @@
 
     <groupId>com.github.rutledgepaulv</groupId>
     <artifactId>q-builders</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>q-builders</name>
     <url>http://github.com/rutledgepaulv/q-builders</url>
