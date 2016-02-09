@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.qbuilders.delegates.concrete;
 
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.delegates.virtual.NumberPropertyDelegate;
-import com.github.rutledgepaulv.qbuilders.properties.concrete.basic.DoubleProperty;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.DoubleProperty;
 
 public final class DoublePropertyDelegate<T extends QBuilder<T>> extends NumberPropertyDelegate<T, Double> implements DoubleProperty<T> {
 

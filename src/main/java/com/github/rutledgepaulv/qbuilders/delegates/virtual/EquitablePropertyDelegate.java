@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.qbuilders.delegates.virtual;
 
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.EquitableProperty;
 
 import java.util.Collections;

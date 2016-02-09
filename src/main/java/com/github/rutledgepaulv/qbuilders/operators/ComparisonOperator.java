@@ -1,4 +1,4 @@
-package com.github.rutledgepaulv.qbuilders.operators.basic;
+package com.github.rutledgepaulv.qbuilders.operators;
 
 import java.util.Objects;
 

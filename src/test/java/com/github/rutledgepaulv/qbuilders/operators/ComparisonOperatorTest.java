@@ -1,5 +1,6 @@
-package com.github.rutledgepaulv.qbuilders.operators.basic;
+package com.github.rutledgepaulv.qbuilders.operators;
 
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotEquals;

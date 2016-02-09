@@ -8,8 +8,8 @@ magic strings, provides type safety, produces queries that read like a sentence,
 and provides an extensible way to define new target query formats.
 
 Have a REST API? Chances are you want to provide an ability for people to query your API, but you
-also make queries against the database yourself. Using these builders you define *one* query model
-in a shared jar that you use in both your SDK and API, and target different formats. Like RSQL for
+also make queries against the database yourself. Using these builders lets you define *one* query model
+in a shared jar that you use in both your SDK and API and target different query formats. Like RSQL for
 over-the-wire and mongo or hibernate queries on the API side.
 
 
@@ -19,17 +19,18 @@ only logical options available, which has resulted in most query builders being 
 call methods that you shouldn't be able to call at that time.
 
 
-# Meet q-builders
+### Why is this better?
 As soon as you start typing, you'll notice that you're never even given an inapplicable option at any point
 as you build your queries. Also, since you define the accepted type when you define your query model, there's
 no need to worry about someone passing an integer to a string field, etc.
 
 
-### Supported Target Query Expressions:
+### Out Of Box Target Query Formats:
 - Java Predicates
 - A string in RSQL format
 - Elasticsearch's QueryBuilder
 - Spring Data's MongoDB Criteria
+- Yours could be next...
 
 
 ### Simple Usage:
@@ -120,10 +121,12 @@ public class PersonQuery extends QBuilder<PersonQuery> {
     
 }
 
+```
+
+```java
 import static com.company.queries.PersonQuery.PersonQueryPredef.*;
 
-Condition<PersonQuery> query = firstName().eq("Paul").or()
-                               .and(firstName().lexicallyBefore("Richard"), age().gt(22));
+Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Richard"), age().gt(22)));
 ```
 
 ### Precedence:
@@ -218,10 +221,9 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
 ```
 
 ### Installation 
-(coming soon to a maven repository near you)
 
 
-#### Release
+#### Release Versions
 ```xml
 <dependencies>
     <dependency>
@@ -232,7 +234,7 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
 </dependencies>
 ```
 
-#### Snapshot
+#### Snapshot Versions
 ```xml
 <dependencies>
     <dependency>
@@ -254,7 +256,6 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
     </repository>
 </repositories>
 ```
-
 
 
 #### Optional dependencies

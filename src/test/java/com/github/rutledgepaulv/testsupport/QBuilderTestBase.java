@@ -1,4 +1,4 @@
-package com.github.rutledgepaulv.testsupport.basic;
+package com.github.rutledgepaulv.testsupport;
 
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-
-import static com.github.rutledgepaulv.testsupport.basic.QModel.QueryModelPredef.*;
 
 
 public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
@@ -18,88 +16,88 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
 
     protected interface Simple {
         interface String {
-            Condition<QModel> EQ = myString().eq("abcdefg");
-            Condition<QModel> NE = myString().ne("abcdefg");
-            Condition<QModel> LT = myString().lexicallyBefore("abcdefg");
-            Condition<QModel> GT = myString().lexicallyAfter("abcdefg");
-            Condition<QModel> GTE = myString().lexicallyNotBefore("abcdefg");
-            Condition<QModel> LTE = myString().lexicallyNotAfter("abcdefg");
-            Condition<QModel> EX = myString().exists();
-            Condition<QModel> DNE = myString().doesNotExist();
-            Condition<QModel> IN = myString().in("a", "b", "c");
-            Condition<QModel> NIN = myString().nin("d", "e", "f");
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myString().eq("abcdefg");
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myString().ne("abcdefg");
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myString().lexicallyBefore("abcdefg");
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myString().lexicallyAfter("abcdefg");
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myString().lexicallyNotBefore("abcdefg");
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myString().lexicallyNotAfter("abcdefg");
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myString().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myString().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myString().in("a", "b", "c");
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myString().nin("d", "e", "f");
         }
 
         interface Boolean {
-            Condition<QModel> TRUE = myBoolean().isTrue();
-            Condition<QModel> FALSE = myBoolean().isFalse();
-            Condition<QModel> EX = myBoolean().exists();
-            Condition<QModel> DNE = myBoolean().doesNotExist();
+            Condition<QueryModel> TRUE = QueryModel.QueryModelPredef.myBoolean().isTrue();
+            Condition<QueryModel> FALSE = QueryModel.QueryModelPredef.myBoolean().isFalse();
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myBoolean().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myBoolean().doesNotExist();
         }
 
         interface Short {
-            Condition<QModel> EQ = myShort().eq((short) 100);
-            Condition<QModel> NE = myShort().ne((short) 100);
-            Condition<QModel> GT = myShort().gt((short) 100);
-            Condition<QModel> LT = myShort().lt((short) 100);
-            Condition<QModel> GTE = myShort().gte((short) 100);
-            Condition<QModel> LTE = myShort().lte((short) 100);
-            Condition<QModel> EX = myShort().exists();
-            Condition<QModel> DNE = myShort().doesNotExist();
-            Condition<QModel> IN = myShort().in((short) 98, (short) 99, (short) 100);
-            Condition<QModel> NIN = myShort().nin((short) 101, (short) 102, (short) 103);
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myShort().eq((short) 100);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myShort().ne((short) 100);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myShort().gt((short) 100);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myShort().lt((short) 100);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myShort().gte((short) 100);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myShort().lte((short) 100);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myShort().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myShort().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myShort().in((short) 98, (short) 99, (short) 100);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myShort().nin((short) 101, (short) 102, (short) 103);
         }
 
         interface Integer {
-            Condition<QModel> EQ = myInteger().eq(100);
-            Condition<QModel> NE = myInteger().ne(100);
-            Condition<QModel> GT = myInteger().gt(100);
-            Condition<QModel> LT = myInteger().lt(100);
-            Condition<QModel> GTE = myInteger().gte(100);
-            Condition<QModel> LTE = myInteger().lte(100);
-            Condition<QModel> EX = myInteger().exists();
-            Condition<QModel> DNE = myInteger().doesNotExist();
-            Condition<QModel> IN = myInteger().in(98, 99, 100);
-            Condition<QModel> NIN = myInteger().nin(101, 102, 103);
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myInteger().eq(100);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myInteger().ne(100);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myInteger().gt(100);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myInteger().lt(100);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myInteger().gte(100);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myInteger().lte(100);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myInteger().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myInteger().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myInteger().in(98, 99, 100);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myInteger().nin(101, 102, 103);
         }
 
         interface Long {
-            Condition<QModel> EQ = myLong().eq(100L);
-            Condition<QModel> NE = myLong().ne(100L);
-            Condition<QModel> GT = myLong().gt(100L);
-            Condition<QModel> LT = myLong().lt(100L);
-            Condition<QModel> GTE = myLong().gte(100L);
-            Condition<QModel> LTE = myLong().lte(100L);
-            Condition<QModel> EX = myLong().exists();
-            Condition<QModel> DNE = myLong().doesNotExist();
-            Condition<QModel> IN = myLong().in(98L, 99L, 100L);
-            Condition<QModel> NIN = myLong().nin(101L, 102L, 103L);
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myLong().eq(100L);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myLong().ne(100L);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myLong().gt(100L);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myLong().lt(100L);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myLong().gte(100L);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myLong().lte(100L);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myLong().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myLong().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myLong().in(98L, 99L, 100L);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myLong().nin(101L, 102L, 103L);
         }
 
         interface Float {
-            Condition<QModel> EQ = myFloat().eq(100f);
-            Condition<QModel> NE = myFloat().ne(100f);
-            Condition<QModel> GT = myFloat().gt(100f);
-            Condition<QModel> LT = myFloat().lt(100f);
-            Condition<QModel> GTE = myFloat().gte(100f);
-            Condition<QModel> LTE = myFloat().lte(100f);
-            Condition<QModel> EX = myFloat().exists();
-            Condition<QModel> DNE = myFloat().doesNotExist();
-            Condition<QModel> IN = myFloat().in(98f, 99f, 100f);
-            Condition<QModel> NIN = myFloat().nin(101f, 102f, 103f);
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myFloat().eq(100f);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myFloat().ne(100f);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myFloat().gt(100f);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myFloat().lt(100f);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myFloat().gte(100f);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myFloat().lte(100f);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myFloat().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myFloat().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myFloat().in(98f, 99f, 100f);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myFloat().nin(101f, 102f, 103f);
         }
 
         interface Double {
-            Condition<QModel> EQ = myDouble().eq(100.0);
-            Condition<QModel> NE = myDouble().ne(100.0);
-            Condition<QModel> GT = myDouble().gt(100.0);
-            Condition<QModel> LT = myDouble().lt(100.0);
-            Condition<QModel> GTE = myDouble().gte(100.0);
-            Condition<QModel> LTE = myDouble().lte(100.0);
-            Condition<QModel> EX = myDouble().exists();
-            Condition<QModel> DNE = myDouble().doesNotExist();
-            Condition<QModel> IN = myDouble().in(98.0, 99.0, 100.0);
-            Condition<QModel> NIN = myDouble().nin(101.0, 102.0, 103.0);
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myDouble().eq(100.0);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myDouble().ne(100.0);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myDouble().gt(100.0);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myDouble().lt(100.0);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myDouble().gte(100.0);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myDouble().lte(100.0);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myDouble().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myDouble().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myDouble().in(98.0, 99.0, 100.0);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myDouble().nin(101.0, 102.0, 103.0);
         }
 
         interface Instant {
@@ -109,64 +107,72 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             java.time.Instant yearAfterEpoch = OffsetDateTime.of(1970, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
                     .plusYears(1).toInstant();
 
-            Condition<QModel> EQ = myDateTime().eq(epoch);
-            Condition<QModel> NE = myDateTime().ne(epoch);
-            Condition<QModel> GT = myDateTime().after(epoch, true);
-            Condition<QModel> GTE = myDateTime().after(epoch, false);
-            Condition<QModel> LT = myDateTime().before(yearAfterEpoch, true);
-            Condition<QModel> LTE = myDateTime().before(yearAfterEpoch, false);
-            Condition<QModel> BETWEEN = myDateTime().between(epoch, false, yearAfterEpoch, false);
-            Condition<QModel> EX = myDateTime().exists();
-            Condition<QModel> DNE = myDateTime().doesNotExist();
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myDateTime().eq(epoch);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myDateTime().ne(epoch);
+            Condition<QueryModel> GT = QueryModel.QueryModelPredef.myDateTime().after(epoch, true);
+            Condition<QueryModel> GTE = QueryModel.QueryModelPredef.myDateTime().after(epoch, false);
+            Condition<QueryModel> LT = QueryModel.QueryModelPredef.myDateTime().before(yearAfterEpoch, true);
+            Condition<QueryModel> LTE = QueryModel.QueryModelPredef.myDateTime().before(yearAfterEpoch, false);
+            Condition<QueryModel> BETWEEN = QueryModel.QueryModelPredef.myDateTime().between(epoch, false, yearAfterEpoch, false);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myDateTime().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myDateTime().doesNotExist();
         }
     }
 
     protected interface Logical {
-        Condition<QModel> INLINE_ANDING = myString().eq("Thing").and().myLong().doesNotExist();
-        Condition<QModel> INLINE_ORING = myString().eq("Thing").or().myLong().doesNotExist();
-        Condition<QModel> LIST_ANDING = and(myString().eq("Thing"), myLong().doesNotExist());
-        Condition<QModel> LIST_ORING = or(myString().eq("Thing"), myLong().doesNotExist());
-        Condition<QModel> LIST_ORING_OF_INLINE_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
-                myString().ne("Cats").and().myLong().gt(30L));
+        Condition<QueryModel> INLINE_ANDING = QueryModel.QueryModelPredef.myString().eq("Thing").and().myLong().doesNotExist();
+        Condition<QueryModel> INLINE_ORING = QueryModel.QueryModelPredef.myString().eq("Thing").or().myLong().doesNotExist();
+        Condition<QueryModel> LIST_ANDING = QueryModel.QueryModelPredef
+                .and(QueryModel.QueryModelPredef.myString().eq("Thing"), QueryModel.QueryModelPredef.myLong().doesNotExist());
+        Condition<QueryModel> LIST_ORING = QueryModel.QueryModelPredef
+                .or(QueryModel.QueryModelPredef.myString().eq("Thing"), QueryModel.QueryModelPredef.myLong().doesNotExist());
+        Condition<QueryModel> LIST_ORING_OF_INLINE_ANDING = QueryModel.QueryModelPredef
+                .or(QueryModel.QueryModelPredef.myString().eq("Thing").and().myLong().doesNotExist(),
+                QueryModel.QueryModelPredef.myString().ne("Cats").and().myLong().gt(30L));
 
-        Condition<QModel> LIST_ANDING_OF_INLINE_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
-                myString().ne("Cats").or().myLong().gt(30L));
+        Condition<QueryModel> LIST_ANDING_OF_INLINE_ORING = QueryModel.QueryModelPredef
+                .and(QueryModel.QueryModelPredef.myString().eq("Thing").or().myLong().doesNotExist(),
+                QueryModel.QueryModelPredef.myString().ne("Cats").or().myLong().gt(30L));
 
-        Condition<QModel> LIST_ANDING_OR_LIST_ORING = and(myString().eq("Thing").or().myLong().doesNotExist(),
-                myString().ne("Cats").or().myLong().gt(30L)).or()
-                .or(myString().eq("Thing").and().myLong().doesNotExist(), myString().ne("Cats").and().myLong().gt(30L));
+        Condition<QueryModel> LIST_ANDING_OR_LIST_ORING = QueryModel.QueryModelPredef
+                .and(QueryModel.QueryModelPredef.myString().eq("Thing").or().myLong().doesNotExist(),
+                QueryModel.QueryModelPredef.myString().ne("Cats").or().myLong().gt(30L)).or()
+                .or(QueryModel.QueryModelPredef
+                        .myString().eq("Thing").and().myLong().doesNotExist(), QueryModel.QueryModelPredef.myString().ne("Cats").and().myLong().gt(30L));
 
-        Condition<QModel> LIST_ORING_ANDLIST_ANDING = or(myString().eq("Thing").and().myLong().doesNotExist(),
-                myString().ne("Cats").and().myLong().gt(30L)).and()
-                .and(myString().eq("Thing").or().myLong().doesNotExist(), myString().ne("Cats").or().myLong().gt(30L));
+        Condition<QueryModel> LIST_ORING_ANDLIST_ANDING = QueryModel.QueryModelPredef
+                .or(QueryModel.QueryModelPredef.myString().eq("Thing").and().myLong().doesNotExist(),
+                QueryModel.QueryModelPredef.myString().ne("Cats").and().myLong().gt(30L)).and()
+                .and(QueryModel.QueryModelPredef
+                        .myString().eq("Thing").or().myLong().doesNotExist(), QueryModel.QueryModelPredef.myString().ne("Cats").or().myLong().gt(30L));
     }
 
 
     protected interface Chained {
-            Condition<QModel> CHAINED_ANDS = myString().eq("thing").and().myInteger().gt(0)
+            Condition<QueryModel> CHAINED_ANDS = QueryModel.QueryModelPredef.myString().eq("thing").and().myInteger().gt(0)
                     .and().myInteger().lt(5).and().myLong().in(0L, 1L, 2L).and().myDouble().lte(2.9)
                     .and().myBoolean().isFalse().and().myDateTime().doesNotExist();
 
-            Condition<QModel> CHAINED_ORS = myString().eq("thing").or().myInteger().gt(0).or()
+            Condition<QueryModel> CHAINED_ORS = QueryModel.QueryModelPredef.myString().eq("thing").or().myInteger().gt(0).or()
                     .myInteger().lt(5).or().myLong().in(0L, 1L, 2L).or().myDouble().lte(2.9).or()
                     .myBoolean().isFalse().or().myDateTime().doesNotExist();
 
-            Condition<QModel> CHAINED_ANDS_AND_ORS = myString().eq("thing").and().myInteger()
+            Condition<QueryModel> CHAINED_ANDS_AND_ORS = QueryModel.QueryModelPredef.myString().eq("thing").and().myInteger()
                     .gt(0).or().myInteger().lt(5).or().myLong().in(0L, 1L, 2L).and().myDouble()
                     .lte(2.9).and().myBoolean().isFalse().or().myDateTime().doesNotExist();
 
-            Condition<QModel> CHAINED_ORS_AND_ANDS = myString().eq("thing").or().myInteger()
+            Condition<QueryModel> CHAINED_ORS_AND_ANDS = QueryModel.QueryModelPredef.myString().eq("thing").or().myInteger()
                     .gt(0).and().myInteger().lt(5).and().myLong().in(0L, 1L, 2L).or().myDouble()
                     .lte(2.9).or().myBoolean().isFalse().and().myDateTime().doesNotExist();
     }
 
     protected interface Composed {
-        Condition<QModel> SUB_QUERY = mySubList().any(Logical.INLINE_ANDING).and().myBoolean().isTrue();
+        Condition<QueryModel> SUB_QUERY = QueryModel.QueryModelPredef.mySubList().any(Logical.INLINE_ANDING).and().myBoolean().isTrue();
     }
 
     protected interface VariedInputs {
-        Condition<QModel> NULL_EQUALITY = myString().eq(null);
-        Condition<QModel> NULL_INEQUALITY = myString().ne(null);
+        Condition<QueryModel> NULL_EQUALITY = QueryModel.QueryModelPredef.myString().eq(null);
+        Condition<QueryModel> NULL_INEQUALITY = QueryModel.QueryModelPredef.myString().ne(null);
     }
 
     protected String String_EQ;
@@ -456,7 +462,7 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(NULL_INEQUALITY, VariedInputs.NULL_INEQUALITY);
     }
 
-    protected void compare(String expected, Condition<QModel> condition) {
+    protected void compare(String expected, Condition<QueryModel> condition) {
         T visitor = getVisitor();
         compare(expected, condition.query(visitor));
     }

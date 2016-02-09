@@ -1,14 +1,13 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
-import com.github.rutledgepaulv.testsupport.basic.QBuilderTestBase;
-import com.github.rutledgepaulv.qbuilders.visitors.basic.BasicMongoVisitor;
+import com.github.rutledgepaulv.testsupport.QBuilderTestBase;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import static org.junit.Assert.assertEquals;
 
-public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Criteria> {
+public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria> {
 
-    public MongoQBuilderTest() {
+    public MongoVisitorTest() {
 
         String_EQ = "{ \"myString\" : \"abcdefg\"}";
         String_NE = "{ \"myString\" : { \"$ne\" : \"abcdefg\"}}";
@@ -155,8 +154,8 @@ public class MongoQBuilderTest extends QBuilderTestBase<BasicMongoVisitor, Crite
 
 
     @Override
-    protected BasicMongoVisitor getVisitor() {
-        return new BasicMongoVisitor();
+    protected MongoVisitor getVisitor() {
+        return new MongoVisitor();
     }
 
     @Override

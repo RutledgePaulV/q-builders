@@ -1,4 +1,4 @@
-package com.github.rutledgepaulv.qbuilders.properties.concrete.basic;
+package com.github.rutledgepaulv.qbuilders.properties.concrete;
 
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.InstantLikeProperty;
