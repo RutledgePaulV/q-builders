@@ -10,7 +10,7 @@ and provides an extensible way to define new target query formats.
 Have a REST API? Chances are you want to provide an ability for people to query your API, but you
 also make queries against the database yourself. Using these builders lets you define *one* query model
 in a shared jar that you use in both your SDK and API and target different query formats. Like RSQL for
-over-the-wire and mongo or hibernate queries on the API side.
+over-the-wire and mongo or hibernate queries on the API server.
 
 
 ### Why does this exist?
@@ -22,7 +22,8 @@ call methods that you shouldn't be able to call at that time.
 ### Why is this better?
 As soon as you start typing, you'll notice that you're never even given an inapplicable option at any point
 as you build your queries. Also, since you define the accepted type when you define your query model, there's
-no need to worry about someone passing an integer to a string field, etc.
+no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition
+to build a query and is ideal for using static imports to create what is essentially a query DSL.
 
 
 ### Out Of Box Target Query Formats:
@@ -219,6 +220,18 @@ Condition<AdvancedQModel> q = firstName().regex("^pau.*");
 Criteria criteria = q.query(new AdvancedMongoVisitor());
 
 ```
+
+
+### RSQL Flavor
+The RSQL builder introduces some new operators to the standard RSQL set. Since this library only
+builds queries, it doesn't dictate what you use to parse them, however it's written specifically
+to be compatible with [rsql-parser](https://github.com/jirutka/rsql-parser). However, you need to
+make sure that you add the following operators before parsing:
+
+- "=ex=" The exists clause. It has values of either ```true``` or ```false```.
+- "=q=" The subquery clause. It has a string value that itself might be an entire RSQL query.
+
+
 
 ### Installation 
 
