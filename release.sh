@@ -20,19 +20,4 @@ then
     echo "Deploying new release artifacts to sonatype repository."
     mvn clean deploy -P release
 
-    read -p "Would you like to promote the release from the sonatype repository to the central repository?"
-    echo
-
-    if [[ $REPLY =~ ^[Yy]$ ]]
-        read -p "Oh, Okay. Would you like to drop the version deployed to the snapshot repository?"
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]
-            exit 0;
-        then
-            mvn nexus-staging:drop -P release
-        fi
-    then
-        mvn nexus-staging:release -P release
-    fi
-
 fi
