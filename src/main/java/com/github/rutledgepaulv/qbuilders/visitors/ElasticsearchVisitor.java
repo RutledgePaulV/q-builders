@@ -1,10 +1,9 @@
-package com.github.rutledgepaulv.qbuilders.visitors.basic;
+package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 
@@ -16,16 +15,16 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 
 
 @SuppressWarnings("WeakerAccess")
-public class BasicEsVisitor extends NodeVisitor<QueryBuilder> {
+public class ElasticsearchVisitor extends NodeVisitor<QueryBuilder> {
 
     protected static final Function<Object, Object> IDENTITY = object -> object;
     protected final Function<Object, Object> normalizer;
 
-    public BasicEsVisitor() {
+    public ElasticsearchVisitor() {
         this(IDENTITY);
     }
 
-    public BasicEsVisitor(Function<Object, Object> normalizer) {
+    public ElasticsearchVisitor(Function<Object, Object> normalizer) {
         this.normalizer = normalizer;
     }
 

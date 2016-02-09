@@ -1,17 +1,16 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
-import com.github.rutledgepaulv.testsupport.basic.QBuilderTestBase;
-import com.github.rutledgepaulv.testsupport.basic.QModel;
+import com.github.rutledgepaulv.testsupport.QBuilderTestBase;
+import com.github.rutledgepaulv.testsupport.QueryModel;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.visitors.basic.BasicRsqlVisitor;
 import org.junit.Test;
 
-import static com.github.rutledgepaulv.testsupport.basic.QModel.QueryModelPredef.myString;
+import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.myString;
 import static org.junit.Assert.assertEquals;
 
-public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String> {
+public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
 
-    public RSQLQBuilderTest() {
+    public RSQLVisitorTest() {
         String_EQ = "myString==\"abcdefg\"";
         String_NE = "myString!=\"abcdefg\"";
         String_LT = "myString=lt=\"abcdefg\"";
@@ -135,7 +134,7 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
     @Test
     public void testDoubleAndSingleQuoteWithEscapeCharacterEscaping() {
 
-        Condition<QModel> q =myString().eq("people's \\of \\the world").and().myBoolean()
+        Condition<QueryModel> q =myString().eq("people's \\of \\the world").and().myBoolean()
                 .isTrue().and().myListOfStrings().in("\"cats", "'demo'\"", "\"test");
 
         compare("myString==\"people's \\\\of \\\\the world\";myBoolean==\"true\";" +
@@ -144,8 +143,8 @@ public class RSQLQBuilderTest extends QBuilderTestBase<BasicRsqlVisitor, String>
 
 
     @Override
-    protected BasicRsqlVisitor getVisitor() {
-        return new BasicRsqlVisitor();
+    protected RSQLVisitor getVisitor() {
+        return new RSQLVisitor();
     }
 
     @Override

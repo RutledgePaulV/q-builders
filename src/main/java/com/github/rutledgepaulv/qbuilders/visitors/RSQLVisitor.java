@@ -1,25 +1,24 @@
-package com.github.rutledgepaulv.qbuilders.visitors.basic;
+package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.github.rutledgepaulv.qbuilders.nodes.AbstractNode;
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
-public class BasicRsqlVisitor extends NodeVisitor<String> {
+public class RSQLVisitor extends NodeVisitor<String> {
 
     private final Function<Object, String> serializer;
 
-    public BasicRsqlVisitor() {
+    public RSQLVisitor() {
         this(DefaultSerializationStrategy.INSTANCE);
     }
 
-    public BasicRsqlVisitor(Function<Object, String> serializationStrategy) {
+    public RSQLVisitor(Function<Object, String> serializationStrategy) {
         this.serializer = serializationStrategy;
     }
 

@@ -3,7 +3,7 @@ package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.nodes.*;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
 @SuppressWarnings("ConstantConditions")
 public abstract class NodeVisitor<T> {

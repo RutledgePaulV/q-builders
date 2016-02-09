@@ -3,8 +3,8 @@ package com.github.rutledgepaulv.qbuilders.delegates.concrete;
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.delegates.virtual.PropertyDelegate;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.qbuilders.properties.concrete.basic.ConditionProperty;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.ConditionProperty;
 
 import java.util.Collections;
 

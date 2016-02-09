@@ -2,7 +2,7 @@ package com.github.rutledgepaulv.qbuilders.delegates.concrete;
 
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.delegates.virtual.InstantLikePropertyDelegate;
-import com.github.rutledgepaulv.qbuilders.properties.concrete.basic.InstantProperty;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.InstantProperty;
 
 import java.time.Instant;
 

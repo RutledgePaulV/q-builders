@@ -1,6 +1,6 @@
 package com.github.rutledgepaulv.qbuilders.nodes;
 
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
 import java.util.Collection;
 

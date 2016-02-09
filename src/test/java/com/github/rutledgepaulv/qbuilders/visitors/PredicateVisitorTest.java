@@ -1,9 +1,8 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
-import com.github.rutledgepaulv.testsupport.basic.Q;
-import com.github.rutledgepaulv.testsupport.basic.QModel;
+import com.github.rutledgepaulv.testsupport.DomainModel;
+import com.github.rutledgepaulv.testsupport.QueryModel;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.visitors.basic.BasicPredicateVisitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,21 +12,21 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.github.rutledgepaulv.testsupport.basic.QModel.QueryModelPredef.*;
+import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.*;
 import static org.junit.Assert.assertEquals;
 
-public class PredicateBuilderTest {
+public class PredicateVisitorTest {
 
-    private Set<Q> actual = new HashSet<>();
+    private Set<DomainModel> actual = new HashSet<>();
 
-    private Q AAA = get((byte) 7, (short) 5, 4, 0, 3, 2, 'a', "testing1", "test_a", "a");
-    private Q ABA = get((byte) 5, (short) 3, 6, 2, 1, 4, 'c', "testing3", "test_b", "ab", "a");
-    private Q AAB = get((byte) 6, (short) 4, 5, 1, 2, 3, 'b', "testing2", "test_c", "abc", "ab", "a");
-    private Q BAA = get((byte) 4, (short) 2, 7, 3, 0, 5, 'd', null, "test_d", "abcd", "abc", "ab", "a");
-    private Q BAB = get((byte) 3, (short) 1, 0, 4, 7, 6, 'e', "testing5", "test_e", "abcde", "abcd", "abc", "ab", "a");
-    private Q BBA = get((byte) 2, (short) 0, 1, 5, 6, 7, 'f', "testing6", "test_f");
-    private Q ABB = get((byte) 1, (short) 7, 2, 6, 5, 0, 'g', null, "test_g");
-    private Q BBB = get((byte) 0, (short) 6, 3, 7, 4, 1, 'h', "testing8", "test_h");
+    private DomainModel AAA = get((byte) 7, (short) 5, 4, 0, 3, 2, 'a', "testing1", "test_a", "a");
+    private DomainModel ABA = get((byte) 5, (short) 3, 6, 2, 1, 4, 'c', "testing3", "test_b", "ab", "a");
+    private DomainModel AAB = get((byte) 6, (short) 4, 5, 1, 2, 3, 'b', "testing2", "test_c", "abc", "ab", "a");
+    private DomainModel BAA = get((byte) 4, (short) 2, 7, 3, 0, 5, 'd', null, "test_d", "abcd", "abc", "ab", "a");
+    private DomainModel BAB = get((byte) 3, (short) 1, 0, 4, 7, 6, 'e', "testing5", "test_e", "abcde", "abcd", "abc", "ab", "a");
+    private DomainModel BBA = get((byte) 2, (short) 0, 1, 5, 6, 7, 'f', "testing6", "test_f");
+    private DomainModel ABB = get((byte) 1, (short) 7, 2, 6, 5, 0, 'g', null, "test_g");
+    private DomainModel BBB = get((byte) 0, (short) 6, 3, 7, 4, 1, 'h', "testing8", "test_h");
 
 
     @Before
@@ -35,7 +34,7 @@ public class PredicateBuilderTest {
         actual.clear();
 
         actual.addAll(Arrays.asList(AAA, AAB, ABA, BBA, BAA, BAB, ABB, BBB));
-        Set<Q> clones = actual.stream().map(Q::copy).collect(Collectors.toSet());
+        Set<DomainModel> clones = actual.stream().map(DomainModel::copy).collect(Collectors.toSet());
 
         actual.forEach(entry -> entry.getMySubList().addAll(clones.stream()
                 .filter(thing -> !thing.equals(entry))
@@ -162,28 +161,28 @@ public class PredicateBuilderTest {
         compare(myString().doesNotExist().or().myString().eq("testing8"), BAA, ABB, BBB);
     }
 
-    private void compare(Condition<QModel> query, Q... expected) {
-        Predicate<Q> predicate = query.query(new BasicPredicateVisitor<>());
-        Set<Q> ex = new HashSet<>(Arrays.asList(expected));
-        Set<Q> ac = actual.stream().filter(predicate).collect(Collectors.toSet());
+    private void compare(Condition<QueryModel> query, DomainModel... expected) {
+        Predicate<DomainModel> predicate = query.query(new PredicateVisitor<>());
+        Set<DomainModel> ex = new HashSet<>(Arrays.asList(expected));
+        Set<DomainModel> ac = actual.stream().filter(predicate).collect(Collectors.toSet());
         assertEquals(ex, ac);
     }
 
 
-    private Q get(byte val1, short val2, int val3, long val4, float val5, double val6, char val7, String val8, String val9,
+    private DomainModel get(byte val1, short val2, int val3, long val4, float val5, double val6, char val7, String val8, String val9,
             String... myStrings) {
-        Q q = new Q();
-        q.setMyByte(val1);
-        q.setMyShort(val2);
-        q.setMyInteger(val3);
-        q.setMyLong(val4);
-        q.setMyFloat(val5);
-        q.setMyDouble(val6);
-        q.setMyCharacter(val7);
-        q.setMyString(val8);
-        q.setMyString2(val9);
-        q.setMyListOfStrings(Arrays.asList(myStrings));
-        return q;
+        DomainModel domainModel = new DomainModel();
+        domainModel.setMyByte(val1);
+        domainModel.setMyShort(val2);
+        domainModel.setMyInteger(val3);
+        domainModel.setMyLong(val4);
+        domainModel.setMyFloat(val5);
+        domainModel.setMyDouble(val6);
+        domainModel.setMyCharacter(val7);
+        domainModel.setMyString(val8);
+        domainModel.setMyString2(val9);
+        domainModel.setMyListOfStrings(Arrays.asList(myStrings));
+        return domainModel;
     }
 
 }

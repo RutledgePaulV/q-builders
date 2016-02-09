@@ -1,4 +1,4 @@
-package com.github.rutledgepaulv.qbuilders.visitors.basic;
+package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +15,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @SuppressWarnings("WeakerAccess")
-public class BasicPredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
+public class PredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
     protected static final ObjectMapper mapper = new ObjectMapper();
 

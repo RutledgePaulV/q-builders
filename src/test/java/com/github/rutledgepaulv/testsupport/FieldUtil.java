@@ -1,4 +1,4 @@
-package com.github.rutledgepaulv.testsupport.dirty;
+package com.github.rutledgepaulv.testsupport;
 
 import java.lang.reflect.Method;
 

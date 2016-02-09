@@ -5,56 +5,33 @@
 ### Overview
 A generic abstraction for building queries for arbitrary domain models that minimizes
 magic strings, provides type safety, produces queries that read like a sentence,
-and provides an extensible way to define new target query formats. All of that together means that 
-when you choose to use these as your query builders you only need to map fields once and 
-use these builders anywhere. 
+and provides an extensible way to define new target query formats.
 
 Have a REST API? Chances are you want to provide an ability for people to query your API, but you
-also make queries against the database yourself. Using these builders you define *one* query model
-that you use in both your SDK and API, and target different formats. Like RSQL for over-the-wire
-and straight mongo queries on the API side.
+also make queries against the database yourself. Using these builders lets you define *one* query model
+in a shared jar that you use in both your SDK and API and target different query formats. Like RSQL for
+over-the-wire and mongo or hibernate queries on the API server.
 
 
 ### Why does this exist?
 A lot of existing query builders are bad. It's *hard* to write a query builder that always restricts you to the
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
-call methods that you shouldn't be able to call at that time. Additionally, sometimes it's not clear when
-you've got the final result versus when you can continue to build on it. What happens if you grab the final
-result and then make more changes to the builder? Some examples of the things I take issue with in other builders:
+call methods that you shouldn't be able to call at that time.
 
 
-*spring data mongodb*:
-
-```java
-
-Criteria crit = Criteria.where("myStringField")
-                .in(Collections.singletonList(1), Collections.singletonList(2));
-                
-crit = new Criteria().is("cats");
-```
-
-*apache cxf*:
-```java
-
-FiqlSearchConditionBuilder builder = new FiqlSearchConditionBuilder();
-builder.is("cats").notAfter(new Date()).or().is("cats").equalTo(3, 3, 3, 3, 4).query();
-builder.and(new ArrayList<>()).wrap().wrap().wrap().and().is("cats");
-String finalQuery = builder.query();
-```
+### Why is this better?
+As soon as you start typing, you'll notice that you're never even given an inapplicable option at any point
+as you build your queries. Also, since you define the accepted type when you define your query model, there's
+no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition
+to build a query and is ideal for using static imports to create what is essentially a query DSL.
 
 
-# Meet q-builders
-
-If you use intellisense, you'll notice that you're never even given an inapplicable option at any point
-as you build your queries. Also, since you define the type when you define your query model, everything
-is type safe. No need to worry about someone passing an integer to a string field, etc.
-
-
-### Supported Target Query Expressions:
-- Spring Data's MongoDB Criteria
-- Elasticsearch's FilterBuilder
-- A string in RSQL format
+### Out Of Box Target Query Formats:
 - Java Predicates
+- A string in RSQL format
+- Elasticsearch's QueryBuilder
+- Spring Data's MongoDB Criteria
+- Yours could be next...
 
 
 ### Simple Usage:
@@ -78,15 +55,12 @@ public class PersonQuery extends QBuilder<PersonQuery> {
 }
 
 
-
 //--------------------------------------------------------------------------
 // write your queries using a straightforward and intuitive syntax that 
 // enforces type safety
 //--------------------------------------------------------------------------
 
-Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul")
-                                                    .and().age().eq(23);
-
+Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul").and().age().eq(23);
 
 
 //--------------------------------------------------------------------------
@@ -94,13 +68,13 @@ Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul")
 // choice. currently supports rsql, mongo, and elasticsearch out of box
 //--------------------------------------------------------------------------
 
-String rsql = q.query(new BasicRsqlVisitor()); 
+String rsql = q.query(new RSQLVisitor()); 
 // firstName==Paul;age==23
 
-Criteria mongoCriteria = q.query(new BasicMongoVisitor()); 
+Criteria mongoCriteria = q.query(new MongoVisitor()); 
 // {firstName: "Paul", age: 23}
 
-FilterBuilder filter = q.query(new BasicEsVisitor());
+FilterBuilder filter = q.query(new ElasticsearchVisitor());
 // { "and" : { "filters" : [ { "term" : { "firstName" : "Paul" } }, { "term" : { "age" : 23 } } ] } }
 ```
 
@@ -114,7 +88,7 @@ FilterBuilder filter = q.query(new BasicEsVisitor());
 //--------------------------------------------------------------------------
 
 List<Person> persons = getPersons();
-Predicate<Person> predicate = q.query(new BasicPredicateVisitor<>());
+Predicate<Person> predicate = q.query(new PredicateVisitor<>());
 List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(toList());
 
 ```
@@ -148,13 +122,15 @@ public class PersonQuery extends QBuilder<PersonQuery> {
     
 }
 
-import static com.company.queries.PersonQuery.PersonQueryPredef.*;
-
-Condition<PersonQuery> query = firstName().eq("Paul").or()
-                               .and(firstName().lexicallyBefore("Richard"), age().gt(22));
 ```
 
-### Caveats:
+```java
+import static com.company.queries.PersonQuery.PersonQueryPredef.*;
+
+Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Richard"), age().gt(22)));
+```
+
+### Precedence:
 Chaining both with ```and()``` and ```or()``` is complicated when you begin to talk about
 precedence. The implementation is such that whenever you change from a chain of ```and()``` to
 a chain of ```or()```, then the previous statements are wrapped together and the existing set
@@ -173,7 +149,7 @@ searches for mongo (something I chose to leave out of the core library due to th
 supporting same-interface regex searches on each backend).
 
 
-1) Define your custom property interface
+1) Define a custom property interface
 
 ```java
 
@@ -184,7 +160,7 @@ public interface AdvancedStringField<T extends Partial<T>> extends StringPropert
 }
 ```
 
-2) Define an implementation for that interface using your operator
+2) Define an implementation for that interface using a new operator
 ```java
 
 public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPropertyDelegate<T>
@@ -204,10 +180,10 @@ public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPr
 }
 ```
 
-3) Define an 'advanced visitor' that builds onto the 'basic visitor' with your functionality
+3) Define a custom 'visitor' (extending the provided one) with your functionality
 ```java
 
-public class AdvancedMongoVisitor extends BasicMongoVisitor {
+public class AdvancedMongoVisitor extends MongoVisitor {
 
     @Override
     protected Criteria visit(ComparisonNode node) {
@@ -245,17 +221,59 @@ Criteria criteria = q.query(new AdvancedMongoVisitor());
 
 ```
 
-### Installation 
-(coming soon to a maven repository near you)
 
+### RSQL Flavor
+The RSQL builder introduces some new operators to the standard RSQL set. Since this library only
+builds queries it doesn't dictate what you use to parse them. However, it's written specifically
+to be compatible with [rsql-parser](https://github.com/jirutka/rsql-parser). So, you should
+make sure that you add the following operators before parsing:
+
+- "=ex=" The exists clause. It has values of either ```true``` or ```false```.
+- "=q=" The subquery clause. It has a string value that itself might be an entire RSQL query.
+
+
+
+### Installation 
+
+
+#### Release Versions
 ```xml
 <dependencies>
-
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
         <version>1.0</version>
     </dependency>
+</dependencies>
+```
+
+#### Snapshot Versions
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.github.rutledgepaulv</groupId>
+        <artifactId>q-builders</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+
+
+<repositories>
+    <repository>
+        <id>ossrh</id>
+        <name>Repository for snapshots</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+
+
+#### Optional dependencies
+```xml
+<dependencies>
     
     <!-- only necessary if you're using the spring data mongodb criteria target type -->
     <dependency>

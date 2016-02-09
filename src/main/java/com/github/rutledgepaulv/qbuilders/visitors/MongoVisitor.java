@@ -1,10 +1,9 @@
-package com.github.rutledgepaulv.qbuilders.visitors.basic;
+package com.github.rutledgepaulv.qbuilders.visitors;
 
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
-import com.github.rutledgepaulv.qbuilders.operators.basic.ComparisonOperator;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.sql.Date;
@@ -17,15 +16,15 @@ import java.util.stream.Collectors;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @SuppressWarnings("WeakerAccess")
-public class BasicMongoVisitor extends NodeVisitor<Criteria> {
+public class MongoVisitor extends NodeVisitor<Criteria> {
 
     protected final Function<Object, Object> normalizer;
 
-    public BasicMongoVisitor() {
+    public MongoVisitor() {
         this(DefaultNormalizer.INSTANCE);
     }
 
-    public BasicMongoVisitor(Function<Object, Object> normalizer) {
+    public MongoVisitor(Function<Object, Object> normalizer) {
         this.normalizer = normalizer;
     }
 

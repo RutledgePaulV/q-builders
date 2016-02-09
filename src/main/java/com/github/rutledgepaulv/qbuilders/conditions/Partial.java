@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.qbuilders.conditions;
 
 import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
-import com.github.rutledgepaulv.qbuilders.properties.concrete.basic.*;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.*;
 
 import java.util.List;
 

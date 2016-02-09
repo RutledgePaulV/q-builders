@@ -1,13 +1,13 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
-import com.github.rutledgepaulv.testsupport.basic.QBuilderTestBase;
-import com.github.rutledgepaulv.qbuilders.visitors.basic.BasicEsVisitor;
+import com.github.rutledgepaulv.testsupport.QBuilderTestBase;
+import org.elasticsearch.index.query.QueryBuilder;
 
 import static org.junit.Assert.assertEquals;
 
-public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elasticsearch.index.query.QueryBuilder> {
+public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisitor, QueryBuilder> {
 
-    public ESQBuilderTest() {
+    public ElasticsearchVisitorTest() {
 
         String_EQ = "{\n" +
                 "  \"term\" : {\n" +
@@ -1313,8 +1313,8 @@ public class ESQBuilderTest extends QBuilderTestBase<BasicEsVisitor, org.elastic
 
 
     @Override
-    protected BasicEsVisitor getVisitor() {
-        return new BasicEsVisitor();
+    protected ElasticsearchVisitor getVisitor() {
+        return new ElasticsearchVisitor();
     }
 
     @Override
