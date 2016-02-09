@@ -29,10 +29,10 @@ then
         if [[ $REPLY =~ ^[Yy]$ ]]
             exit 0;
         then
-            mvn nexus-staging:drop
+            mvn nexus-staging:drop -P release
         fi
     then
-        mvn nexus-staging:release
+        mvn nexus-staging:release -P release
     fi
 
 fi
