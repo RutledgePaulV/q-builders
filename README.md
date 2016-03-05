@@ -4,6 +4,8 @@
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/RutledgePaulV/q-builders)
 
 ### Overview
+
+[![Join the chat at https://gitter.im/RutledgePaulV/q-builders](https://badges.gitter.im/RutledgePaulV/q-builders.svg)](https://gitter.im/RutledgePaulV/q-builders?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A generic abstraction for building queries for arbitrary domain models that minimizes
 magic strings, provides type safety, produces queries that read like a sentence,
 and provides an extensible way to define new target query formats.
