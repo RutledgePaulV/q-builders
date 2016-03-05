@@ -242,7 +242,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 </dependencies>
 ```
@@ -253,7 +253,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
