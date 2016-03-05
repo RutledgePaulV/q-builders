@@ -4,7 +4,7 @@
 
     <groupId>com.github.rutledgepaulv</groupId>
     <artifactId>q-builders</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <name>q-builders</name>
     <url>http://github.com/rutledgepaulv/q-builders</url>
@@ -178,6 +178,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.jirutka.rsql</groupId>
+            <artifactId>rsql-parser</artifactId>
+            <version>2.1.0</version>
             <scope>test</scope>
         </dependency>
 

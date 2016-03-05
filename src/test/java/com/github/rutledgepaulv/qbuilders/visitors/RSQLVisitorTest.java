@@ -1,11 +1,19 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
+import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.testsupport.QBuilderTestBase;
 import com.github.rutledgepaulv.testsupport.QueryModel;
-import com.github.rutledgepaulv.qbuilders.conditions.Condition;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.AndNode;
+import cz.jirutka.rsql.parser.ast.ComparisonNode;
+import cz.jirutka.rsql.parser.ast.Node;
+import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import org.junit.Test;
 
-import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.myString;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.*;
 import static org.junit.Assert.assertEquals;
 
 public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
@@ -18,7 +26,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         String_EX = "myString=ex=\"true\"";
         String_DNE = "myString=ex=\"false\"";
         String_IN = "myString=in=(\"a\",\"b\",\"c\")";
-        String_NIN = "myString=nin=(\"d\",\"e\",\"f\")";
+        String_NIN = "myString=out=(\"d\",\"e\",\"f\")";
         String_LTE = "myString=le=\"abcdefg\"";
         String_GTE = "myString=ge=\"abcdefg\"";
 
@@ -36,7 +44,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         Short_EX = "myShort=ex=\"true\"";
         Short_DNE = "myShort=ex=\"false\"";
         Short_IN = "myShort=in=(\"98\",\"99\",\"100\")";
-        Short_NIN = "myShort=nin=(\"101\",\"102\",\"103\")";
+        Short_NIN = "myShort=out=(\"101\",\"102\",\"103\")";
 
         Integer_EQ = "myInteger==\"100\"";
         Integer_NE = "myInteger!=\"100\"";
@@ -47,7 +55,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         Integer_EX = "myInteger=ex=\"true\"";
         Integer_DNE = "myInteger=ex=\"false\"";
         Integer_IN = "myInteger=in=(\"98\",\"99\",\"100\")";
-        Integer_NIN = "myInteger=nin=(\"101\",\"102\",\"103\")";
+        Integer_NIN = "myInteger=out=(\"101\",\"102\",\"103\")";
 
         Long_EQ = "myLong==\"100\"";
         Long_NE = "myLong!=\"100\"";
@@ -58,7 +66,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         Long_EX = "myLong=ex=\"true\"";
         Long_DNE = "myLong=ex=\"false\"";
         Long_IN = "myLong=in=(\"98\",\"99\",\"100\")";
-        Long_NIN = "myLong=nin=(\"101\",\"102\",\"103\")";
+        Long_NIN = "myLong=out=(\"101\",\"102\",\"103\")";
 
         Float_EQ = "myFloat==\"100.0\"";
         Float_NE = "myFloat!=\"100.0\"";
@@ -69,7 +77,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         Float_EX = "myFloat=ex=\"true\"";
         Float_DNE = "myFloat=ex=\"false\"";
         Float_IN = "myFloat=in=(\"98.0\",\"99.0\",\"100.0\")";
-        Float_NIN = "myFloat=nin=(\"101.0\",\"102.0\",\"103.0\")";
+        Float_NIN = "myFloat=out=(\"101.0\",\"102.0\",\"103.0\")";
 
         Double_EQ = "myDouble==\"100.0\"";
         Double_NE = "myDouble!=\"100.0\"";
@@ -80,7 +88,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
         Double_EX = "myDouble=ex=\"true\"";
         Double_DNE = "myDouble=ex=\"false\"";
         Double_IN = "myDouble=in=(\"98.0\",\"99.0\",\"100.0\")";
-        Double_NIN = "myDouble=nin=(\"101.0\",\"102.0\",\"103.0\")";
+        Double_NIN = "myDouble=out=(\"101.0\",\"102.0\",\"103.0\")";
 
         DateTime_EQ = "myDateTime==\"1970-01-01T00:00:00Z\"";
         DateTime_NE = "myDateTime!=\"1970-01-01T00:00:00Z\"";
@@ -130,17 +138,120 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
 
     }
 
-
     @Test
     public void testDoubleAndSingleQuoteWithEscapeCharacterEscaping() {
 
-        Condition<QueryModel> q =myString().eq("people's \\of \\the world").and().myBoolean()
+        Condition<QueryModel> q = myString().eq("people's \\of \\the world").and().myBoolean()
                 .isTrue().and().myListOfStrings().in("\"cats", "'demo'\"", "\"test");
 
         compare("myString==\"people's \\\\of \\\\the world\";myBoolean==\"true\";" +
                 "myListOfStrings=in=('\"cats',\"'demo'\\\"\",'\"test')", q);
     }
 
+
+    @Test
+    public void testWithBackslashesInValue() {
+        String value = "'\\something \\with \\\"some\" \\backslashes'";
+        Condition<QueryModel> query = myString().eq(value);
+        compare("myString==\"'\\\\something \\\\with \\\\\\\"some\\\" \\\\backslashes'\"", query);
+
+        ComparisonNode node = (ComparisonNode) parse(query.query(new RSQLVisitor()));
+        assertEquals("myString", node.getSelector());
+        assertEquals("==", node.getOperator().getSymbol());
+        assertEquals(value, node.getArguments().get(0));
+    }
+
+
+    @Test
+    public void testUsingSingleQuoteButNoDoubleQuote() {
+        String value = "'cats'";
+        Condition<QueryModel> query = myString().eq(value);
+        compare("myString==\"'cats'\"", query);
+
+        ComparisonNode node = (ComparisonNode) parse(query.query(new RSQLVisitor()));
+        assertEquals("myString", node.getSelector());
+        assertEquals("==", node.getOperator().getSymbol());
+        assertEquals(value, node.getArguments().get(0));
+    }
+
+    @Test
+    public void testUsingDoubleQuoteButNoSingleQuote() {
+
+        String value = "\"cats\"";
+        Condition<QueryModel> query = myString().eq(value);
+        compare("myString=='\"cats\"'", query);
+
+        ComparisonNode node = (ComparisonNode) parse(query.query(new RSQLVisitor()));
+        assertEquals("myString", node.getSelector());
+        assertEquals("==", node.getOperator().getSymbol());
+        assertEquals(value, node.getArguments().get(0));
+
+    }
+
+    @Test
+    public void testEscapingOfBothKindsOfQuotesInSingleQueryValue() {
+        String stringWithApostropheAndQuotation = "Paul's friend said \"Let's run off and escape together!\"";
+
+        Condition<QueryModel> query = myString().eq(stringWithApostropheAndQuotation);
+
+        compare("myString==\"Paul's friend said \\\"Let's run off and escape together!\\\"\"",
+                query);
+
+        ComparisonNode node = (ComparisonNode) parse(query.query(new RSQLVisitor()));
+        assertEquals("myString", node.getSelector());
+        assertEquals("==", node.getOperator().getSymbol());
+        assertEquals(stringWithApostropheAndQuotation, node.getArguments().get(0));
+
+    }
+
+    @Test
+    public void testEscapingOfBothKindsOfQuotesInMultiQueryValue() {
+        String val1 = "Paul said \"Okay, but only if we can take a giant peach!\"";
+        String val2 = "'Fine.' grumbled the friend. We can take the \"giant\" peach.";
+
+        Condition<QueryModel> query = myString().in(val1, val2);
+
+        compare("myString=in=('Paul said \"Okay, but only if we can take a giant peach!\"'," +
+                        "\"'Fine.' grumbled the friend. We can take the \\\"giant\\\" peach.\")",
+                query);
+
+        ComparisonNode node = (ComparisonNode) parse(query.query(new RSQLVisitor()));
+        assertEquals("myString", node.getSelector());
+        assertEquals("=in=", node.getOperator().getSymbol());
+        assertEquals(val1, node.getArguments().get(0));
+        assertEquals(val2, node.getArguments().get(1));
+    }
+
+    @Test
+    public void testEscapingOfBothKindsOfQuotesInSubqueryQueryValue() {
+        String val1 = "\"Off to the peach we go!\" Hi ho' Hi ho' Hi ho'";
+        String val2 = "'Rawwwwrrrrrrrrr' I'm a dinosawr'";
+        Condition<QueryModel> subquery = mySubList().any(and(myString().eq(val1), myString().eq(val2)));
+
+        compare("mySubList=q=\"(myString==\\\"\\\\\\\"Off to the peach we go!\\\\\\\" " +
+                        "Hi ho' Hi ho' Hi ho'\\\";myString==\\\"'Rawwwwrrrrrrrrr' I'm a dinosawr'\\\")\"",
+                subquery);
+
+        cz.jirutka.rsql.parser.ast.ComparisonNode node = ( cz.jirutka.rsql.parser.ast.ComparisonNode ) parse(subquery.query(new RSQLVisitor()));
+        assertEquals("=q=", node.getOperator().getSymbol());
+        assertEquals("mySubList", node.getSelector());
+        AndNode and = (AndNode) parse(node.getArguments().get(0));
+        cz.jirutka.rsql.parser.ast.ComparisonNode  left = (ComparisonNode) and.getChildren().get(0);
+        cz.jirutka.rsql.parser.ast.ComparisonNode  right = (ComparisonNode) and.getChildren().get(1);
+
+        assertEquals("myString", left.getSelector());
+        assertEquals(val1, left.getArguments().get(0));
+        assertEquals("myString", right.getSelector());
+        assertEquals(val2, right.getArguments().get(0));
+    }
+
+    protected Node parse(String rsql) {
+        Set<cz.jirutka.rsql.parser.ast.ComparisonOperator> ops = new HashSet<>();
+        ops.addAll(RSQLOperators.defaultOperators());
+        ops.add(new cz.jirutka.rsql.parser.ast.ComparisonOperator("=q=", false));
+        ops.add(new cz.jirutka.rsql.parser.ast.ComparisonOperator("=ex=", false));
+        return new RSQLParser(ops).parse(rsql);
+    }
 
     @Override
     protected RSQLVisitor getVisitor() {
@@ -149,6 +260,8 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
 
     @Override
     protected void compare(String expected, String converted) {
+        // make sure it's parseable
+        parse(converted);
         assertEquals(expected, converted);
     }
 

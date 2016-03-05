@@ -27,9 +27,19 @@ public abstract class NodeVisitor<T> {
             throw new IllegalArgumentException("You can only build a condition for sub-condition operator nodes.");
         }
 
-        Condition<?> condition = (Condition<?>) node.getValues().iterator().next();
+        Object sub = node.getValues().iterator().next();
 
-        return condition.query(this);
+        // support either submitting a tree node in which case handle visiting it for
+        // them, or submit a Condition representing a wrapper around that tree in which
+        // case visit it with this visitor
+        if(sub instanceof AbstractNode) {
+            return visitAny((AbstractNode) sub);
+        } else if (sub instanceof Condition<?>) {
+            return ((Condition<?>) sub).query(this);
+        } else {
+            throw new IllegalArgumentException("Unknown node value type for subquery.");
+        }
+
     }
 
 
