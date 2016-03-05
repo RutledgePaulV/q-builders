@@ -56,7 +56,7 @@ public class RSQLVisitor extends NodeVisitor<String> {
         } else if (ComparisonOperator.IN.equals(operator)) {
             return list(node, "=in=");
         } else if (ComparisonOperator.NIN.equals(operator)) {
-            return list(node, "=nin=");
+            return list(node, "=out=");
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
             return node.getField() + "=q=" + serialize(condition(node));
         }
