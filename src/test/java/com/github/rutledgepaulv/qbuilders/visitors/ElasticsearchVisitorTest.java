@@ -9,6 +9,54 @@ public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisi
 
     public ElasticsearchVisitorTest() {
 
+        Enum_EQ = "{\n" +
+                "  \"term\" : {\n" +
+                "    \"myEnum\" : \"VALUE1\"\n" +
+                "  }\n" +
+                "}";
+
+        Enum_NE = "{\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"term\" : {\n" +
+                "        \"myEnum\" : \"VALUE1\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        Enum_EX = "{\n" +
+                "  \"exists\" : {\n" +
+                "    \"field\" : \"myEnum\"\n" +
+                "  }\n" +
+                "}";
+
+        Enum_DNE = "{\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"exists\" : {\n" +
+                "        \"field\" : \"myEnum\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        Enum_IN = "{\n" +
+                "  \"terms\" : {\n" +
+                "    \"myEnum\" : [ \"VALUE1\", \"VALUE2\", \"VALUE3\" ]\n" +
+                "  }\n" +
+                "}";
+
+        Enum_NIN = "{\n" +
+                "  \"bool\" : {\n" +
+                "    \"must_not\" : {\n" +
+                "      \"terms\" : {\n" +
+                "        \"myEnum\" : [ \"VALUE1\", \"VALUE2\", \"VALUE3\" ]\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
         String_EQ = "{\n" +
                 "  \"term\" : {\n" +
                 "    \"myString\" : \"abcdefg\"\n" +

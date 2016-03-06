@@ -61,6 +61,14 @@ public class QueryModel extends QBuilder<QueryModel> {
         public static ConditionProperty<QueryModel, QueryModel> mySubList() {
             return new QueryModel().mySubList();
         }
+
+        public static EnumProperty<QueryModel, DomainModel.MyEnum> myEnum() {
+            return new QueryModel().myEnum();
+        }
+    }
+
+    public EnumProperty<QueryModel, DomainModel.MyEnum> myEnum() {
+        return enumeration(getCurrentMethodName());
     }
 
     private StringProperty<QueryModel> myString2() {

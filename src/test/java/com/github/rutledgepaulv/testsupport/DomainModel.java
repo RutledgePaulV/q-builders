@@ -7,6 +7,13 @@ import java.util.stream.Collectors;
 
 public class DomainModel {
 
+    public enum MyEnum {
+        VALUE1,
+        VALUE2,
+        VALUE3
+    }
+
+    private MyEnum myEnum;
     private Byte myByte;
     private Float myFloat;
     private Double myDouble;
@@ -91,6 +98,13 @@ public class DomainModel {
         this.myListOfStrings = myListOfStrings;
     }
 
+    public MyEnum getMyEnum() {
+        return myEnum;
+    }
+
+    public void setMyEnum(MyEnum myEnum) {
+        this.myEnum = myEnum;
+    }
 
     public String getMyString2() {
         return myString2;
@@ -110,6 +124,7 @@ public class DomainModel {
 
     public DomainModel copy() {
         DomainModel domainModel = new DomainModel();
+        domainModel.setMyEnum(getMyEnum());
         domainModel.setMyByte(getMyByte());
         domainModel.setMyCharacter(getMyCharacter());
         domainModel.setMyDouble(getMyDouble());
@@ -143,12 +158,13 @@ public class DomainModel {
                 Objects.equals(myString2, domainModel.myString2) &&
                 Objects.equals(myCharacter, domainModel.myCharacter) &&
                 Objects.equals(mySubList, domainModel.mySubList) &&
+                Objects.equals(myEnum, domainModel.myEnum)  &&
                 Objects.equals(myListOfStrings, domainModel.myListOfStrings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myByte, myFloat, myDouble, myLong, myInteger, myShort, myString, myString2, myCharacter,
+        return Objects.hash(myByte, myFloat, myDouble, myEnum, myLong, myInteger, myShort, myString, myString2, myCharacter,
                 mySubList, myListOfStrings);
     }
 }

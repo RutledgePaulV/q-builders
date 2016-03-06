@@ -33,8 +33,11 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
     private LogicalNode current;
 
     public QBuilder() {
-        root = new OrNode(null, new ArrayList<>());
-        current = root;
+        root = current = new OrNode();
+    }
+
+    public final <S extends Enum<S>> EnumProperty<T,S> enumeration(String field) {
+        return prop(field, EnumPropertyDelegate.class, EnumProperty.class);
     }
 
     public final BooleanProperty<T> bool(String field) {
@@ -69,11 +72,11 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
         return prop(field, InstantPropertyDelegate.class, InstantProperty.class);
     }
 
-    public <S extends QBuilder<S>> ConditionProperty<T, S> condition(String field) {
+    public final <S extends QBuilder<S>> ConditionProperty<T, S> condition(String field) {
         return prop(field, ConditionPropertyDelegate.class, ConditionProperty.class);
     }
 
-    public final <S extends PropertyDelegate<T>, Q extends Property<T>> Q prop(String field, Class<S> delegate, Class<Q> inter) {
+    protected final <S extends PropertyDelegate<T>, Q extends Property<T>> Q prop(String field, Class<S> delegate, Class<Q> inter) {
         if(!inter.isAssignableFrom(delegate)) {
             throw new IllegalArgumentException("Must provide a delegate that implements the interface to be returned.");
         }

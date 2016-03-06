@@ -4,7 +4,13 @@ import java.util.List;
 
 public final class AndNode extends LogicalNode {
 
-    public AndNode(AbstractNode parent, List<AbstractNode> children) {
+    public AndNode() {}
+
+    public AndNode(LogicalNode parent) {
+        super(parent);
+    }
+
+    public AndNode(LogicalNode parent, List<AbstractNode> children) {
         super(parent, children);
     }
 

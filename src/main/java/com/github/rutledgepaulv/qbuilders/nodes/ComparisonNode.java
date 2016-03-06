@@ -10,7 +10,7 @@ public final class ComparisonNode extends AbstractNode {
     private ComparisonOperator operator;
     private Collection<?> values;
 
-    public ComparisonNode(AbstractNode parent) {
+    public ComparisonNode(LogicalNode parent) {
         super(parent);
     }
 

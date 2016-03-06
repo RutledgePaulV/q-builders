@@ -1,5 +1,6 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
+import com.github.rutledgepaulv.testsupport.CriteriaSerializer;
 import com.github.rutledgepaulv.testsupport.QBuilderTestBase;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -8,6 +9,13 @@ import static org.junit.Assert.assertEquals;
 public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria> {
 
     public MongoVisitorTest() {
+
+        Enum_EQ = "{ \"myEnum\" : \"VALUE1\"}";
+        Enum_NE = "{ \"myEnum\" : { \"$ne\" : \"VALUE1\"}}";
+        Enum_EX = "{ \"myEnum\" : { \"$exists\" : true}}";
+        Enum_DNE = "{ \"myEnum\" : { \"$exists\" : false}}";
+        Enum_IN = "{ \"myEnum\" : { \"$in\" : [ \"VALUE1\" , \"VALUE2\" , \"VALUE3\"]}}";
+        Enum_NIN = "{ \"myEnum\" : { \"$nin\" : [ \"VALUE1\" , \"VALUE2\" , \"VALUE3\"]}}";
 
         String_EQ = "{ \"myString\" : \"abcdefg\"}";
         String_NE = "{ \"myString\" : { \"$ne\" : \"abcdefg\"}}";
@@ -160,7 +168,7 @@ public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria> {
 
     @Override
     protected void compare(String expected, Criteria converted) {
-        assertEquals(expected,  converted.getCriteriaObject().toString());
+        assertEquals(expected,  new CriteriaSerializer().apply(converted));
     }
 
 }
