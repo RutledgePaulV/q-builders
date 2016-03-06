@@ -7,8 +7,6 @@ import java.util.stream.IntStream;
 
 @SuppressWarnings({"unchecked", "Convert2MethodRef"})
 public final class ObjectUtils {
-    private ObjectUtils(){}
-
 
     /**
      * Instantiate a class for the provided constructor arguments.
