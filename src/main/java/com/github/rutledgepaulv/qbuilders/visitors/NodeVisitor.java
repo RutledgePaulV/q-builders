@@ -5,6 +5,8 @@ import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.nodes.*;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
+import java.util.Collection;
+
 @SuppressWarnings("ConstantConditions")
 public abstract class NodeVisitor<T> {
 
@@ -42,12 +44,23 @@ public abstract class NodeVisitor<T> {
 
     }
 
+    protected Object single(Collection<?> values) {
+        if(!values.isEmpty()) {
+            return values.iterator().next();
+        } else {
+            throw new IllegalArgumentException("You must provide a non-null query value for the condition.");
+        }
+    }
+
 
     public final T visitAny(AbstractNode node) {
 
         // skip straight to the children if it's a logical node with one member
-        if(node instanceof LogicalNode && node.getChildren().size() == 1) {
-            return visitAny(node.getChildren().get(0));
+        if(node instanceof LogicalNode) {
+            LogicalNode logical = (LogicalNode) node;
+            if(logical.getChildren().size() == 1) {
+                return visitAny(logical.getChildren().get(0));
+            }
         }
 
         if(node instanceof AndNode){

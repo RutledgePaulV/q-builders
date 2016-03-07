@@ -19,6 +19,14 @@ import static org.junit.Assert.assertEquals;
 public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
 
     public RSQLVisitorTest() {
+
+        Enum_EQ = "myEnum==\"VALUE1\"";
+        Enum_NE = "myEnum!=\"VALUE1\"";
+        Enum_EX = "myEnum=ex=\"true\"";
+        Enum_DNE = "myEnum=ex=\"false\"";
+        Enum_IN = "myEnum=in=(\"VALUE1\",\"VALUE2\",\"VALUE3\")";
+        Enum_NIN = "myEnum=out=(\"VALUE1\",\"VALUE2\",\"VALUE3\")";
+
         String_EQ = "myString==\"abcdefg\"";
         String_NE = "myString!=\"abcdefg\"";
         String_LT = "myString=lt=\"abcdefg\"";

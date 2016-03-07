@@ -77,16 +77,6 @@ public class MongoVisitor extends NodeVisitor<Criteria> {
     }
 
 
-    protected Object single(Collection<?> values) {
-        if(!values.isEmpty()) {
-            return values.iterator().next();
-        } else {
-            throw new IllegalArgumentException("You must provide a non-null query value for the condition.");
-        }
-    }
-
-
-
     protected static class DefaultNormalizer implements Function<Object, Object> {
 
         protected static DefaultNormalizer INSTANCE = new DefaultNormalizer();

@@ -15,6 +15,15 @@ import java.util.List;
 public interface Partial<T extends QBuilder<T>> {
 
     /**
+     * For usage when the field is known to contain values of an enum type.
+     *
+     * @param field The name of the field.
+     *
+     * @return The property interface so that a constraint can be set against the field.
+     */
+    <S extends Enum<S>> EnumProperty<T,S> enumeration(String field);
+
+    /**
      * For usage when the field is known to contain values of a boolean type.
      *
      * @param field The name of the field.

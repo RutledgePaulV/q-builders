@@ -6,8 +6,10 @@ import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 
+import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 @SuppressWarnings("WeakerAccess")
 public class RSQLVisitor extends NodeVisitor<String> {
@@ -24,13 +26,13 @@ public class RSQLVisitor extends NodeVisitor<String> {
 
     @Override
     protected String visit(AndNode node) {
-        String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(";"));
+        String body = node.getChildren().stream().map(this::visitAny).collect(joining(";"));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
     @Override
     protected String visit(OrNode node) {
-        String body = node.getChildren().stream().map(this::visitAny).collect(Collectors.joining(","));
+        String body = node.getChildren().stream().map(this::visitAny).collect(joining(","));
         return nodeBelongsToParentExpression(node) ? "(" + body + ")" : body;
     }
 
@@ -69,12 +71,12 @@ public class RSQLVisitor extends NodeVisitor<String> {
     }
 
     protected String single(ComparisonNode node, String op) {
-        return node.getField() + op + serialize(node.getValues().iterator().next());
+        return node.getField() + op + serialize(single(node.getValues()));
     }
 
     protected String list(ComparisonNode node, String op) {
         return node.getField() + op + node.getValues().stream()
-                .map(this::serialize).collect(Collectors.joining(",", "(", ")"));
+                .map(this::serialize).collect(joining(",", "(", ")"));
     }
 
     protected String serialize(Object value) {
@@ -91,26 +93,26 @@ public class RSQLVisitor extends NodeVisitor<String> {
 
 
         @Override
-        public String apply(Object o) {
-            String string = o.toString();
+        public String apply(Object value) {
+
+            String string = Objects.toString(value);
+
             if(string.contains("\\")) {
                 string = string.replaceAll("\\\\","\\\\\\\\");
             }
 
             boolean containsDoubleQuotes = string.contains("\"");
             boolean containsSingleQuotes = string.contains("'");
-            boolean containsBoth = containsDoubleQuotes && containsSingleQuotes;
 
-            if (!(containsDoubleQuotes || containsSingleQuotes)) {
+            if(!containsDoubleQuotes) {
                 return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
-            } else if(containsDoubleQuotes && !containsBoth) {
+            } else if (!containsSingleQuotes) {
                 return SINGLE_QUOTE + string + SINGLE_QUOTE;
-            } else if (!containsBoth) {
-                return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
             } else {
                 string = string.replaceAll("\"", "\\\\\"");
                 return DOUBLE_QUOTE + string + DOUBLE_QUOTE;
             }
+
         }
 
     }

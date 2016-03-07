@@ -4,8 +4,15 @@ import java.util.List;
 
 public final class OrNode extends LogicalNode {
 
-    public OrNode(AbstractNode parent, List<AbstractNode> children) {
+    public OrNode() {}
+
+    public OrNode(LogicalNode parent) {
+        super(parent);
+    }
+
+    public OrNode(LogicalNode parent, List<AbstractNode> children) {
         super(parent, children);
     }
+
 
 }

@@ -7,6 +7,10 @@ import org.junit.Test;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+import static com.github.rutledgepaulv.testsupport.DomainModel.MyEnum.VALUE1;
+import static com.github.rutledgepaulv.testsupport.DomainModel.MyEnum.VALUE2;
+import static com.github.rutledgepaulv.testsupport.DomainModel.MyEnum.VALUE3;
+
 
 public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
 
@@ -26,6 +30,15 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
             Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myString().doesNotExist();
             Condition<QueryModel> IN = QueryModel.QueryModelPredef.myString().in("a", "b", "c");
             Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myString().nin("d", "e", "f");
+        }
+
+        interface Enum {
+            Condition<QueryModel> EQ = QueryModel.QueryModelPredef.myEnum().eq(VALUE1);
+            Condition<QueryModel> NE = QueryModel.QueryModelPredef.myEnum().ne(VALUE1);
+            Condition<QueryModel> EX = QueryModel.QueryModelPredef.myEnum().exists();
+            Condition<QueryModel> DNE = QueryModel.QueryModelPredef.myEnum().doesNotExist();
+            Condition<QueryModel> IN = QueryModel.QueryModelPredef.myEnum().in(VALUE1, VALUE2, VALUE3);
+            Condition<QueryModel> NIN = QueryModel.QueryModelPredef.myEnum().nin(VALUE1, VALUE2, VALUE3);
         }
 
         interface Boolean {
@@ -173,6 +186,23 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
     protected interface VariedInputs {
         Condition<QueryModel> NULL_EQUALITY = QueryModel.QueryModelPredef.myString().eq(null);
         Condition<QueryModel> NULL_INEQUALITY = QueryModel.QueryModelPredef.myString().ne(null);
+    }
+
+    protected String Enum_EQ;
+    protected String Enum_NE;
+    protected String Enum_EX;
+    protected String Enum_DNE;
+    protected String Enum_IN;
+    protected String Enum_NIN;
+
+    @Test
+    public void simple_Enum() {
+        compare(Enum_EQ, Simple.Enum.EQ);
+        compare(Enum_NE, Simple.Enum.NE);
+        compare(Enum_EX, Simple.Enum.EX);
+        compare(Enum_DNE, Simple.Enum.DNE);
+        compare(Enum_IN, Simple.Enum.IN);
+        compare(Enum_NIN, Simple.Enum.NIN);
     }
 
     protected String String_EQ;

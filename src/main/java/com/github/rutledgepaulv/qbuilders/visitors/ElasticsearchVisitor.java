@@ -77,13 +77,4 @@ public class ElasticsearchVisitor extends NodeVisitor<QueryBuilder> {
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
     }
 
-
-    protected Object single(Collection<?> values) {
-        if (!values.isEmpty()) {
-            return values.iterator().next();
-        } else {
-            throw new IllegalArgumentException("You must provide a query value for the condition.");
-        }
-    }
-
 }
