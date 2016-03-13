@@ -30,8 +30,6 @@
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
             <version>1.7.2</version>
-            <optional>true</optional>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

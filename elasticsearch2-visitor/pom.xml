@@ -31,8 +31,6 @@
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
             <version>2.2.0</version>
-            <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
 
     </dependencies>
