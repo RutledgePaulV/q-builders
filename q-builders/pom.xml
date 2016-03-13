@@ -13,7 +13,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>q-builders</artifactId>
 
-
     <build>
         <plugins>
             <plugin>

@@ -58,7 +58,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <configuration>
-                    <dataFile>${report.path}</dataFile>
                     <destFile>${report.path}</destFile>
                     <append>true</append>
                 </configuration>

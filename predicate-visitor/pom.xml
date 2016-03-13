@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>prediate-visitor</artifactId>
+    <artifactId>predicate-visitor</artifactId>
 
     <dependencies>
 
