@@ -47,17 +47,29 @@
         <url>https://github.com/rutledgepaulv/q-builders/issues</url>
     </issueManagement>
 
+    <properties>
+        <report.path>${project.basedir}/../target/jacoco.exec</report.path>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
                 <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <aggregate>true</aggregate>
+                    <dataFile>${report.path}</dataFile>
+                    <destFile>${report.path}</destFile>
+                    <append>true</append>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
