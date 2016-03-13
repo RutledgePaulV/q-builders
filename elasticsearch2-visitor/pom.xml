@@ -17,13 +17,13 @@
         <dependency>
             <groupId>com.github.rutledgepaulv</groupId>
             <artifactId>q-builders</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.rutledgepaulv</groupId>
             <artifactId>q-builders</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
             <type>test-jar</type>
         </dependency>
 
