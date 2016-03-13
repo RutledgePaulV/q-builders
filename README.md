@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/RutledgePaulV/q-builders.svg)](https://travis-ci.org/RutledgePaulV/q-builders)
 [![Coverage Status](https://coveralls.io/repos/RutledgePaulV/q-builders/badge.svg?branch=master&service=github)](https://coveralls.io/github/RutledgePaulV/q-builders?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders-all)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/RutledgePaulV/q-builders)
 
 ### Overview
@@ -30,7 +30,8 @@ to build a query and is ideal for using static imports to create what is essenti
 ### Out Of Box Target Query Formats:
 - Java Predicates
 - A string in RSQL format
-- Elasticsearch's QueryBuilder
+- Elasticsearch 2's QueryBuilder
+- Elasticsearch 1's FilterBuilder
 - Spring Data's MongoDB Criteria
 - Yours could be next...
 
