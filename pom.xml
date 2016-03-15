@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>q-builders</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.3</version>
 
     <name>q-builders</name>
     <url>http://github.com/rutledgepaulv/q-builders</url>
