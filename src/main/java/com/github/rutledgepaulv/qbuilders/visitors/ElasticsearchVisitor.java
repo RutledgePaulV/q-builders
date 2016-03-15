@@ -78,10 +78,11 @@ public class ElasticsearchVisitor extends ContextualNodeVisitor<QueryBuilder, El
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return boolQuery().mustNot(termsQuery(field, values));
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
-            context.originatedAsNestedQuery = true;
-            QueryBuilder result =  nestedQuery(field, condition(node, context));
-            context.originatedAsNestedQuery = false;
-            return result;
+            // create a new context to pass to the children so we don't modify the one
+            // that may get reused from "above"
+            Context subquery = new Context();
+            subquery.originatedAsNestedQuery = true;
+            return nestedQuery(field, condition(node, subquery));
         }
 
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
