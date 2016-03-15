@@ -5,7 +5,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 
 import static org.junit.Assert.assertEquals;
 
-public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisitor, QueryBuilder> {
+public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisitor, QueryBuilder, ElasticsearchVisitor.Context> {
 
     public ElasticsearchVisitorTest() {
 
@@ -1318,13 +1318,13 @@ public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisi
                 "          \"bool\" : {\n" +
                 "            \"must\" : [ {\n" +
                 "              \"term\" : {\n" +
-                "                \"myString\" : \"Thing\"\n" +
+                "                \"mySubList.myString\" : \"Thing\"\n" +
                 "              }\n" +
                 "            }, {\n" +
                 "              \"bool\" : {\n" +
                 "                \"must_not\" : {\n" +
                 "                  \"exists\" : {\n" +
-                "                    \"field\" : \"myLong\"\n" +
+                "                    \"field\" : \"mySubList.myLong\"\n" +
                 "                  }\n" +
                 "                }\n" +
                 "              }\n" +
@@ -1363,6 +1363,11 @@ public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisi
     @Override
     protected ElasticsearchVisitor getVisitor() {
         return new ElasticsearchVisitor();
+    }
+
+    @Override
+    protected ElasticsearchVisitor.Context getContext() {
+        return new ElasticsearchVisitor.Context();
     }
 
     @Override

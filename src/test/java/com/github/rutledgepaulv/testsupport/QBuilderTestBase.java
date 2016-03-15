@@ -1,7 +1,7 @@
 package com.github.rutledgepaulv.testsupport;
 
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.visitors.ContextualNodeVisitor;
 import org.junit.Test;
 
 import java.time.OffsetDateTime;
@@ -12,7 +12,7 @@ import static com.github.rutledgepaulv.testsupport.DomainModel.MyEnum.VALUE2;
 import static com.github.rutledgepaulv.testsupport.DomainModel.MyEnum.VALUE3;
 
 
-public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
+public abstract class QBuilderTestBase<T extends ContextualNodeVisitor<S,U>, S, U> {
 
     protected abstract T getVisitor();
 
@@ -492,9 +492,13 @@ public abstract class QBuilderTestBase<T extends NodeVisitor<S>, S> {
         compare(NULL_INEQUALITY, VariedInputs.NULL_INEQUALITY);
     }
 
+    protected U getContext() {
+        return null;
+    }
+
     protected void compare(String expected, Condition<QueryModel> condition) {
         T visitor = getVisitor();
-        compare(expected, condition.query(visitor));
+        compare(expected, condition.query(visitor, getContext()));
     }
 
 

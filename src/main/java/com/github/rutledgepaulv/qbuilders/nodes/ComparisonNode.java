@@ -1,12 +1,13 @@
 package com.github.rutledgepaulv.qbuilders.nodes;
 
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.util.Collection;
 
 public final class ComparisonNode extends AbstractNode {
 
-    private String field;
+    private FieldPath path;
     private ComparisonOperator operator;
     private Collection<?> values;
 
@@ -14,12 +15,12 @@ public final class ComparisonNode extends AbstractNode {
         super(parent);
     }
 
-    public String getField() {
-        return field;
+    public FieldPath getField() {
+        return path;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public void setField(FieldPath field) {
+        this.path = field;
     }
 
     public ComparisonOperator getOperator() {

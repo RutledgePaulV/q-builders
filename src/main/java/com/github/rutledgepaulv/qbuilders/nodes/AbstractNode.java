@@ -1,6 +1,6 @@
 package com.github.rutledgepaulv.qbuilders.nodes;
 
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.visitors.ContextualNodeVisitor;
 
 public abstract class AbstractNode implements Visitable {
 
@@ -21,8 +21,8 @@ public abstract class AbstractNode implements Visitable {
     }
 
     @Override
-    public <T> T visit(NodeVisitor<T> visitor) {
-        return visitor.visitAny(this);
+    public <T, S> T visit(ContextualNodeVisitor<T, S> visitor, S context) {
+        return visitor.visitAny(this, context);
     }
 
 }

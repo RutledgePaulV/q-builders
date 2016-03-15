@@ -16,7 +16,7 @@ import java.util.Set;
 import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.*;
 import static org.junit.Assert.assertEquals;
 
-public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String> {
+public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String, Void> {
 
     public RSQLVisitorTest() {
 

@@ -8,13 +8,13 @@ import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import java.util.Collection;
 
 @SuppressWarnings("ConstantConditions")
-public abstract class NodeVisitor<T> {
+public abstract class ContextualNodeVisitor<T,S> {
 
-    protected abstract T visit(AndNode node);
+    protected abstract T visit(AndNode node, S context);
 
-    protected abstract T visit(OrNode node);
+    protected abstract T visit(OrNode node, S context);
 
-    protected abstract T visit(ComparisonNode node);
+    protected abstract T visit(ComparisonNode node, S context);
 
     /**
      * Build a comparison node value into a visited value so that
@@ -24,7 +24,7 @@ public abstract class NodeVisitor<T> {
      *
      * @return The visited value.
      */
-    protected final T condition(ComparisonNode node) {
+    protected T condition(ComparisonNode node,S context) {
         if(!node.getOperator().equals(ComparisonOperator.SUB_CONDITION_ANY)) {
             throw new IllegalArgumentException("You can only build a condition for sub-condition operator nodes.");
         }
@@ -35,9 +35,9 @@ public abstract class NodeVisitor<T> {
         // them, or submit a Condition representing a wrapper around that tree in which
         // case visit it with this visitor
         if(sub instanceof AbstractNode) {
-            return visitAny((AbstractNode) sub);
+            return visitAny((AbstractNode) sub, context);
         } else if (sub instanceof Condition<?>) {
-            return ((Condition<?>) sub).query(this);
+            return ((Condition<?>) sub).query(this, context);
         } else {
             throw new IllegalArgumentException("Unknown node value type for subquery.");
         }
@@ -53,22 +53,22 @@ public abstract class NodeVisitor<T> {
     }
 
 
-    public final T visitAny(AbstractNode node) {
+    public final T visitAny(AbstractNode node, S context) {
 
         // skip straight to the children if it's a logical node with one member
         if(node instanceof LogicalNode) {
             LogicalNode logical = (LogicalNode) node;
             if(logical.getChildren().size() == 1) {
-                return visitAny(logical.getChildren().get(0));
+                return visitAny(logical.getChildren().get(0), context);
             }
         }
 
         if(node instanceof AndNode){
-            return visit((AndNode)node);
+            return visit((AndNode)node, context);
         } else if (node instanceof OrNode){
-            return visit((OrNode)node);
+            return visit((OrNode)node, context);
         } else {
-            return visit((ComparisonNode)node);
+            return visit((ComparisonNode)node, context);
         }
 
     }

@@ -5,13 +5,14 @@ import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.delegates.virtual.ListablePropertyDelegate;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.concrete.StringProperty;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.util.Collections;
 
 public final class StringPropertyDelegate<T extends QBuilder<T>>
         extends ListablePropertyDelegate<T, String> implements StringProperty<T> {
 
-    public StringPropertyDelegate(String field, T canonical) {
+    public StringPropertyDelegate(FieldPath field, T canonical) {
         super(field, canonical);
     }
 

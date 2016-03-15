@@ -4,7 +4,7 @@ import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.visitors.ContextualNodeVisitor;
 
 import java.util.List;
 
@@ -13,8 +13,6 @@ import java.util.List;
  * Intended to be composed into more complex conditions, or built into a query
  * that can be executed against a set of objects to determine those things
  * which satisfy the criteria.
- *
- * Note that ANDs take precedence over ORs by default.
  *
  * @param <T> The final type of the builder, used for a fluid chaining interface.
  */
@@ -51,10 +49,21 @@ public interface Condition<T extends QBuilder<T>> {
      *
      * @param visitor The visitor which specifies how to traverse the nodes in the visitor tree.
      *                Nodes can be {@link AndNode}s or {@link OrNode}s or {@link ComparisonNode}s.
-     *
-     * @param <Q> The type of the results returned from visiting any node in the tree.
-     *
+     * @param <Q>     The type of the results returned from visiting any node in the tree.
      * @return The result of the visitor's execution.
      */
-    <Q> Q query(NodeVisitor<Q> visitor);
+    <Q> Q query(ContextualNodeVisitor<Q, Void> visitor);
+
+    /**
+     * Given this logically complete condition, execute a node visitor against the
+     * underlying condition tree in order to build a query or predicate against which
+     * objects can be queried / tested.
+     *
+     * @param visitor The visitor which specifies how to traverse the nodes in the visitor tree.
+     *                Nodes can be {@link AndNode}s or {@link OrNode}s or {@link ComparisonNode}s.
+     * @param <Q>     The type of the results returned from visiting any node in the tree.
+     * @return The result of the visitor's execution.
+     */
+    <Q, S> Q query(ContextualNodeVisitor<Q, S> visitor, S context);
+
 }

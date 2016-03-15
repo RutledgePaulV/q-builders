@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import static org.junit.Assert.assertEquals;
 
-public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria> {
+public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria, Void> {
 
     public MongoVisitorTest() {
 

@@ -4,13 +4,14 @@ import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.EquitableProperty;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.util.Collections;
 
 public abstract class EquitablePropertyDelegate<T extends QBuilder<T>, S>
         extends ExistentialPropertyDelegate<T> implements EquitableProperty<T,S> {
 
-    protected EquitablePropertyDelegate(String field, T canonical) {
+    protected EquitablePropertyDelegate(FieldPath field, T canonical) {
         super(field, canonical);
     }
 
