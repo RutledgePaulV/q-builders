@@ -4,13 +4,14 @@ import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.NumberProperty;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.util.Collections;
 
 public abstract class NumberPropertyDelegate<T extends QBuilder<T>, S extends Number>
         extends ListablePropertyDelegate<T, S> implements NumberProperty<T, S> {
 
-    protected NumberPropertyDelegate(String field, T canonical) {
+    protected NumberPropertyDelegate(FieldPath field, T canonical) {
         super(field, canonical);
     }
 

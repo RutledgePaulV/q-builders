@@ -12,7 +12,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 
 @SuppressWarnings("WeakerAccess")
-public class RSQLVisitor extends NodeVisitor<String> {
+public class RSQLVisitor extends AbstractVoidContextNodeVisitor<String> {
 
     private final Function<Object, String> serializer;
 
@@ -60,7 +60,7 @@ public class RSQLVisitor extends NodeVisitor<String> {
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return list(node, "=out=");
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
-            return node.getField() + "=q=" + serialize(condition(node));
+            return node.getField().asKey() + "=q=" + serialize(condition(node));
         }
 
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");
@@ -71,11 +71,11 @@ public class RSQLVisitor extends NodeVisitor<String> {
     }
 
     protected String single(ComparisonNode node, String op) {
-        return node.getField() + op + serialize(single(node.getValues()));
+        return node.getField().asKey() + op + serialize(single(node.getValues()));
     }
 
     protected String list(ComparisonNode node, String op) {
-        return node.getField() + op + node.getValues().stream()
+        return node.getField().asKey() + op + node.getValues().stream()
                 .map(this::serialize).collect(joining(",", "(", ")"));
     }
 

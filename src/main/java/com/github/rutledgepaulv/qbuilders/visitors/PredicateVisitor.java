@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @SuppressWarnings("WeakerAccess")
-public class PredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
+public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicate<T>> {
 
     protected static final ObjectMapper mapper = new ObjectMapper();
 
@@ -164,19 +164,19 @@ public class PredicateVisitor<T> extends NodeVisitor<Predicate<T>> {
 
 
     protected Predicate<T> doesNotExist(ComparisonNode node) {
-        return t -> !exists(node.getField(), t);
+        return t -> !exists(node.getField().asKey(), t);
     }
 
     protected Predicate<T> exists(ComparisonNode node) {
-        return t -> exists(node.getField(), t);
+        return t -> exists(node.getField().asKey(), t);
     }
 
     protected Predicate<T> single(ComparisonNode node, BiFunction<Object, Object, Boolean> func) {
-        return t -> func.apply(obj(node.getField(), t), node.getValues().iterator().next());
+        return t -> func.apply(obj(node.getField().asKey(), t), node.getValues().iterator().next());
     }
 
     protected Predicate<T> multi(ComparisonNode node, BiFunction<Object, Collection<?>, Boolean> func) {
-        return t -> func.apply(obj(node.getField(), t), node.getValues());
+        return t -> func.apply(obj(node.getField().asKey(), t), node.getValues());
     }
 
     protected Object obj(String fieldName, Object actual) {

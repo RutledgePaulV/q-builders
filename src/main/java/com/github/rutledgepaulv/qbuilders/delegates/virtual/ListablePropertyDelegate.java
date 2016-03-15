@@ -4,6 +4,7 @@ import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.ListableProperty;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.util.Collection;
 
@@ -12,7 +13,7 @@ import static java.util.Arrays.asList;
 public abstract class ListablePropertyDelegate<T extends QBuilder<T>, S>
         extends EquitablePropertyDelegate<T, S> implements ListableProperty<T, S> {
 
-    protected ListablePropertyDelegate(String field, T canonical) {
+    protected ListablePropertyDelegate(FieldPath field, T canonical) {
         super(field, canonical);
     }
 

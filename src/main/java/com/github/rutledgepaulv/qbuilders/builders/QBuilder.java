@@ -9,8 +9,9 @@ import com.github.rutledgepaulv.qbuilders.nodes.*;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.concrete.*;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.Property;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 import com.github.rutledgepaulv.qbuilders.utilities.ObjectUtils;
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.visitors.ContextualNodeVisitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +30,8 @@ import static java.util.Arrays.asList;
 @SuppressWarnings("unchecked")
 public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
-    private LogicalNode root;
-    private LogicalNode current;
+    protected LogicalNode root;
+    protected LogicalNode current;
 
     public QBuilder() {
         root = current = new OrNode();
@@ -81,7 +82,7 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
             throw new IllegalArgumentException("Must provide a delegate that implements the interface to be returned.");
         }
 
-        return (Q) ObjectUtils.init(delegate, field, self());
+        return (Q) ObjectUtils.init(delegate, new FieldPath(field), self());
     }
 
     @SafeVarargs
@@ -110,11 +111,11 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
     private <S extends LogicalNode> Condition<T> combine(List<Condition<T>> conditions, Class<S> type) {
 
         List<AbstractNode> children = conditions.stream()
-                .map(condition -> ((QBuilder<T>)((QBuilder<T>) condition).self()).current)
+                .map(condition -> ((QBuilder<T>) condition).self().current)
                 .collect(Collectors.toList());
 
-        S node = ObjectUtils.init(type, ((QBuilder<T>)self()).current, children);
-        ((QBuilder<T>)self()).current.getChildren().add(node);
+        S node = ObjectUtils.init(type, self().current, children);
+        self().current.getChildren().add(node);
 
         return new ConditionDelegate(self());
     }
@@ -128,14 +129,14 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
      *
      * @return A completed {@link Condition} that can be built into a query or logically composed into other conditions.
      */
-    protected final Condition<T> condition(String field, ComparisonOperator operator, Collection<?> values) {
-        ComparisonNode node = new ComparisonNode(((QBuilder<T>)self()).current);
+    protected final Condition<T> condition(FieldPath field, ComparisonOperator operator, Collection<?> values) {
+        ComparisonNode node = new ComparisonNode(self().current);
 
         node.setField(field);
         node.setOperator(operator);
         node.setValues(values);
 
-        ((QBuilder<T>)self()).current.getChildren().add(node);
+        self().current.getChildren().add(node);
         return new ConditionDelegate(self());
     }
 
@@ -158,7 +159,7 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
      * condition can either be directly built into a query or it can be composed with other conditions in
      * the form of 'AND' or 'OR'
      */
-    private final class ConditionDelegate extends Delegate<T> implements Condition<T> {
+    protected final class ConditionDelegate extends Delegate<T> implements Condition<T> {
 
         private ConditionDelegate(T canonical) {
             super(canonical);
@@ -204,11 +205,19 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
             return (T) self;
         }
 
-        public final <Q> Q query(NodeVisitor<Q> visitor) {
+        public final <Q> Q query(ContextualNodeVisitor<Q,Void> visitor) {
             QBuilder<T> self = self();
             return self.root.visit(visitor);
         }
 
+        public final <Q,S> Q query(ContextualNodeVisitor<Q,S> visitor, S context) {
+            QBuilder<T> self = self();
+            return self.root.visit(visitor, context);
+        }
+
+        public final LogicalNode getRootNode() {
+            return self().root;
+        }
     }
 
 

@@ -1,9 +1,13 @@
 package com.github.rutledgepaulv.qbuilders.nodes;
 
-import com.github.rutledgepaulv.qbuilders.visitors.NodeVisitor;
+import com.github.rutledgepaulv.qbuilders.visitors.ContextualNodeVisitor;
 
 public interface Visitable {
 
-    <T> T visit(NodeVisitor<T> visitor);
+    default <T> T visit(ContextualNodeVisitor<T,Void> visitor) {
+        return visit(visitor, null);
+    }
+
+     <T,S> T visit(ContextualNodeVisitor<T,S> visitor, S context);
 
 }

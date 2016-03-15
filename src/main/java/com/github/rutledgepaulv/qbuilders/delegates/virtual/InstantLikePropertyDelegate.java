@@ -4,6 +4,7 @@ import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
 import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
 import com.github.rutledgepaulv.qbuilders.properties.virtual.InstantLikeProperty;
+import com.github.rutledgepaulv.qbuilders.structures.FieldPath;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.Collections;
 public abstract class InstantLikePropertyDelegate<T extends QBuilder<T>, S>
         extends EquitablePropertyDelegate<T, S> implements InstantLikeProperty<T, S> {
 
-    public InstantLikePropertyDelegate(String field, T canonical) {
+    public InstantLikePropertyDelegate(FieldPath field, T canonical) {
         super(field, canonical);
     }
 
@@ -30,8 +31,8 @@ public abstract class InstantLikePropertyDelegate<T extends QBuilder<T>, S>
 
     @Override
     public final Condition<T> between(S after, boolean exclusiveAfter, S before, boolean exclusiveBefore) {
-        Condition<T> afterCondition = new QBuilder().instant(getField()).after(after, exclusiveAfter);
-        Condition<T> beforeCondition = new QBuilder().instant(getField()).before(before, exclusiveBefore);
+        Condition<T> afterCondition = new QBuilder().instant(getField().asKey()).after(after, exclusiveAfter);
+        Condition<T> beforeCondition = new QBuilder().instant(getField().asKey()).before(before, exclusiveBefore);
         return and(afterCondition, beforeCondition);
     }
 
