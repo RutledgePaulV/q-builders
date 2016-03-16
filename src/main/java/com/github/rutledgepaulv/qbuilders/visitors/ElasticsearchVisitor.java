@@ -50,7 +50,7 @@ public class ElasticsearchVisitor extends ContextualNodeVisitor<QueryBuilder, El
     @Override
     protected QueryBuilder visit(ComparisonNode node, Context context) {
         ComparisonOperator operator = node.getOperator();
-
+        
         Collection<?> values = node.getValues().stream().map(normalizer).collect(Collectors.toList());
 
         String field = context.originatedAsNestedQuery ? node.getField().asFullyQualifiedKey() : node.getField().asKey();
