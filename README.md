@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/RutledgePaulV/q-builders.svg)](https://travis-ci.org/RutledgePaulV/q-builders)
-[![Coverage Status](https://coveralls.io/repos/RutledgePaulV/q-builders/badge.svg?branch=master&service=github)](https://coveralls.io/github/RutledgePaulV/q-builders?branch=master)
+[![Coverage Status](https://coveralls.io/repos/RutledgePaulV/q-builders/badge.svg?branch=develop&service=github)](https://coveralls.io/github/RutledgePaulV/q-builders?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders)
 
 ### Overview
