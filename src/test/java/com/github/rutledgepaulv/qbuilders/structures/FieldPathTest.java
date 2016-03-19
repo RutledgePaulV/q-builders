@@ -21,7 +21,7 @@ public class FieldPathTest {
     }
 
     @Test
-    public void append() throws Exception {
+    public void append_String() throws Exception {
         FieldPath oneMore = it.append("name");
         assertEquals("com.github.rutledgepaulv.myList.name", oneMore.asFullyQualifiedKey());
         assertEquals("name", oneMore.asKey());
@@ -32,38 +32,80 @@ public class FieldPathTest {
     }
 
     @Test
-    public void append1() throws Exception {
-
+    public void append_Path() throws Exception {
+        FieldPath oneMore = it.append(new FieldPath("name"));
+        assertEquals("com.github.rutledgepaulv.myList.name", oneMore.asFullyQualifiedKey());
+        assertEquals("name", oneMore.asKey());
     }
 
     @Test
-    public void prepend() throws Exception {
-
+    public void prepend_String() throws Exception {
+        FieldPath oneMore = it.prepend("name");
+        assertEquals("name.com.github.rutledgepaulv.myList", oneMore.asFullyQualifiedKey());
+        assertEquals("com.github.rutledgepaulv.myList", oneMore.asKey());
     }
 
     @Test
-    public void prepend1() throws Exception {
-
+    public void prepend_Path() throws Exception {
+        FieldPath oneMore = it.prepend(new FieldPath("name"));
+        assertEquals("name.com.github.rutledgepaulv.myList", oneMore.asFullyQualifiedKey());
+        assertEquals("com.github.rutledgepaulv.myList", oneMore.asKey());
     }
 
     @Test
     public void asFullyQualifiedPrefix() throws Exception {
-
+        FieldPath oneMore = it.append("name");
+        assertEquals("com.github.rutledgepaulv.myList.", it.asFullyQualifiedPrefix());
+        assertEquals("com.github.rutledgepaulv.myList.name.", oneMore.asFullyQualifiedPrefix());
     }
 
     @Test
     public void asFullyQualifiedKey() throws Exception {
-
+        FieldPath oneMore = it.append("name");
+        assertEquals("com.github.rutledgepaulv.myList", it.asFullyQualifiedKey());
+        assertEquals("com.github.rutledgepaulv.myList.name", oneMore.asFullyQualifiedKey());
     }
 
     @Test
     public void asShortKey() throws Exception {
+        FieldPath oneMore = it.append("name");
+        assertEquals("name", oneMore.asKey());
+    }
 
+    @Test
+    public void asShortPrefix() throws Exception {
+        FieldPath oneMore = it.append("name");
+        assertEquals("name.", oneMore.asPrefix());
     }
 
     @Test
     public void test_toString() throws Exception {
+        FieldPath oneMore = it.append("name");
+        assertEquals("com.github.rutledgepaulv.myList.name", oneMore.toString());
+    }
 
+    @Test
+    public void testEquals() {
+        FieldPath path = new FieldPath("test");
+        assertTrue(path.equals(path));
+        assertFalse(path.equals("cats"));
+        assertFalse(path.equals(new FieldPath("bats")));
+        assertTrue(path.equals(new FieldPath("test")));
+    }
+
+    @Test
+    public void testHashCode() {
+        FieldPath path = new FieldPath("test");
+        assertEquals(path.hashCode(), path.hashCode());
+        assertNotEquals(path.hashCode(), new FieldPath("badgers").hashCode());
+    }
+
+
+    @Test
+    public void testGetParentPath() {
+        FieldPath path = it.append("name");
+        assertTrue(path.getParentPath().isPresent());
+        assertEquals("com.github.rutledgepaulv.myList", path.getParentPath().get().asFullyQualifiedKey());
     }
 
 }
