@@ -45,6 +45,11 @@ public class PredicateVisitorTest {
     }
 
     @Test
+    public void testRegex() {
+        compare(myListOfStrings().pattern(".*cd$"), BAA, BAB);
+    }
+
+    @Test
     public void subquery(){
         compare(mySubList().any(myLong().gt(4L).and().myString().doesNotExist()),
                 AAA, ABA, AAB, BAA, BAB, BBA, BBB);

@@ -149,6 +149,15 @@ public class ElasticsearchVisitorTest extends QBuilderTestBase<ElasticsearchVisi
                 "  }\n" +
                 "}";
 
+        String_RE = "{\n" +
+                "  \"regexp\" : {\n" +
+                "    \"myString\" : {\n" +
+                "      \"value\" : \"(abc|def)\",\n" +
+                "      \"flags_value\" : 65535\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
         Boolean_TRUE = "{\n" +
                 "  \"term\" : {\n" +
                 "    \"myBoolean\" : true\n" +

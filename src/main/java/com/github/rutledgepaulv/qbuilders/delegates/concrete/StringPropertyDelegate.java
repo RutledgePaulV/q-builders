@@ -32,4 +32,8 @@ public final class StringPropertyDelegate<T extends QBuilder<T>>
         return condition(getField(), ComparisonOperator.GTE, Collections.singletonList(value));
     }
 
+    public Condition<T> pattern(String pattern) {
+        return condition(getField(), ComparisonOperator.RE, Collections.singletonList(pattern));
+    }
+
 }

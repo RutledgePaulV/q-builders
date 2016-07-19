@@ -27,6 +27,7 @@ public class MongoVisitorTest extends QBuilderTestBase<MongoVisitor, Criteria, V
         String_DNE = "{ \"myString\" : { \"$exists\" : false}}";
         String_IN = "{ \"myString\" : { \"$in\" : [ \"a\" , \"b\" , \"c\"]}}";
         String_NIN = "{ \"myString\" : { \"$nin\" : [ \"d\" , \"e\" , \"f\"]}}";
+        String_RE = "{ \"myString\" : { \"$regex\" : \"(abc|def)\"}}";
 
         Boolean_TRUE = "{ \"myBoolean\" : true}";
         Boolean_FALSE = "{ \"myBoolean\" : false}";
