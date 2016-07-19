@@ -21,7 +21,7 @@ public class MongoVisitor extends AbstractVoidContextNodeVisitor<Criteria> {
     protected final Function<Object, Object> normalizer;
 
     public MongoVisitor() {
-        this(DefaultNormalizer.INSTANCE);
+        this(new DefaultNormalizer());
     }
 
     public MongoVisitor(Function<Object, Object> normalizer) {
@@ -70,6 +70,8 @@ public class MongoVisitor extends AbstractVoidContextNodeVisitor<Criteria> {
             return where(field).in(values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return where(field).nin(values);
+        } else if (ComparisonOperator.RE.equals(operator)) {
+            return where(field).regex((String)single(values));
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
             return where(field).elemMatch(condition(node));
         }
@@ -79,8 +81,6 @@ public class MongoVisitor extends AbstractVoidContextNodeVisitor<Criteria> {
 
 
     protected static class DefaultNormalizer implements Function<Object, Object> {
-
-        protected static DefaultNormalizer INSTANCE = new DefaultNormalizer();
 
         @Override
         public Object apply(Object o) {

@@ -14,7 +14,7 @@ over-the-wire and mongo or hibernate queries on the API server.
 
 
 ### Why does this exist?
-A lot of existing query builders are bad. It's *hard* to write a query builder that always restricts you to the
+A lot of existing query builders are bad. It's difficult to write a query builder that always restricts you to the
 only logical options available, which has resulted in most query builders being overly generic and allowing you to 
 call methods that you shouldn't be able to call at that time.
 
@@ -131,95 +131,14 @@ Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Ric
 ```
 
 ### Precedence:
-Chaining both with ```and()``` and ```or()``` is complicated when you begin to talk about
+Chaining both with the infix forms of ```and()``` and ```or()``` is complicated when you begin to talk about
 precedence. The implementation is such that whenever you change from a chain of ```and()``` to
 a chain of ```or()```, then the previous statements are wrapped together and the existing set
 becomes one of the elements in the new ```or()``` chain, and vice versa for a chain of ```or()``` followed
 by a chain of ```and()```. In general, to avoid unintended precedence concerns, it's best to limit your chains
-to only ```and()``` or ```or()``` operators and use the parameterized 
+to only ```and()``` or ```or()``` operators and use the parametrized 
 ```and(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` and 
 ```or(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` for more complicated queries.
-
-
-### Customizations:
-It's great to have a single syntax to define queries that can be used against multiple
-backends, but what about features that are specific to certain things? How would I add
-(insert thing here) query support for mongo? I'll provide an example of adding regex 
-searches for mongo (something I chose to leave out of the core library due to the complexity of
-supporting same-interface regex searches on each backend).
-
-
-1) Define a custom property interface
-
-```java
-
-public interface AdvancedStringField<T extends Partial<T>> extends StringProperty<T> {
-
-    Condition<T> regex(String pattern);
-
-}
-```
-
-2) Define an implementation for that interface using a new operator
-```java
-
-public class AdvancedStringFieldDelegate<T extends QBuilder<T>> extends StringPropertyDelegate<T>
-        implements AdvancedStringField<T> {
-
-    public static final ComparisonOperator REGEX = new ComparisonOperator("REGEX");
-
-    public AdvancedStringFieldDelegate(String field, T canonical) {
-        super(field, canonical);
-    }
-
-    @Override
-    public final Condition<T> regex(String pattern) {
-        return condition(getField(), REGEX, Collections.singletonList(pattern));
-    }
-
-}
-```
-
-3) Define a custom 'visitor' (extending the provided one) with your functionality
-```java
-
-public class AdvancedMongoVisitor extends MongoVisitor {
-
-    @Override
-    protected Criteria visit(ComparisonNode node) {
-
-        ComparisonOperator operator = node.getOperator();
-
-        if(operator.equals(AdvancedStringFieldDelegate.REGEX)) {
-            return Criteria.where(node.getField()).regex((String) node.getValues().iterator().next());
-        } else {
-            return super.visit(node);
-        }
-
-    }
-
-}
-```
-
-4) Use the custom property in your query builders
-```java
-
-public class AdvancedPersonQuery extends QBuilder<AdvancedPersonQuery> {
-    
-    public AdvancedStringField<AdvancedQModel> firstName() {
-        return prop(getCurrentMethodName(), AdvancedStringFieldDelegate.class, AdvancedStringField.class);
-    }
-    
-}
-```
-
-5) Use your custom visitor when building queries that might contain the new property type.
-```java
-
-Condition<AdvancedQModel> q = firstName().regex("^pau.*");
-Criteria criteria = q.query(new AdvancedMongoVisitor());
-
-```
 
 
 ### RSQL Flavor
@@ -242,7 +161,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>1.1</version>
+        <version>1.4</version>
     </dependency>
 </dependencies>
 ```
@@ -253,7 +172,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.5-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
@@ -279,22 +198,15 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-mongodb</artifactId>
-        <version>1.8.2.RELEASE</version>
+        <version>1.9.2.RELEASE</version>
     </dependency>
     
     <!-- only necessary if you're using the elasticsearch filter builder target type -->
     <dependency>
         <groupId>org.elasticsearch</groupId>
         <artifactId>elasticsearch</artifactId>
-        <version>2.2.0</version>
+        <version>2.3.4</version>
     </dependency>
-
-    <!-- only necessary if you're using the java.util.function.Predicate target type -->
-     <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.7.1</version>
-     </dependency>
             
 </dependencies>
 ```

@@ -19,6 +19,7 @@ public final class ComparisonOperator {
     public static final ComparisonOperator IN = new ComparisonOperator("IN");
     public static final ComparisonOperator NIN = new ComparisonOperator("NIN");
     public static final ComparisonOperator EX = new ComparisonOperator("EX");
+    public static final ComparisonOperator RE = new ComparisonOperator("RE");
     public static final ComparisonOperator SUB_CONDITION_ANY = new ComparisonOperator("SUB_CONDITION_ANY");
 
     @Override
