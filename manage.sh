@@ -8,6 +8,20 @@ function integration_test() {
     mvn clean install failsafe:integration-test
 }
 
+function snapshot() {
+    read -p "This will reset your current working tree to origin/develop, is this okay? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+    git fetch
+    git reset --hard origin/develop
+
+    echo "Deploying new release artifacts to sonatype repository."
+    mvn clean deploy -P release
+    fi
+}
+
+
 function release() {
     read -p "This will reset your current working tree to origin/develop, is this okay? " -n 1 -r
     echo
@@ -21,6 +35,13 @@ function release() {
 
         echo "Merging the release branch into develop & master, pushing changes, and tagging new version off of master"
         mvn -Prelease jgitflow:release-finish -DnoReleaseBuild=true -DpushReleases=true -DnoDeploy=true
+
+        echo "Checking out latest version of master."
+        git fetch
+        git checkout origin/master
+
+        echo "Deploying new release artifacts to sonatype repository."
+        mvn clean deploy -P release
     fi
 }
 
