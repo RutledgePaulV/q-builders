@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.*;
 
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Stream.*;
 
 public class FieldPath implements Iterable<FieldPath.FieldNamespace> {
 
@@ -14,10 +13,6 @@ public class FieldPath implements Iterable<FieldPath.FieldNamespace> {
 
     public FieldPath(String raw) {
         chain.add(new FieldNamespace(raw));
-    }
-
-    public FieldPath(FieldNamespace namespace) {
-        chain.add(namespace);
     }
 
     public FieldPath(List<FieldNamespace> namespaces) {
@@ -48,28 +43,17 @@ public class FieldPath implements Iterable<FieldPath.FieldNamespace> {
         return new FieldPath(chain);
     }
 
-    public FieldPath append(FieldNamespace... path) {
-        List<FieldNamespace> chain = new LinkedList<>();
-        chain.addAll(this.chain);
-        chain.addAll(Arrays.stream(path).collect(Collectors.toList()));
-        return new FieldPath(chain);
-    }
-
     public FieldPath append(FieldPath... path) {
-        List<FieldNamespace> chain = Arrays.stream(path).flatMap($ -> $.chain.stream()).collect(Collectors.toList());
-        return new FieldPath(chain);
+        List<FieldNamespace> newChain = new LinkedList<>();
+        newChain.addAll(this.chain);
+        newChain.addAll(Arrays.stream(path).flatMap($ ->
+                $.chain.stream()).collect(Collectors.toList()));
+        return new FieldPath(newChain);
     }
 
     public FieldPath prepend(String path) {
         List<FieldNamespace> chain = new LinkedList<>();
         chain.add(new FieldNamespace(path));
-        chain.addAll(this.chain);
-        return new FieldPath(chain);
-    }
-
-    public FieldPath prepend(FieldNamespace path) {
-        List<FieldNamespace> chain = new LinkedList<>();
-        chain.add(path);
         chain.addAll(this.chain);
         return new FieldPath(chain);
     }
@@ -97,6 +81,28 @@ public class FieldPath implements Iterable<FieldPath.FieldNamespace> {
         return chain.get(chain.size() - 1).toString() + ".";
     }
 
+    @Override
+    public String toString() {
+        return asFullyQualifiedKey();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FieldPath)) {
+            return false;
+        }
+        FieldPath that = (FieldPath) o;
+        return Objects.equals(chain, that.chain);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chain);
+    }
+
     public static class FieldNamespace implements Iterable<String> {
         private String raw;
 
@@ -113,26 +119,26 @@ public class FieldPath implements Iterable<FieldPath.FieldNamespace> {
             return StreamSupport.stream(spliterator(), false);
         }
 
-        public FieldNamespace append(String... path) {
-            return new FieldNamespace(
-                    concat(Stream.of(raw), Arrays.stream(path)).map(FieldPath::strip).collect(joining(".")));
-        }
-
-        public FieldNamespace append(FieldNamespace... path) {
-            return append(Arrays.stream(path).map($ -> $.raw).toArray(String[]::new));
-        }
-
-        public FieldNamespace prepend(String path) {
-            return new FieldNamespace(StringUtils.join(new String[]{path, raw}, "."));
-        }
-
-        public FieldNamespace prepend(FieldNamespace path) {
-            return prepend(path.raw);
-        }
-
         @Override
         public String toString() {
             return raw;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof FieldNamespace)) {
+                return false;
+            }
+            FieldNamespace strings = (FieldNamespace) o;
+            return Objects.equals(raw, strings.raw);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(raw);
         }
     }
 

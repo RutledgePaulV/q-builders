@@ -59,6 +59,8 @@ public class RSQLVisitor extends AbstractVoidContextNodeVisitor<String> {
             return list(node, "=in=");
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return list(node, "=out=");
+        } else if (ComparisonOperator.RE.equals(operator)) {
+            return single(node, "=re=");
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
             return node.getField().asKey() + "=q=" + serialize(condition(node));
         }

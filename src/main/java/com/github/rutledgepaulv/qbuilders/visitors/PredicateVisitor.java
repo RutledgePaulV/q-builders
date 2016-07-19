@@ -1,23 +1,22 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rutledgepaulv.qbuilders.nodes.AndNode;
 import com.github.rutledgepaulv.qbuilders.nodes.ComparisonNode;
 import com.github.rutledgepaulv.qbuilders.nodes.OrNode;
 import com.github.rutledgepaulv.qbuilders.operators.ComparisonOperator;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.function.BiFunction;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
+import static java.util.Arrays.stream;
 
 @SuppressWarnings("WeakerAccess")
 public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicate<T>> {
-
-    protected static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     protected Predicate<T> visit(AndNode node) {
@@ -52,6 +51,8 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
             return multi(node, this::in);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return multi(node, this::nin);
+        } else if (ComparisonOperator.RE.equals(operator)) {
+            return single(node, this::regex);
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
             Predicate test = condition(node);
             // subquery condition is ignored because a predicate has already been built.
@@ -64,7 +65,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     protected boolean subquery(Object actual, Predicate<Object> func) {
         if (actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
-            return Arrays.stream(values).anyMatch(func);
+            return stream(values).anyMatch(func);
         } else if (actual != null && Collection.class.isAssignableFrom(actual.getClass())) {
             Collection<?> values = (Collection<?>) actual;
             return values.stream().anyMatch(func);
@@ -73,11 +74,33 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
         }
     }
 
+    protected boolean regex(Object actual, Object query) {
+        Predicate<String> test;
+
+        if (query instanceof String) {
+            String queryRegex = (String) query;
+            test = Pattern.compile(queryRegex).asPredicate();
+        } else {
+            return false;
+        }
+
+        if (actual.getClass().isArray()) {
+            String[] values = (String[]) actual;
+            return Arrays.stream(values).anyMatch(test);
+        } else if (Collection.class.isAssignableFrom(actual.getClass())) {
+            Collection<String> values = (Collection<String>) actual;
+            return values.stream().anyMatch(test);
+        } else if (actual instanceof String) {
+            return test.test((String) actual);
+        }
+
+        return false;
+    }
 
     protected boolean equality(Object actual, Object query) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
-            return Arrays.stream(values).anyMatch(query::equals);
+            return stream(values).anyMatch(query::equals);
         } else if (actual != null && Collection.class.isAssignableFrom(actual.getClass())) {
             Collection<?> values = (Collection<?>)actual;
             return values.stream().anyMatch(query::equals);
@@ -89,7 +112,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     protected boolean inequality(Object actual, Object query) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
-            return Arrays.stream(values).noneMatch(query::equals);
+            return stream(values).noneMatch(query::equals);
         } else if (actual != null && Collection.class.isAssignableFrom(actual.getClass())) {
             Collection<?> values = (Collection<?>)actual;
             return values.stream().noneMatch(query::equals);
@@ -101,7 +124,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     protected boolean nin(Object actual, Collection<?> queries) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
-            return Arrays.stream(values).noneMatch(queries::contains);
+            return stream(values).noneMatch(queries::contains);
         } else if (actual != null &&  Collection.class.isAssignableFrom(actual.getClass())) {
             Collection<?> values = (Collection<?>)actual;
             return values.stream().noneMatch(queries::contains);
@@ -113,7 +136,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     protected boolean in(Object actual, Collection<?> queries) {
         if(actual != null && actual.getClass().isArray()) {
             Object[] values = (Object[]) actual;
-            return Arrays.stream(values).anyMatch(queries::contains);
+            return stream(values).anyMatch(queries::contains);
         } else if (actual != null && Collection.class.isAssignableFrom(actual.getClass())) {
             Collection<?> values = (Collection<?>)actual;
             return values.stream().anyMatch(queries::contains);
@@ -162,52 +185,85 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
         }
     }
 
-
-    protected Predicate<T> doesNotExist(ComparisonNode node) {
-        return t -> !exists(node.getField().asKey(), t);
+    private Predicate<T> doesNotExist(ComparisonNode node) {
+        return t -> resolveSingleField(t, node.getField().asKey(), node, (one, two) -> Objects.isNull(one));
     }
 
-    protected Predicate<T> exists(ComparisonNode node) {
-        return t -> exists(node.getField().asKey(), t);
+    private Predicate<T> exists(ComparisonNode node) {
+        return t -> resolveSingleField(t, node.getField().asKey(), node, (one, two) -> Objects.nonNull(one));
     }
 
-    protected Predicate<T> single(ComparisonNode node, BiFunction<Object, Object, Boolean> func) {
-        return t -> func.apply(obj(node.getField().asKey(), t), node.getValues().iterator().next());
+    private Predicate<T> single(ComparisonNode node, BiPredicate<Object, Object> func) {
+        return t -> resolveSingleField(t, node.getField().asKey(), node, func);
     }
 
-    protected Predicate<T> multi(ComparisonNode node, BiFunction<Object, Collection<?>, Boolean> func) {
-        return t -> func.apply(obj(node.getField().asKey(), t), node.getValues());
+    private Predicate<T> multi(ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
+        return t -> resolveMultiField(t, node.getField().asKey(), node, func);
     }
 
-    protected Object obj(String fieldName, Object actual) {
-        JsonNode node = mapper.valueToTree(actual);
+    private boolean resolveSingleField(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
+        if(root == null || node.getField() == null) {
+            return func.test(null, node.getValues().iterator().next());
+        } else {
+            String[] splitField = field.split("\\.", 2);
+            Object currentField = getFieldValueFromString(root, splitField[0]);
+            if(splitField.length == 1) {
+                return func.test(currentField, node.getValues().iterator().next());
+            } else {
+                return recurseSingle(currentField, splitField[1], node, func);
+            }
+        }
+    }
 
-        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
+    private boolean recurseSingle(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
 
-        while(iter.hasNext()) {
-            node = node.path(iter.next());
+        if(root.getClass().isArray()) {
+            return Arrays.stream((Object[])root).anyMatch(t -> resolveSingleField(t, field, node, func));
         }
 
-        if(node.isValueNode() || node.isArray()) {
-            try {
-                return mapper.treeToValue(node, Object.class);
-            } catch (JsonProcessingException ignored) {}
+        if(root instanceof Collection) {
+            return ((Collection<Object>)root).stream().anyMatch(t -> resolveSingleField(t, field, node, func));
         }
 
-        throw new UnsupportedOperationException("Referenced an unresolvable field.");
+        return resolveSingleField(root, field, node, func);
     }
 
+    private boolean resolveMultiField(Object root, String field, ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
+        if(root == null || node.getField() == null) {
+            return func.test(null, node.getValues());
+        } else {
+            String[] splitField = field.split("\\.", 2);
+            Object currentField = getFieldValueFromString(root, splitField[0]);
+            if(splitField.length == 1) {
+                return func.test(currentField, node.getValues());
+            } else {
+                return recurseMulti(currentField, splitField[1], node, func);
+            }
+        }
+    }
 
-    protected boolean exists(String fieldName, Object actual) {
-        JsonNode node = mapper.valueToTree(actual);
+    private boolean recurseMulti(Object root, String field, ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
 
-        Iterator<String> iter = Arrays.stream(fieldName.split("\\.")).iterator();
-
-        while(iter.hasNext()) {
-            node = node.path(iter.next());
+        if(root.getClass().isArray()) {
+            return Arrays.stream((Object[])root).anyMatch(t -> resolveMultiField(t, field, node, func));
         }
 
-        return !node.isMissingNode() && !node.isNull();
+        if(root instanceof Collection) {
+            return ((Collection<Object>)root).stream().anyMatch(t -> resolveMultiField(t, field, node, func));
+        }
+
+        return resolveMultiField(root, field, node, func);
+    }
+
+    private Object getFieldValueFromString(Object o, String s) {
+        if(o == null) {
+            return null;
+        }
+        try {
+            return FieldUtils.readField(o, s, true);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 
 }

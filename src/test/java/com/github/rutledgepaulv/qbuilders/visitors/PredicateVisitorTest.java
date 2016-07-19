@@ -1,19 +1,22 @@
 package com.github.rutledgepaulv.qbuilders.visitors;
 
+import com.github.rutledgepaulv.qbuilders.builders.QBuilder;
+import com.github.rutledgepaulv.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.ConditionProperty;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.EnumProperty;
+import com.github.rutledgepaulv.qbuilders.properties.concrete.StringProperty;
 import com.github.rutledgepaulv.testsupport.DomainModel;
 import com.github.rutledgepaulv.testsupport.QueryModel;
-import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.github.rutledgepaulv.testsupport.QueryModel.QueryModelPredef.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PredicateVisitorTest {
 
@@ -39,6 +42,11 @@ public class PredicateVisitorTest {
         actual.forEach(entry -> entry.getMySubList().addAll(clones.stream()
                 .filter(thing -> !thing.equals(entry))
                 .collect(Collectors.toList())));
+    }
+
+    @Test
+    public void testRegex() {
+        compare(myListOfStrings().pattern(".*cd$"), BAA, BAB);
     }
 
     @Test
@@ -161,10 +169,282 @@ public class PredicateVisitorTest {
         compare(myString().doesNotExist().or().myString().eq("testing8"), BAA, ABB, BBB);
     }
 
+    public enum Icecream {
+        GINGER_ROOT(), GOBLIN_BLOOD()
+    }
+
+    public class User {
+
+        private String firstName;
+        public String middleName;
+        private String lastName;
+        private Icecream favouriteFlavor;
+        private List<User> friends = new LinkedList<>();
+        private User[] neighbors = new User[2];
+        private User bestFriend;
+
+        public User withFriends(User... newFriends) {
+            Collections.addAll(friends, newFriends);
+            return this;
+        }
+
+
+        public User firstName(String paul) {
+            firstName = paul;
+            return this;
+        }
+
+        public User lastName(String paul) {
+            lastName = paul;
+            return this;
+        }
+
+        public User bestFriend(User paul) {
+            bestFriend = paul;
+            return this;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public List<User> getFriends() {
+            return friends;
+        }
+
+        public User[] getNeighbors() {
+            return neighbors;
+        }
+
+        public User getBestFriend() {
+            return bestFriend;
+        }
+
+        public Icecream getFavouriteFlavor() {
+            return favouriteFlavor;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public class UserQuery extends QBuilder<UserQuery> {
+
+        public StringProperty<UserQuery> firstName() {
+            return string("firstName");
+        }
+
+        public StringProperty<UserQuery> middleName() {
+            return string("middleName");
+        }
+
+        public StringProperty<UserQuery> lastName() {
+            return string("lastName");
+        }
+
+        public ConditionProperty<UserQuery, UserQuery> bestFriend() {
+            return condition("bestFriend");
+        }
+
+        public ConditionProperty<UserQuery, UserQuery> friends() {
+            return condition("friends");
+        }
+
+        public ConditionProperty<UserQuery, UserQuery> neighbors() {
+            return condition("neighbors");
+        }
+
+        public EnumProperty<UserQuery, Icecream> favouriteFlavor() {
+            return enumeration("favouriteFlavor");
+        }
+    }
+
+    public class Bruiser extends User {
+        public String cruiser;
+        public Optional<String> getCruiser() { return Optional.ofNullable(cruiser); }
+    }
+
+    @Test
+    public void regularQueryTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().withFriends(new User().firstName("James"), new User().firstName("Paul")));
+        people.add(new User().withFriends(new User().firstName("Bob")));
+
+        Condition<UserQuery> condition = new UserQuery().friends().any(new UserQuery().firstName().eq("Paul"));
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void regularQueryNoGetterTest() {
+        List<User> people = new LinkedList<>();
+        User paul = new User();
+        paul.middleName = "Paul";
+        people.add(new User().withFriends(new User().firstName("James"), paul));
+        people.add(new User().withFriends(new User().firstName("Bob")));
+        Condition<UserQuery> condition = new UserQuery().friends().any(new UserQuery().middleName().eq("Paul"));
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+
+    @Test
+    public void regularQueryNoGetterSuperclassTest() {
+        List<User> people = new LinkedList<>();
+        Bruiser paul = new Bruiser();
+        paul.middleName = "Braul";
+        people.add(new User().withFriends(new User().firstName("James"), paul));
+        people.add(new User().withFriends(new User().firstName("Bob")));
+        Condition<UserQuery> condition = new UserQuery().friends().any(new UserQuery().middleName().eq("Braul"));
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void stringQueryTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().firstName("James").withFriends(new User().firstName("Paul")));
+        people.add(new User().firstName("Paul"));
+
+        Condition<UserQuery> condition = new UserQuery().string("firstName").eq("Paul");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(1), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void stringQueryMultipleLevelsTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().bestFriend(new User().firstName("Geraldo")).firstName("Kanye"));
+        people.add(new User().bestFriend(new User().firstName("James")).firstName("Kim"));
+        people.add(new User().bestFriend(new User().firstName("Geraldo")).firstName("James"));
+
+        Condition<UserQuery> condition = new UserQuery().string("bestFriend.firstName").eq("Geraldo");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(2, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void stringQueryListTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().withFriends(new User().firstName("Paul")).firstName("Dan"));
+        people.add(new User().withFriends(new User().firstName("Durande")).firstName("Don"));
+
+        Condition<UserQuery> condition = new UserQuery().string("friends.firstName").eq("Durande");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(1), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void stringQueryMultipleListTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().withFriends(new User().withFriends(new User().firstName("Durande"))));
+        people.add(new User().withFriends(new User().withFriends(new User().firstName("Paul"))));
+        people.add(new User().withFriends(new User().firstName("Durande")));
+
+        Condition<UserQuery> condition = new UserQuery().string("friends.friends.firstName").eq("Durande");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+
+    @Test
+    public void stringQueryArrayTest() {
+        List<User> people = new LinkedList<>();
+        User person1 = new User().firstName("Gumbo");
+        person1.neighbors[0] = new User().firstName("Durande");
+        person1.neighbors[1] = new User().firstName("KangarooCat");
+        people.add(person1);
+
+        User person2 = new User().firstName("Mendy");
+        person2.neighbors[0] = new User().firstName("Not Durande");
+        person2.neighbors[1] = new User().firstName("KangarooCat");
+        people.add(person2);
+
+        Condition<UserQuery> condition = new UserQuery().string("neighbors.firstName").eq("Durande");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+
+    @Test
+    public void stringQueryNullTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().withFriends(null, null));
+
+        Condition<UserQuery> condition = new UserQuery().string("friends.firstName").eq("Durande");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        Object nothing = people.stream().filter(query).findAny();
+        assertEquals(Optional.empty(), nothing);
+    }
+
+    @Test
+    public void stringQueryNullMiddleTest() {
+        List<User> people = new LinkedList<>();
+        people.add(new User().bestFriend(null));
+
+        Condition<UserQuery> condition = new UserQuery().string("friends.bestFriend.firstName").eq("Durande");
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        Object nothing = people.stream().filter(query).findAny();
+        assertEquals(Optional.empty(), nothing);
+    }
+
+    @Test
+    public void stringQueryLogicTest() {
+        Condition<UserQuery> ev = new UserQuery().string("firstName").eq("Geraldo").and().string("lastName").eq("Neumann");
+        Condition<UserQuery> condition = new UserQuery().friends().any(ev);
+        Predicate<User> query = condition.query(new PredicateVisitor<>());
+
+        List<User> people = new LinkedList<>();
+        people.add(new User().withFriends(new User().firstName("Geraldo").lastName("Neumann")));
+        people.add(new User().withFriends(new User().firstName("Geraldo").lastName("Not Neumann")).firstName("Geraldo")
+                .lastName("Neumann"));
+
+        assertEquals(people.get(0), people.stream().filter(query).findFirst().get());
+        assertEquals(1, people.stream().filter(query).count());
+    }
+
+    @Test
+    public void enumTest() {
+        User user = new User();
+        user.favouriteFlavor = Icecream.GOBLIN_BLOOD;
+        user.firstName = "Geraldo";
+        Condition<UserQuery> query = new UserQuery().favouriteFlavor().eq(Icecream.GOBLIN_BLOOD);
+        assertTrue(query.query(new PredicateVisitor<>()).test(user));
+    }
+
+    @Test
+    public void existsTest() {
+        User user = new User();
+        user.favouriteFlavor = Icecream.GOBLIN_BLOOD;
+        user.firstName = "Geraldo";
+        Condition<UserQuery> query = new UserQuery().favouriteFlavor().exists();
+        assertTrue(query.query(new PredicateVisitor<>()).test(user));
+    }
+
+
+
     private void compare(Condition<QueryModel> query, DomainModel... expected) {
-        Predicate<DomainModel> predicate = query.query(new PredicateVisitor<>());
+        Predicate<DomainModel> pred = query.query(new PredicateVisitor<>());
         Set<DomainModel> ex = new HashSet<>(Arrays.asList(expected));
-        Set<DomainModel> ac = actual.stream().filter(predicate).collect(Collectors.toSet());
+        Set<DomainModel> ac = actual.stream().filter(pred).collect(Collectors.toSet());
         assertEquals(ex, ac);
     }
 

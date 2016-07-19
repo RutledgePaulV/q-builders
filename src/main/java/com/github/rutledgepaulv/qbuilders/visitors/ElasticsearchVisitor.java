@@ -17,21 +17,21 @@ public class ElasticsearchVisitor extends ContextualNodeVisitor<QueryBuilder, El
 
     public static class Context {
         private boolean originatedAsNestedQuery = false;
+        public Context(){}
+        public Context(boolean originatedAsNestedQuery) {
+            this.originatedAsNestedQuery = originatedAsNestedQuery;
+        }
     }
 
-    protected static final Function<Object, Object> IDENTITY = object -> object;
     protected final Function<Object, Object> normalizer;
 
     public ElasticsearchVisitor() {
-        this(IDENTITY);
+        this(Function.identity());
     }
 
     public ElasticsearchVisitor(Function<Object, Object> normalizer) {
         this.normalizer = normalizer;
     }
-
-
-
 
     @Override
     protected QueryBuilder visit(AndNode node, Context context) {
@@ -50,7 +50,7 @@ public class ElasticsearchVisitor extends ContextualNodeVisitor<QueryBuilder, El
     @Override
     protected QueryBuilder visit(ComparisonNode node, Context context) {
         ComparisonOperator operator = node.getOperator();
-
+        
         Collection<?> values = node.getValues().stream().map(normalizer).collect(Collectors.toList());
 
         String field = context.originatedAsNestedQuery ? node.getField().asFullyQualifiedKey() : node.getField().asKey();
@@ -77,12 +77,10 @@ public class ElasticsearchVisitor extends ContextualNodeVisitor<QueryBuilder, El
             return termsQuery(field, values);
         } else if (ComparisonOperator.NIN.equals(operator)) {
             return boolQuery().mustNot(termsQuery(field, values));
+        } else if (ComparisonOperator.RE.equals(operator)) {
+            return regexpQuery(field, (String) single(values));
         } else if (ComparisonOperator.SUB_CONDITION_ANY.equals(operator)) {
-            // create a new context to pass to the children so we don't modify the one
-            // that may get reused from "above"
-            Context subquery = new Context();
-            subquery.originatedAsNestedQuery = true;
-            return nestedQuery(field, condition(node, subquery));
+            return nestedQuery(field, condition(node, new Context(true)));
         }
 
         throw new UnsupportedOperationException("This visitor does not support the operator " + operator + ".");

@@ -37,6 +37,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String, Void>
         String_NIN = "myString=out=(\"d\",\"e\",\"f\")";
         String_LTE = "myString=le=\"abcdefg\"";
         String_GTE = "myString=ge=\"abcdefg\"";
+        String_RE = "myString=re=\"(abc|def)\"";
 
         Boolean_TRUE = "myBoolean==\"true\"";
         Boolean_FALSE = "myBoolean==\"false\"";
@@ -258,6 +259,7 @@ public class RSQLVisitorTest extends QBuilderTestBase<RSQLVisitor, String, Void>
         ops.addAll(RSQLOperators.defaultOperators());
         ops.add(new cz.jirutka.rsql.parser.ast.ComparisonOperator("=q=", false));
         ops.add(new cz.jirutka.rsql.parser.ast.ComparisonOperator("=ex=", false));
+        ops.add(new cz.jirutka.rsql.parser.ast.ComparisonOperator("=re=", false));
         return new RSQLParser(ops).parse(rsql);
     }
 
