@@ -13,7 +13,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static com.sun.tools.doclets.internal.toolkit.util.DocPath.parent;
 import static java.util.Arrays.stream;
 
 @SuppressWarnings("WeakerAccess")
@@ -203,7 +202,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     }
 
     private boolean resolveSingleField(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
-        if(parent == null || node.getField() == null) {
+        if(root == null || node.getField() == null) {
             return func.test(null, node.getValues().iterator().next());
         } else {
             String[] splitField = field.split("\\.", 2);
@@ -230,7 +229,7 @@ public class PredicateVisitor<T> extends AbstractVoidContextNodeVisitor<Predicat
     }
 
     private boolean resolveMultiField(Object root, String field, ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
-        if(parent == null || node.getField() == null) {
+        if(root == null || node.getField() == null) {
             return func.test(null, node.getValues());
         } else {
             String[] splitField = field.split("\\.", 2);
