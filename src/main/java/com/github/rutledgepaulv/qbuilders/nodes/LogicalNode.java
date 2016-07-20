@@ -1,3 +1,15 @@
+/*
+ *
+ *  *  com.github.rutledgepaulv.qbuilders.nodes.LogicalNode
+ *  *  *
+ *  *  * Copyright (C) 2016 Paul Rutledge <paul.v.rutledge@gmail.com>
+ *  *  *
+ *  *  * This software may be modified and distributed under the terms
+ *  *  * of the MIT license.  See the LICENSE file for details.
+ *  *
+ *
+ */
+
 package com.github.rutledgepaulv.qbuilders.nodes;
 
 import java.util.LinkedList;
