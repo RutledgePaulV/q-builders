@@ -62,6 +62,11 @@ case "$1" in
         integration_test
         echo ""
     ;;
+    snapshot)
+        echo -n "Preparing a new snapshot version of the app..."
+        release
+        echo ""
+    ;;
     release)
         echo -n "Preparing to release a new version of the app..."
         release
@@ -78,7 +83,7 @@ case "$1" in
         echo ""
     ;;
     *)
-        echo "Usage: ./manage.sh integration-test|release|unit-test|upgrade"
+        echo "Usage: ./manage.sh integration-test|release|snapshot|unit-test|upgrade"
         exit 1
 esac
 
