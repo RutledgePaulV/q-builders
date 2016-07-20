@@ -149,6 +149,7 @@ make sure that you add the following operators before parsing:
 
 - "=ex=" The exists clause. It has values of either ```true``` or ```false```.
 - "=q=" The subquery clause. It has a string value that itself might be an entire RSQL query.
+- "=re=" A regular expression as a string. The string will be passed as-is to the backend visitor you use, so the regex string must be in the same flavor as the visitor you intend to use (mongo regex vs java regex, etc)
 
 
 
