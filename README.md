@@ -161,7 +161,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
     </dependency>
 </dependencies>
 ```
@@ -172,7 +172,7 @@ make sure that you add the following operators before parsing:
     <dependency>
         <groupId>com.github.rutledgepaulv</groupId>
         <artifactId>q-builders</artifactId>
-        <version>1.5-SNAPSHOT</version>
+        <version>1.6-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
