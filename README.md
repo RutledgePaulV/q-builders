@@ -6,10 +6,10 @@
 A lightweight abstraction for constructing queries oriented around domain models / entities that minimizes
 magic strings, provides type safety, produces queries that read well, and provides a decoupled way to define new query target formats - allowing you to change your mind about where you store your data without having to change all of your query code.
 
-Have a REST API? Chances are you want to provide an ability for people to query your API, but you
-also make queries against the database yourself. One option could be to use these builders to define *one* query model
-in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for
-over-the-wire and directly into mongo criteria on the API server.
+### Use Cases
+
+#### Providing a Rest API
+Chances are you want to provide an ability for people to query against your API, but you also make queries against the database yourself in the implementation of business logic on the server. One option could be to use these builders to define one query model in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for over-the-wire and directly into mongo criteria on the API server.
 
 
 ### Why does this exist?
@@ -20,7 +20,7 @@ A lot of existing query builders are lacking. It's difficult to write a query bu
 It uses the type system to enforce that you won't call an unapplicable method at any point as you build your queries. Also, there's no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition to build a query and when used with static imports it becomes a succinct (as far as java goes) query DSL.
 
 
-### Out Of Box Target Query Formats:
+### Out Of Box Target Formats:
 - Java Predicates
 - A string in RSQL format
 - Elasticsearch's QueryBuilder
