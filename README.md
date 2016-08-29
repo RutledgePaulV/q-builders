@@ -3,26 +3,21 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders)
 
 ### Overview
-An abstraction for building queries for arbitrary domain models that minimizes
-magic strings, provides type safety, produces queries that read like a sentence,
-and provides an extensible way to define new target query formats.
+A lightweight abstraction for constructing queries oriented around domain models / entities that minimizes
+magic strings, provides type safety, produces queries that read well, and provides a decoupled way to define new query target formats - allowing you to change your mind about where you store your data without having to change all of your query code.
 
 Have a REST API? Chances are you want to provide an ability for people to query your API, but you
 also make queries against the database yourself. One option could be to use these builders to define *one* query model
 in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for
-over-the-wire and mongo on the API server.
+over-the-wire and directly into mongo criteria on the API server.
 
 
 ### Why does this exist?
-A lot of existing query builders are bad (in my opinion). It's difficult to write a convenient query builder in a statically typed language, which has resulted in most query builders giving up on type safety and allowing you to 
-call methods that you shouldn't be able to call at that time.
+A lot of existing query builders are lacking. It's difficult to write a query builder that is both convenient and safe, which has resulted in most query builders giving up on type safety or allowing you to call methods that don't make sense to be able to call at that time.
 
 
 ### Why is this better?
-It uses the type system to enforce that you can't call an unapplicable method at any point
-as you build your queries. Also, since you define the accepted type when you define your query model, there's
-no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition
-to build a query and when used with static imports it begins to look like a succinct query DSL.
+It uses the type system to enforce that you won't call an unapplicable method at any point as you build your queries. Also, there's no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition to build a query and when used with static imports it becomes a succinct (as far as java goes) query DSL.
 
 
 ### Out Of Box Target Query Formats:
@@ -30,7 +25,6 @@ to build a query and when used with static imports it begins to look like a succ
 - A string in RSQL format
 - Elasticsearch's QueryBuilder
 - Spring Data's MongoDB Criteria
-- Yours could be next...
 
 
 ### Simple Usage:
@@ -86,7 +80,7 @@ public class PersonQuery extends QBuilder<PersonQuery> {
     
 }
 
-import static com.company.queries.PersonQuery.PersonQueryPredef.*;
+import static com.company.queries.PersonQuery.*;
 
 Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Richard"), age().gt(22)));
 ```
