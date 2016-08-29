@@ -6,11 +6,6 @@
 A lightweight abstraction for constructing queries oriented around domain models / entities that minimizes
 magic strings, provides type safety, produces queries that read well, and provides a decoupled way to define new query target formats - allowing you to change your mind about where you store your data without having to change all of your query code.
 
-### Use Cases
-
-#### Providing a Rest API
-Chances are you want to provide an ability for people to query against your API, but you also make queries against the database yourself in the implementation of business logic on the server. One option could be to use these builders to define one query model in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for over-the-wire and directly into mongo criteria on the API server.
-
 
 ### Why does this exist?
 A lot of existing query builders are lacking. It's difficult to write a query builder that is both convenient and safe, which has resulted in most query builders giving up on type safety or allowing you to call methods that don't make sense to be able to call at that time.
@@ -95,6 +90,19 @@ In general, to avoid unintended precedence concerns, it's best to limit your cha
 to only ```and()``` or ```or()``` operators and use the compositional forms 
 ```and(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` and 
 ```or(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` for queries that must mix the two.
+
+
+
+### Common Use Cases
+
+#### Such-&-Such Isn't Easy to Use or Type Safe
+Many criteria / query builders don't provide much in the way of a good "user experience". You can use q-builders simply because they provide an improvement over these.
+
+#### I Might Change Datastores
+By using a layer that provides some decoupling from your storage, if you decide to swap out a datastore for something else but you're not also changing your data's structure then you can just write a new target backend and keep your query building the same.
+
+#### I'm Providing a Rest API
+Chances are you want to provide an ability for people to query against your API, but you also make queries against the database yourself in the implementation of business logic on the server. One option could be to use these builders to define one query model in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for over-the-wire and directly into mongo criteria on the API server.
 
 
 ### RSQL Flavor
