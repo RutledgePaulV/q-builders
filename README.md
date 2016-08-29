@@ -76,13 +76,12 @@ Predicate<Person> predicate = q.query(new PredicateVisitor<>());
 
 public class PersonQuery extends QBuilder<PersonQuery> {
 
-    public static class PersonQueryPredef {
-        public static StringProperty<PersonQuery> firstName() {
-            return new PersonQuery().stringField("firstName");
-        }
-        public static IntegerProperty<PersonQuery> age() {
-            return new PersonQuery().integerField("age");
-        }
+    public static StringProperty<PersonQuery> firstName() {
+        return new PersonQuery().stringField("firstName");
+    }
+    
+    public static IntegerProperty<PersonQuery> age() {
+        return new PersonQuery().integerField("age");
     }
     
 }
