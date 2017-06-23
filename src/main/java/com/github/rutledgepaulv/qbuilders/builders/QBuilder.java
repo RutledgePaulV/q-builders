@@ -99,14 +99,16 @@ public class QBuilder<T extends QBuilder<T>> implements Partial<T> {
 
     @SafeVarargs
     public final Condition<T> and(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
-        List<Condition<T>> conditions = asList(c1,c2);
+        List<Condition<T>> conditions = new ArrayList<>();
+        conditions.addAll(asList(c1,c2));
         conditions.addAll(asList(cn));
         return and(conditions);
     }
 
     @SafeVarargs
     public final Condition<T> or(Condition<T> c1, Condition<T> c2, Condition<T>... cn) {
-        List<Condition<T>> conditions = asList(c1,c2);
+        List<Condition<T>> conditions = new ArrayList<>();
+        conditions.addAll(asList(c1,c2));
         conditions.addAll(asList(cn));
         return or(conditions);
     }

@@ -3,35 +3,23 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rutledgepaulv/q-builders)
 
 ### Overview
-A generic abstraction for building queries for arbitrary domain models that minimizes
-magic strings, provides type safety, produces queries that read like a sentence,
-and provides an extensible way to define new target query formats.
-
-Have a REST API? Chances are you want to provide an ability for people to query your API, but you
-also make queries against the database yourself. Using these builders lets you define *one* query model
-in a shared jar that you use in both your SDK and API and target different query formats. Like RSQL for
-over-the-wire and mongo or hibernate queries on the API server.
+A lightweight abstraction for constructing queries oriented around domain models / entities that minimizes
+magic strings, provides type safety, produces queries that read well, and provides a decoupled way to define new query target formats - allowing you to change your mind about where you store your data without having to change all of your query code.
 
 
 ### Why does this exist?
-A lot of existing query builders are bad. It's difficult to write a query builder that always restricts you to the
-only logical options available, which has resulted in most query builders being overly generic and allowing you to 
-call methods that you shouldn't be able to call at that time.
+A lot of existing query builders are lacking. It's difficult to write a query builder that is both convenient and safe, which has resulted in most query builders giving up on type safety or allowing you to call methods that don't make sense to be able to call at that time.
 
 
 ### Why is this better?
-As soon as you start typing, you'll notice that you're never even given an inapplicable option at any point
-as you build your queries. Also, since you define the accepted type when you define your query model, there's
-no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition
-to build a query and is ideal for using static imports to create what is essentially a query DSL.
+It uses the type system to enforce that you won't call an unapplicable method at any point as you build your queries. Also, there's no need to worry about someone passing an integer to a string field, etc. It supports both chaining and composition to build a query and when used with static imports it becomes a succinct (as far as java goes) query DSL.
 
 
-### Out Of Box Target Query Formats:
+### Out Of Box Target Formats:
 - Java Predicates
 - A string in RSQL format
 - Elasticsearch's QueryBuilder
 - Spring Data's MongoDB Criteria
-- Yours could be next...
 
 
 ### Simple Usage:
@@ -55,18 +43,8 @@ public class PersonQuery extends QBuilder<PersonQuery> {
 }
 
 
-//--------------------------------------------------------------------------
-// write your queries using a straightforward and intuitive syntax that 
-// enforces type safety
-//--------------------------------------------------------------------------
-
 Condition<PersonQuery> q = new PersonQuery().firstName().eq("Paul").and().age().eq(23);
 
-
-//--------------------------------------------------------------------------
-// build the abstract representation of the query into the format of your 
-// choice. currently supports rsql, mongo, and elasticsearch out of box
-//--------------------------------------------------------------------------
 
 String rsql = q.query(new RSQLVisitor()); 
 // firstName==Paul;age==23
@@ -76,69 +54,55 @@ Criteria mongoCriteria = q.query(new MongoVisitor());
 
 FilterBuilder filter = q.query(new ElasticsearchVisitor());
 // { "and" : { "filters" : [ { "term" : { "firstName" : "Paul" } }, { "term" : { "age" : 23 } } ] } }
-```
 
-### Predicate Usage:
-```java
-
-//--------------------------------------------------------------------------
-// feeling bold? integration tests too much setup? you can build into java 
-// predicates too, so you can test your queries using an in-memory list or the
-// like (not recommended for production code use)
-//--------------------------------------------------------------------------
-
-List<Person> persons = getPersons();
 Predicate<Person> predicate = q.query(new PredicateVisitor<>());
-List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(toList());
-
+// List<Person> personsNamedPaulAndAge23 = persons.stream().filter(predicate).collect(toList());
 ```
 
 
 ### Static Import Usage:
 ```java
 
-//--------------------------------------------------------------------------
-// prefer the look and feel of static imports? me too.
-//--------------------------------------------------------------------------
-
 public class PersonQuery extends QBuilder<PersonQuery> {
 
-    public static class PersonQueryPredef {
-        public static StringProperty<PersonQuery> firstName() {
-            return new PersonQuery().firstName();
-        }
-        public static IntegerProperty<PersonQuery> age() {
-            return new PersonQuery().age();
-        }
+    public static StringProperty<PersonQuery> firstName() {
+        return new PersonQuery().stringField("firstName");
     }
     
-    public StringProperty<PersonQuery> firstName() {
-        return stringField("firstName");
-    }
-    
-    public IntegerProperty<PersonQuery> age() {
-        return integerField("age");
+    public static IntegerProperty<PersonQuery> age() {
+        return new PersonQuery().integerField("age");
     }
     
 }
 
-```
-
-```java
-import static com.company.queries.PersonQuery.PersonQueryPredef.*;
+import static com.company.queries.PersonQuery.*;
 
 Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Richard"), age().gt(22)));
 ```
 
 ### Precedence:
-Chaining both with the infix forms of ```and()``` and ```or()``` is complicated when you begin to talk about
+Chaining with the infix forms of ```and()``` and ```or()``` is complicated when you use both and then want to talk about
 precedence. The implementation is such that whenever you change from a chain of ```and()``` to
-a chain of ```or()```, then the previous statements are wrapped together and the existing set
-becomes one of the elements in the new ```or()``` chain, and vice versa for a chain of ```or()``` followed
-by a chain of ```and()```. In general, to avoid unintended precedence concerns, it's best to limit your chains
-to only ```and()``` or ```or()``` operators and use the parametrized 
+a chain of ```or()``` (or vice versa), then the previous statements are wrapped together and the existing set
+becomes one of the elements in the new ```or()``` (or ```and()```) chain. 
+
+In general, to avoid unintended precedence concerns, it's best to limit your chains
+to only ```and()``` or ```or()``` operators and use the compositional forms 
 ```and(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` and 
-```or(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` for more complicated queries.
+```or(Condition<T> c1, Condition<T> c2, Condition<T>... cn)``` for queries that must mix the two.
+
+
+
+### Common Use Cases
+
+#### Such-&-Such Isn't Easy to Use or Type Safe
+Many criteria / query builders don't provide much in the way of a good "user experience". You can use q-builders simply because they provide an improvement over these.
+
+#### I Might Change Datastores
+By using a layer that provides some decoupling from your storage, if you decide to swap out a datastore for something else but you're not also changing your data's structure then you can just write a new target backend and keep your query building the same.
+
+#### I'm Providing a Rest API
+Chances are you want to provide an ability for people to query against your API, but you also make queries against the database yourself in the implementation of business logic on the server. One option could be to use these builders to define one query model in a shared jar that you use in both your SDK and API and simply target different query formats. Like RSQL for over-the-wire and directly into mongo criteria on the API server.
 
 
 ### RSQL Flavor
@@ -149,6 +113,7 @@ make sure that you add the following operators before parsing:
 
 - "=ex=" The exists clause. It has values of either ```true``` or ```false```.
 - "=q=" The subquery clause. It has a string value that itself might be an entire RSQL query.
+- "=re=" A regular expression as a string. The string will be passed as-is to the backend visitor you use, so the regex string must be in the same flavor as the visitor you intend to use (mongo regex vs java regex, etc)
 
 
 
